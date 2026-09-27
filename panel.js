@@ -71,6 +71,13 @@ onAuthStateChanged(auth, async (user) => {
   usuario = user;
   $("#user-email").textContent = user.email;
 
+  // Saludo con el nombre que dio al crear la cuenta (solo el primer nombre)
+  const primerNombre = (user.displayName || "").trim().split(" ")[0];
+  if (primerNombre) {
+    $("#panel-greeting").textContent = `HOLA, ${primerNombre.toUpperCase()}`;
+    $("#welcome-kicker").textContent = `HOLA, ${primerNombre.toUpperCase()}. TE DAMOS LA BIENVENIDA A SERVICE PLANET`;
+  }
+
   const snap = await getDoc(doc(db, "perfiles", user.uid));
   if (snap.exists()) {
     perfil = snap.data();

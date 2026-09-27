@@ -20,6 +20,15 @@
 .form input, .form textarea { background: var(--cream); border: 1px solid var(--line); border-radius: 12px; color: var(--ink); font: inherit; padding: 12px 14px; }
 .form input:focus, .form textarea:focus { border-color: var(--blue); outline: 3px solid var(--mist); }
 .form .button { cursor: pointer; width: 100%; }
+/* Contraseña con botón de ojo para mostrar/ocultar */
+.password-field { align-items: center; background: var(--cream); border: 1px solid var(--line); border-radius: 12px; display: flex; }
+.password-field:focus-within { border-color: var(--blue); outline: 3px solid var(--mist); }
+.form .password-field input { background: transparent; border: 0; flex: 1; min-width: 0; }
+.form .password-field input:focus { outline: none; }
+.password-toggle { align-items: center; background: none; border: 0; border-radius: 10px; color: var(--muted); cursor: pointer; display: flex; height: 44px; justify-content: center; width: 46px; }
+.password-toggle:hover { color: var(--blue); }
+.password-toggle svg { fill: none; height: 20px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; width: 20px; }
+.field-hint { color: var(--muted); font-size: .8rem; font-weight: 400; }
 .form-message { color: #c0392b; font-size: .88rem; min-height: 1.3em; }
 .form-message.ok { color: #1f8a55; }
 .form-title { font-family: "DM Sans", Arial, sans-serif; font-size: 1.15rem; }

@@ -23,11 +23,26 @@
       <h1 id="auth-title">Empieza tu página</h1>
 
       <form class="form" id="auth-form">
+        <!-- Solo al crear cuenta -->
+        <label id="name-field">Tu nombre
+          <input id="nombre" maxlength="60" autocomplete="name" placeholder="Ej: Camila Rojas">
+        </label>
         <label>Correo
           <input type="email" id="email" required autocomplete="email">
         </label>
         <label>Contraseña
-          <input type="password" id="password" required minlength="6" autocomplete="new-password">
+          <span class="password-field">
+            <input type="password" id="password" required minlength="6" autocomplete="new-password">
+            <button class="password-toggle" type="button" data-target="password" aria-label="Mostrar contraseña"></button>
+          </span>
+          <small class="field-hint" id="password-hint">Mínimo 6 caracteres.</small>
+        </label>
+        <!-- Solo al crear cuenta -->
+        <label id="confirm-field">Confirma tu contraseña
+          <span class="password-field">
+            <input type="password" id="password2" minlength="6" autocomplete="new-password">
+            <button class="password-toggle" type="button" data-target="password2" aria-label="Mostrar contraseña"></button>
+          </span>
         </label>
         <p class="form-message" id="auth-message" role="alert"></p>
         <button class="button" type="submit" id="auth-submit">Crear cuenta</button>
