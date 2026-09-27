@@ -1,0 +1,82 @@
+/* Estilos de las páginas de la app (cuenta, panel, página pública).
+   Usa las variables de color definidas en style.css. */
+
+.app-main { padding-bottom: 80px; padding-top: 16px; }
+.user-email { color: var(--muted); font-size: .88rem; font-weight: 500; }
+
+.auth-card { background: var(--white); border: 1px solid var(--line); border-radius: 24px; box-shadow: 12px 14px 0 var(--orange); margin: 24px auto 0; max-width: 440px; padding: 36px; }
+.auth-card h1 { font-size: clamp(2.2rem, 5vw, 2.8rem); margin-bottom: 24px; }
+
+.form { display: grid; gap: 16px; }
+.form label { display: grid; font-size: .88rem; font-weight: 600; gap: 6px; }
+.form input, .form textarea { background: var(--cream); border: 1px solid var(--line); border-radius: 12px; color: var(--ink); font: inherit; padding: 12px 14px; }
+.form input:focus, .form textarea:focus { border-color: var(--blue); outline: 3px solid var(--mist); }
+.form .button { cursor: pointer; width: 100%; }
+.form-message { color: #c0392b; font-size: .88rem; min-height: 1.3em; }
+.form-message.ok { color: #1f8a55; }
+
+.button:disabled { cursor: wait; opacity: .6; transform: none; }
+.link-button { background: none; border: 0; color: var(--blue); cursor: pointer; font-weight: 700; padding: 0; }
+.link-button:hover { text-decoration: underline; }
+.auth-switch { font-size: .92rem; margin-top: 20px; text-align: center; }
+.auth-forgot { display: block; font-size: .85rem; margin: 10px auto 0; }
+
+button.button { cursor: pointer; }
+.button-outline { background: transparent; color: var(--blue); }
+.button-outline:hover { color: var(--white); }
+
+/* ---------- Panel ---------- */
+
+.panel-head { margin: 8px 0 24px; }
+.panel-head h1 { font-size: clamp(2.2rem, 5vw, 3rem); }
+.panel-grid { align-items: start; display: grid; gap: 24px; grid-template-columns: 1fr 1fr; }
+.panel-card { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 28px; }
+.panel-card h2 { font-size: 1.6rem; margin-bottom: 18px; }
+.panel-hint { color: var(--muted); font-size: .92rem; }
+
+.slug-field { align-items: center; background: var(--cream); border: 1px solid var(--line); border-radius: 12px; display: flex; font-weight: 500; padding-left: 14px; }
+.slug-field > span { color: var(--muted); }
+.slug-field:focus-within { border-color: var(--blue); outline: 3px solid var(--mist); }
+.form .slug-field input { background: transparent; border: 0; flex: 1; min-width: 0; padding-left: 2px; }
+.form .slug-field input:focus { outline: none; }
+.form-row { display: grid; gap: 12px; grid-template-columns: 84px 1fr; }
+.form-row input { min-width: 0; }
+#pr-emoji { font-size: 1.2rem; text-align: center; }
+kbd { background: var(--mist); border-radius: 4px; font: inherit; font-weight: 700; padding: 1px 5px; }
+.form-actions { display: grid; gap: 12px; justify-items: center; }
+
+.product-list { display: grid; list-style: none; margin-top: 24px; padding: 0; }
+.product-row { align-items: center; border-top: 1px solid #eee8de; display: flex; gap: 12px; justify-content: space-between; padding: 14px 0; }
+.product-row > div:first-child { display: grid; }
+.product-row small { color: var(--muted); }
+.product-row-actions { display: flex; font-size: .88rem; gap: 14px; }
+.danger { color: #c0392b; }
+
+.share-box { align-items: center; background: var(--mist); border: 1px solid #dfe7f7; border-radius: 20px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; margin-bottom: 24px; padding: 20px 24px; }
+.share-label { color: var(--muted); font-size: .82rem; }
+.share-link { color: var(--blue); font-weight: 700; word-break: break-all; }
+.share-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---------- Página pública ---------- */
+
+.public-main { padding-bottom: 32px; padding-top: 48px; }
+.public-status { color: var(--muted); padding: 80px 0; text-align: center; }
+.catalog { background: var(--white); border: 1px solid var(--line); border-radius: 24px; box-shadow: 12px 14px 0 var(--orange); margin: 0 auto; max-width: 520px; padding: 28px; }
+.catalog h1 { font-size: clamp(1.6rem, 5vw, 2rem); letter-spacing: -.03em; }
+.catalog .product-image { font-family: "Playfair Display", Georgia, serif; font-size: 1.4rem; font-weight: 700; }
+.product-desc { color: #4f5b6e; font-size: .8rem; }
+.product.selected { color: var(--blue); }
+.catalog-empty { color: var(--muted); padding: 16px 0; }
+.public-footer { align-items: center; display: flex; flex-direction: column; font-size: .9rem; font-weight: 600; gap: 4px; padding: 32px 0 48px; }
+.public-footer .logo { font-size: 1.5rem; }
+
+@media (max-width: 780px) {
+  .panel-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 430px) {
+  .auth-card { box-shadow: 8px 10px 0 var(--orange); padding: 26px; }
+  .user-email { display: none; }
+  .panel-card { padding: 22px; }
+  .catalog { box-shadow: 8px 10px 0 var(--orange); padding: 22px; }
+}

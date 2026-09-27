@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Ofrezco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="header container">
+    <a class="logo" href="index.html" aria-label="Ofrezco, ir al inicio">Ofrezco<span>.</span></a>
+  </header>
+
+  <main class="container app-main">
+    <section class="auth-card">
+      <p class="eyebrow" id="auth-eyebrow">CREA TU CUENTA</p>
+      <h1 id="auth-title">Empieza tu página</h1>
+
+      <form class="form" id="auth-form">
+        <label>Correo
+          <input type="email" id="email" required autocomplete="email">
+        </label>
+        <label>Contraseña
+          <input type="password" id="password" required minlength="6" autocomplete="new-password">
+        </label>
+        <p class="form-message" id="auth-message" role="alert"></p>
+        <button class="button" type="submit" id="auth-submit">Crear cuenta</button>
+      </form>
+
+      <p class="auth-switch">
+        <span id="switch-text">¿Ya tienes cuenta?</span>
+        <button class="link-button" type="button" id="switch-mode">Inicia sesión</button>
+      </p>
+      <button class="link-button auth-forgot" type="button" id="forgot" hidden>¿Olvidaste tu contraseña?</button>
+    </section>
+  </main>
+
+  <script type="module" src="cuenta.js"></script>
+</body>
+</html>

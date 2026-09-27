@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo — Ofrezco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <main class="container public-main">
+    <p class="public-status" id="estado">Cargando catálogo…</p>
+
+    <article class="catalog" id="catalogo" hidden>
+      <div class="preview-header">
+        <div class="avatar" id="c-avatar" aria-hidden="true"></div>
+        <div>
+          <h1 id="c-nombre"></h1>
+          <p id="c-zona"></p>
+        </div>
+      </div>
+      <p class="catalog-intro" id="c-descripcion"></p>
+      <div class="products" id="c-productos"></div>
+      <a class="whatsapp-button" id="c-whatsapp" target="_blank" rel="noopener">
+        <span id="c-whatsapp-texto">Consultar por WhatsApp</span> <span aria-hidden="true">↗</span>
+      </a>
+    </article>
+  </main>
+
+  <footer class="public-footer">
+    <a class="logo" href="index.html">Ofrezco<span>.</span></a>
+    <a href="cuenta.html">Crea tu página gratis →</a>
+  </footer>
+
+  <!-- Molde de cada producto (pagina.js lo copia y lo llena) -->
+  <template id="producto-molde">
+    <button class="product" type="button">
+      <span class="product-image" aria-hidden="true"></span>
+      <span class="product-info"><strong></strong><small></small><span class="product-desc"></span></span>
+      <span aria-hidden="true">+</span>
+    </button>
+  </template>
+
+  <script type="module" src="pagina.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi panel — Ofrezco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="header container">
+    <a class="logo" href="index.html" aria-label="Ofrezco, ir al inicio">Ofrezco<span>.</span></a>
+    <nav class="navigation">
+      <span class="user-email" id="user-email"></span>
+      <button class="button button-small" type="button" id="logout">Cerrar sesión</button>
+    </nav>
+  </header>
+
+  <main class="container app-main" id="panel" hidden>
+    <div class="panel-head">
+      <p class="eyebrow">TU PANEL</p>
+      <h1>Arma tu página</h1>
+    </div>
+
+    <!-- Aparece cuando el perfil ya está guardado -->
+    <section class="share-box" id="share-box" hidden>
+      <div>
+        <p class="share-label">Tu página está en</p>
+        <a class="share-link" id="share-link" target="_blank" rel="noopener"></a>
+      </div>
+      <div class="share-actions">
+        <button class="button button-small" type="button" id="copy-link">Copiar enlace</button>
+        <a class="button button-small button-outline" id="share-whatsapp" target="_blank" rel="noopener">Compartir por WhatsApp</a>
+      </div>
+    </section>
+
+    <div class="panel-grid">
+      <section class="panel-card">
+        <h2>Tu perfil</h2>
+        <form class="form" id="profile-form">
+          <label>Nombre
+            <input id="p-nombre" required maxlength="60" placeholder="Ej: Rueda Libre, María Pastelería">
+          </label>
+          <label>Descripción
+            <textarea id="p-descripcion" rows="3" maxlength="300" placeholder="Cuenta en una o dos frases qué ofreces."></textarea>
+          </label>
+          <label>Dónde atiendes
+            <input id="p-zona" maxlength="60" placeholder="Ej: Puerto Varas, a domicilio en Ñuñoa, online">
+          </label>
+          <label>WhatsApp
+            <input id="p-whatsapp" type="tel" required placeholder="+56 9 1234 5678">
+          </label>
+          <label>Tu enlace
+            <span class="slug-field"><span>ofrezco.cl/</span><input id="p-slug" required maxlength="40" placeholder="maria-pasteleria"></span>
+          </label>
+          <p class="form-message" id="profile-message" role="alert"></p>
+          <button class="button" type="submit" id="profile-submit">Guardar perfil</button>
+        </form>
+      </section>
+
+      <section class="panel-card">
+        <h2>Lo que ofreces</h2>
+        <p class="panel-hint" id="products-locked">Guarda tu perfil primero para empezar a agregar lo que ofreces.</p>
+        <form class="form" id="product-form" hidden>
+          <div class="form-row">
+            <label>Emoji
+              <input id="pr-emoji" maxlength="8" placeholder="🚲">
+            </label>
+            <label>Nombre
+              <input id="pr-nombre" required maxlength="80" placeholder="Ej: Bicicleta urbana, Clase de guitarra">
+            </label>
+          </div>
+          <label>Precio
+            <input id="pr-precio" maxlength="40" placeholder="Ej: $5.000 la hora, Desde $24.000, A convenir">
+          </label>
+          <label>Descripción (opcional)
+            <textarea id="pr-descripcion" rows="2" maxlength="200"></textarea>
+          </label>
+          <p class="panel-hint">Tip: en Windows abre los emojis con <kbd>Win</kbd> + <kbd>.</kbd></p>
+          <p class="form-message" id="product-message" role="alert"></p>
+          <div class="form-actions">
+            <button class="button" type="submit" id="product-submit">Agregar</button>
+            <button class="link-button" type="button" id="product-cancel" hidden>Cancelar edición</button>
+          </div>
+        </form>
+        <ul class="product-list" id="product-list"></ul>
+      </section>
+    </div>
+  </main>
+
+  <!-- Molde de cada producto en la lista (panel.js lo copia y lo llena) -->
+  <template id="product-item">
+    <li class="product-row">
+      <div><strong></strong><small></small></div>
+      <div class="product-row-actions">
+        <button class="link-button" type="button" data-action="editar">Editar</button>
+        <button class="link-button danger" type="button" data-action="eliminar">Eliminar</button>
+      </div>
+    </li>
+  </template>
+
+  <script type="module" src="panel.js"></script>
+</body>
+</html>
