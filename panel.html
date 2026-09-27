@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi panel — Service Planet</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -12,12 +14,23 @@
 </head>
 <body>
   <header class="header container">
-    <a class="logo" href="index.html" aria-label="Service Planet, ir al inicio">Service <span>Planet</span></a>
+    <a class="logo" href="index.html" aria-label="Service Planet, ir al inicio"><img src="logo.svg" alt="" width="36" height="36">Service<span>Planet</span></a>
     <nav class="navigation">
       <span class="user-email" id="user-email"></span>
       <button class="button button-small" type="button" id="logout">Cerrar sesión</button>
     </nav>
   </header>
+
+  <!-- Bienvenida animada: aparece solo la primera vez que alguien entra sin perfil -->
+  <div class="welcome" id="welcome" hidden>
+    <div class="welcome-stars" aria-hidden="true"></div>
+    <div class="welcome-comet" aria-hidden="true"></div>
+    <img class="welcome-planet" src="logo.svg" alt="">
+    <p class="welcome-kicker">TE DAMOS LA BIENVENIDA A SERVICE PLANET</p>
+    <h1 class="welcome-title">Aquí nace<br><em>tu imperio</em>.</h1>
+    <p class="welcome-text">Todo lo que sabes hacer merece ser visto. En minutos tendrás tu propia página para mostrarlo al mundo y recibir clientes por WhatsApp.</p>
+    <button class="button" type="button" id="welcome-start">Comenzar a construirlo <span aria-hidden="true">→</span></button>
+  </div>
 
   <main class="container app-main" id="panel" hidden>
     <div class="panel-head">
@@ -39,8 +52,42 @@
 
     <div class="panel-grid">
       <section class="panel-card">
-        <h2>Tu perfil</h2>
-        <form class="form" id="profile-form">
+        <div class="card-head">
+          <h2>Tu perfil</h2>
+          <button class="button button-small button-outline" type="button" id="profile-edit" hidden>Editar datos</button>
+        </div>
+
+        <!-- Vista del perfil guardado -->
+        <div class="profile-view" id="profile-view" hidden>
+          <div class="profile-cover" id="v-portada"></div>
+          <div class="profile-id">
+            <div class="avatar" id="v-logo" aria-hidden="true"></div>
+            <div><strong id="v-nombre"></strong><small id="v-zona"></small></div>
+          </div>
+          <p class="profile-description" id="v-descripcion"></p>
+          <p class="panel-hint" id="v-whatsapp"></p>
+        </div>
+
+        <!-- Formulario para crear o editar el perfil -->
+        <form class="form" id="profile-form" hidden>
+          <div class="image-field">
+            <span class="image-label">Logo</span>
+            <div class="image-picker">
+              <div class="image-preview logo-preview" id="logo-preview"></div>
+              <div class="image-buttons">
+                <label class="button button-small button-outline">Subir logo<input type="file" accept="image/*" id="p-logo" hidden></label>
+                <button class="link-button danger" type="button" id="logo-remove" hidden>Quitar</button>
+              </div>
+            </div>
+          </div>
+          <div class="image-field">
+            <span class="image-label">Imagen de portada</span>
+            <div class="image-preview cover-preview" id="cover-preview"></div>
+            <div class="image-buttons">
+              <label class="button button-small button-outline">Subir portada<input type="file" accept="image/*" id="p-portada" hidden></label>
+              <button class="link-button danger" type="button" id="cover-remove" hidden>Quitar</button>
+            </div>
+          </div>
           <label>Nombre
             <input id="p-nombre" required maxlength="60" placeholder="Ej: Rueda Libre, María Pastelería">
           </label>
@@ -54,17 +101,37 @@
             <input id="p-whatsapp" type="tel" required placeholder="+56 9 1234 5678">
           </label>
           <label>Tu enlace
-            <span class="slug-field"><span>serviceplanet.cl/</span><input id="p-slug" required maxlength="40" placeholder="maria-pasteleria"></span>
+            <span class="input-prefix"><span>serviceplanet.cl/</span><input id="p-slug" required maxlength="40" placeholder="maria-pasteleria"></span>
           </label>
           <p class="form-message" id="profile-message" role="alert"></p>
-          <button class="button" type="submit" id="profile-submit">Guardar perfil</button>
+          <div class="form-actions">
+            <button class="button" type="submit" id="profile-submit">Guardar perfil</button>
+            <button class="link-button" type="button" id="profile-cancel" hidden>Cancelar</button>
+          </div>
         </form>
       </section>
 
-      <section class="panel-card">
-        <h2>Lo que ofreces</h2>
-        <p class="panel-hint" id="products-locked">Guarda tu perfil primero para empezar a agregar lo que ofreces.</p>
+      <section class="panel-card" id="services-card">
+        <h2>Tus servicios</h2>
+        <p class="panel-hint" id="products-locked">Guarda tu perfil primero para empezar a agregar tus servicios.</p>
+
+        <button class="add-service" type="button" id="product-new" hidden>
+          <span class="add-service-icon" aria-hidden="true">+</span>
+          <span><strong>¿Quieres agregar un nuevo servicio?</strong><small>Pulsa aquí para crearlo</small></span>
+        </button>
+
         <form class="form" id="product-form" hidden>
+          <h3 class="form-title" id="product-form-title">Nuevo servicio</h3>
+          <div class="image-field">
+            <span class="image-label">Imagen de referencia (opcional)</span>
+            <div class="image-picker">
+              <div class="image-preview item-preview" id="item-preview"></div>
+              <div class="image-buttons">
+                <label class="button button-small button-outline">Subir imagen<input type="file" accept="image/*" id="pr-imagen" hidden></label>
+                <button class="link-button danger" type="button" id="item-remove" hidden>Quitar</button>
+              </div>
+            </div>
+          </div>
           <div class="form-row">
             <label>Emoji
               <input id="pr-emoji" maxlength="8" placeholder="🚲">
@@ -74,7 +141,7 @@
             </label>
           </div>
           <label>Precio
-            <input id="pr-precio" maxlength="40" placeholder="Ej: $5.000 la hora, Desde $24.000, A convenir">
+            <span class="input-prefix"><span aria-hidden="true">💵</span><input id="pr-precio" maxlength="40" placeholder="Ej: $5.000 la hora, Desde $24.000, A convenir"></span>
           </label>
           <label>Descripción (opcional)
             <textarea id="pr-descripcion" rows="2" maxlength="200"></textarea>
@@ -82,19 +149,21 @@
           <p class="panel-hint">Tip: en Windows abre los emojis con <kbd>Win</kbd> + <kbd>.</kbd></p>
           <p class="form-message" id="product-message" role="alert"></p>
           <div class="form-actions">
-            <button class="button" type="submit" id="product-submit">Agregar</button>
-            <button class="link-button" type="button" id="product-cancel" hidden>Cancelar edición</button>
+            <button class="button" type="submit" id="product-submit">Agregar servicio</button>
+            <button class="link-button" type="button" id="product-cancel">Cancelar</button>
           </div>
         </form>
+
         <ul class="product-list" id="product-list"></ul>
       </section>
     </div>
   </main>
 
-  <!-- Molde de cada producto en la lista (panel.js lo copia y lo llena) -->
+  <!-- Molde de cada servicio en la lista (panel.js lo copia y lo llena) -->
   <template id="product-item">
     <li class="product-row">
-      <div><strong></strong><small></small></div>
+      <span class="product-thumb" aria-hidden="true"></span>
+      <div class="product-row-info"><strong></strong><span class="price"></span></div>
       <div class="product-row-actions">
         <button class="link-button" type="button" data-action="editar">Editar</button>
         <button class="link-button danger" type="button" data-action="eliminar">Eliminar</button>

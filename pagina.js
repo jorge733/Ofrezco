@@ -19,6 +19,12 @@ function obtenerSlug() {
   return ultimo.includes(".") || ultimo === "pagina" ? "" : ultimo.toLowerCase();
 }
 
+// Pone una imagen de fondo en un elemento (o la quita si no hay)
+function pintarImagen(elemento, dataUrl) {
+  elemento.style.backgroundImage = dataUrl ? `url("${dataUrl}")` : "";
+  elemento.classList.toggle("has-image", Boolean(dataUrl));
+}
+
 function noEncontrado() {
   $("#estado").innerHTML = 'Esta página no existe. <a class="link-button" href="index.html">Ir a Service Planet</a>';
 }
@@ -33,7 +39,7 @@ async function cargar() {
     if (!slugSnap.exists()) return noEncontrado();
     const uid = slugSnap.data().uid;
 
-    // 2) Con eso cargamos el perfil y los productos
+    // 2) Con eso cargamos el perfil y los servicios
     const [perfilSnap, productosSnap] = await Promise.all([
       getDoc(doc(db, "perfiles", uid)),
       getDocs(query(collection(db, "perfiles", uid, "productos"), orderBy("creado")))
@@ -43,16 +49,19 @@ async function cargar() {
     mostrar(perfilSnap.data(), productosSnap.docs.map((d) => d.data()));
   } catch (error) {
     console.error(error);
-    $("#estado").textContent = "No pudimos cargar el catálogo. Revisa tu conexión e inténtalo de nuevo.";
+    $("#estado").textContent = "No pudimos cargar esta página. Revisa tu conexión e inténtalo de nuevo.";
   }
 }
 
 function mostrar(perfil, productos) {
   document.title = `${perfil.nombre} — Service Planet`;
-  $("#c-avatar").textContent = perfil.nombre.charAt(0).toUpperCase();
+  pintarImagen($("#c-portada"), perfil.portada);
+  const avatar = $("#c-avatar");
+  pintarImagen(avatar, perfil.logo);
+  avatar.textContent = perfil.logo ? "" : perfil.nombre.charAt(0).toUpperCase();
   $("#c-nombre").textContent = perfil.nombre;
-  $("#c-descripcion").textContent = perfil.descripcion;
   $("#c-zona").textContent = perfil.zona || "";
+  $("#c-descripcion").textContent = perfil.descripcion;
 
   const whatsapp = $("#c-whatsapp");
   const prepararWhatsapp = (texto) => {
@@ -68,13 +77,14 @@ function mostrar(perfil, productos) {
   productos.forEach((producto, i) => {
     const boton = $("#producto-molde").content.firstElementChild.cloneNode(true);
     const imagen = boton.querySelector(".product-image");
-    imagen.textContent = producto.emoji || producto.nombre.charAt(0).toUpperCase();
-    imagen.style.background = COLORES[i % COLORES.length];
+    imagen.style.backgroundColor = COLORES[i % COLORES.length];
+    pintarImagen(imagen, producto.imagen);
+    imagen.textContent = producto.imagen ? "" : (producto.emoji || producto.nombre.charAt(0).toUpperCase());
     boton.querySelector("strong").textContent = producto.nombre;
-    boton.querySelector("small").textContent = producto.precio;
+    boton.querySelector(".price").textContent = producto.precio;
     boton.querySelector(".product-desc").textContent = producto.descripcion;
 
-    // Al tocar un producto, el botón de WhatsApp pregunta por ese producto
+    // Al tocar un servicio, el botón de WhatsApp pregunta por ese servicio
     boton.addEventListener("click", () => {
       lista.querySelectorAll(".product.selected").forEach((b) => b.classList.remove("selected"));
       boton.classList.add("selected");

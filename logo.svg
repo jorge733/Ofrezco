@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="sp-planeta" x1="18" y1="14" x2="46" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4c86ff"/>
+      <stop offset="1" stop-color="#1142ae"/>
+    </linearGradient>
+    <!-- Mitad delantera del anillo (la que pasa por encima del planeta) -->
+    <clipPath id="sp-frente" clipPathUnits="userSpaceOnUse">
+      <rect x="0" y="32" width="64" height="32"/>
+    </clipPath>
+  </defs>
+  <g transform="rotate(-24 32 32)">
+    <ellipse cx="32" cy="32" rx="28" ry="8.5" fill="none" stroke="#ff7b4a" stroke-width="4"/>
+  </g>
+  <circle cx="32" cy="32" r="17" fill="url(#sp-planeta)"/>
+  <path d="M21.5 26.5a12 12 0 0 1 9-8.5" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+  <g transform="rotate(-24 32 32)">
+    <ellipse cx="32" cy="32" rx="28" ry="8.5" fill="none" stroke="#ff7b4a" stroke-width="4" clip-path="url(#sp-frente)"/>
+  </g>
+  <circle cx="53" cy="15" r="4" fill="#ff7b4a"/>
+</svg>

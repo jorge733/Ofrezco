@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo — Service Planet</title>
+  <title>Service Planet</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -12,34 +14,37 @@
 </head>
 <body>
   <main class="container public-main">
-    <p class="public-status" id="estado">Cargando catálogo…</p>
+    <p class="public-status" id="estado">Cargando…</p>
 
     <article class="catalog" id="catalogo" hidden>
-      <div class="preview-header">
-        <div class="avatar" id="c-avatar" aria-hidden="true"></div>
-        <div>
-          <h1 id="c-nombre"></h1>
-          <p id="c-zona"></p>
+      <div class="catalog-cover" id="c-portada"></div>
+      <div class="catalog-body">
+        <div class="catalog-id">
+          <div class="avatar catalog-logo" id="c-avatar" aria-hidden="true"></div>
+          <div>
+            <h1 id="c-nombre"></h1>
+            <p id="c-zona"></p>
+          </div>
         </div>
+        <p class="catalog-intro" id="c-descripcion"></p>
+        <div class="products" id="c-productos"></div>
+        <a class="whatsapp-button" id="c-whatsapp" target="_blank" rel="noopener">
+          <span id="c-whatsapp-texto">Consultar por WhatsApp</span> <span aria-hidden="true">↗</span>
+        </a>
       </div>
-      <p class="catalog-intro" id="c-descripcion"></p>
-      <div class="products" id="c-productos"></div>
-      <a class="whatsapp-button" id="c-whatsapp" target="_blank" rel="noopener">
-        <span id="c-whatsapp-texto">Consultar por WhatsApp</span> <span aria-hidden="true">↗</span>
-      </a>
     </article>
   </main>
 
   <footer class="public-footer">
-    <a class="logo" href="index.html">Service <span>Planet</span></a>
+    <a class="logo" href="index.html"><img src="logo.svg" alt="" width="36" height="36">Service<span>Planet</span></a>
     <a href="cuenta.html">Crea tu página gratis →</a>
   </footer>
 
-  <!-- Molde de cada producto (pagina.js lo copia y lo llena) -->
+  <!-- Molde de cada servicio (pagina.js lo copia y lo llena) -->
   <template id="producto-molde">
     <button class="product" type="button">
       <span class="product-image" aria-hidden="true"></span>
-      <span class="product-info"><strong></strong><small></small><span class="product-desc"></span></span>
+      <span class="product-info"><strong></strong><span class="price"></span><span class="product-desc"></span></span>
       <span aria-hidden="true">+</span>
     </button>
   </template>
