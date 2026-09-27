@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/:slug", "destination": "/pagina.html" }
+    { "source": "/:slug", "destination": "/pagina" }
   ]
 }
