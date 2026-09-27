@@ -11,7 +11,7 @@ import {
 const COLORES = ["#ffe5d8", "#e9e0ff", "#dff5e8", "#fff1c9", "#e3edff"];
 const $ = (selector) => document.querySelector(selector);
 
-// Lee el enlace desde ofrezco.cl/maria-pasteleria (Vercel) o pagina.html?u=maria-pasteleria (local)
+// Lee el enlace desde serviceplanet.cl/maria-pasteleria (Vercel) o pagina.html?u=maria-pasteleria (local)
 function obtenerSlug() {
   const desdeParametro = new URLSearchParams(location.search).get("u");
   if (desdeParametro) return desdeParametro.toLowerCase();
@@ -20,7 +20,7 @@ function obtenerSlug() {
 }
 
 function noEncontrado() {
-  $("#estado").innerHTML = 'Esta página no existe. <a class="link-button" href="index.html">Ir a Ofrezco</a>';
+  $("#estado").innerHTML = 'Esta página no existe. <a class="link-button" href="index.html">Ir a Service Planet</a>';
 }
 
 async function cargar() {
@@ -48,7 +48,7 @@ async function cargar() {
 }
 
 function mostrar(perfil, productos) {
-  document.title = `${perfil.nombre} — Ofrezco`;
+  document.title = `${perfil.nombre} — Service Planet`;
   $("#c-avatar").textContent = perfil.nombre.charAt(0).toUpperCase();
   $("#c-nombre").textContent = perfil.nombre;
   $("#c-descripcion").textContent = perfil.descripcion;
@@ -58,7 +58,7 @@ function mostrar(perfil, productos) {
   const prepararWhatsapp = (texto) => {
     whatsapp.href = `https://wa.me/${perfil.whatsapp}?text=${encodeURIComponent(texto)}`;
   };
-  prepararWhatsapp(`Hola ${perfil.nombre}, vi tu catálogo en Ofrezco y quiero hacer una consulta.`);
+  prepararWhatsapp(`Hola ${perfil.nombre}, vi tu página en Service Planet y quiero hacer una consulta.`);
 
   const lista = $("#c-productos");
   if (productos.length === 0) {

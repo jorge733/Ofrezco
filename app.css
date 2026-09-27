@@ -1,6 +1,9 @@
 /* Estilos de las páginas de la app (cuenta, panel, página pública).
    Usa las variables de color definidas en style.css. */
 
+/* Lo que tiene el atributo hidden siempre queda oculto, aunque otra regla le ponga display */
+[hidden] { display: none !important; }
+
 .app-main { padding-bottom: 80px; padding-top: 16px; }
 .user-email { color: var(--muted); font-size: .88rem; font-weight: 500; }
 
