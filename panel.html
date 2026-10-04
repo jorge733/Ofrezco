@@ -71,7 +71,17 @@
         </div>
 
         <!-- Formulario para crear o editar el perfil -->
-        <form class="form" id="profile-form" hidden>
+        <form class="form" id="profile-form" hidden novalidate>
+          <ol class="stepper" id="stepper">
+            <li class="active"><span>1</span>Tu negocio</li>
+            <li><span>2</span>Contacto</li>
+            <li><span>3</span>Pedidos</li>
+            <li><span>4</span>Diseño</li>
+          </ol>
+
+          <!-- Paso 1 -->
+          <div class="step" data-step="1">
+          <p class="step-intro">Cuéntale al mundo quién eres. Lo único obligatorio es el nombre.</p>
           <div class="image-field">
             <span class="image-label">Logo</span>
             <div class="image-picker">
@@ -99,6 +109,11 @@
           <label>Años de experiencia (opcional)
             <input id="p-experiencia" type="number" min="0" max="80" inputmode="numeric" placeholder="Ej: 5">
           </label>
+          </div>
+
+          <!-- Paso 2 -->
+          <div class="step" data-step="2" hidden>
+          <p class="step-intro">¿Dónde y cuándo te encuentran? El WhatsApp es obligatorio: ahí te llegan los clientes.</p>
           <label>Dónde atiendes
             <input id="p-zona" maxlength="60" placeholder="Ej: Puerto Varas, a domicilio en Ñuñoa, online">
           </label>
@@ -123,6 +138,11 @@
               <label>Hasta<input id="p-cierra" type="time"></label>
             </div>
           </fieldset>
+          </div>
+
+          <!-- Paso 3 -->
+          <div class="step" data-step="3" hidden>
+          <p class="step-intro">Elige cómo quieres que te hagan los pedidos. Puedes cambiarlo cuando quieras.</p>
           <fieldset class="form-group">
             <legend>Cómo te piden</legend>
             <label class="check"><input type="checkbox" id="p-carrito">Carrito: el cliente elige varios servicios y te envía el pedido con el total</label>
@@ -137,6 +157,11 @@
               <input id="p-aviso" maxlength="120">
             </label>
           </fieldset>
+          </div>
+
+          <!-- Paso 4 -->
+          <div class="step" data-step="4" hidden>
+          <p class="step-intro">Último paso: dale tu estilo y elige tu enlace.</p>
           <fieldset class="form-group">
             <legend>Diseño de tu página</legend>
             <div class="design-picker">
@@ -165,9 +190,13 @@
           <label>Tu enlace
             <span class="input-prefix"><span>serviceplanet.cl/</span><input id="p-slug" required maxlength="40" placeholder="maria-pasteleria"></span>
           </label>
+          </div>
+
           <p class="form-message" id="profile-message" role="alert"></p>
-          <div class="form-actions">
-            <button class="button" type="submit" id="profile-submit">Guardar perfil</button>
+          <div class="form-actions step-actions">
+            <button class="button button-outline" type="button" id="step-back" data-step-back hidden>← Atrás</button>
+            <button class="button" type="button" id="step-next" data-step-next>Siguiente →</button>
+            <button class="button" type="submit" id="profile-submit" hidden>Guardar perfil</button>
             <button class="link-button" type="button" id="profile-cancel" hidden>Cancelar</button>
           </div>
         </form>
@@ -182,8 +211,16 @@
           <span><strong>¿Quieres agregar un nuevo servicio?</strong><small>Pulsa aquí para crearlo</small></span>
         </button>
 
-        <form class="form" id="product-form" hidden>
+        <form class="form" id="product-form" hidden novalidate>
           <h3 class="form-title" id="product-form-title">Nuevo servicio</h3>
+          <ol class="stepper stepper-2">
+            <li class="active"><span>1</span>Qué ofreces</li>
+            <li><span>2</span>Detalles</li>
+          </ol>
+
+          <!-- Paso 1 -->
+          <div class="step" data-step="1">
+          <p class="step-intro">Lo básico: cómo se llama y cuánto cuesta. Solo el nombre es obligatorio.</p>
           <div class="image-field">
             <span class="image-label">Imagen de referencia (opcional)</span>
             <div class="image-picker">
@@ -205,6 +242,11 @@
           <label>Precio
             <span class="input-prefix"><span aria-hidden="true">💵</span><input id="pr-precio" maxlength="40" placeholder="Ej: 5000 la hora, Desde 24000, A convenir"></span>
           </label>
+          </div>
+
+          <!-- Paso 2 -->
+          <div class="step" data-step="2" hidden>
+          <p class="step-intro">Todo esto es opcional, pero ayuda a que tus clientes se decidan.</p>
           <div class="form-row form-row-even">
             <label>Categoría (opcional)
               <input id="pr-categoria" maxlength="30" list="categorias" placeholder="Ej: Tortas, Clases">
@@ -220,9 +262,13 @@
             <textarea id="pr-descripcion" rows="2" maxlength="200"></textarea>
           </label>
           <p class="panel-hint">Tip: en Windows abre los emojis con <kbd>Win</kbd> + <kbd>.</kbd></p>
+          </div>
+
           <p class="form-message" id="product-message" role="alert"></p>
-          <div class="form-actions">
-            <button class="button" type="submit" id="product-submit">Agregar servicio</button>
+          <div class="form-actions step-actions">
+            <button class="button button-outline" type="button" data-step-back hidden>← Atrás</button>
+            <button class="button" type="button" data-step-next>Siguiente →</button>
+            <button class="button" type="submit" id="product-submit" hidden>Agregar servicio</button>
             <button class="link-button" type="button" id="product-cancel">Cancelar</button>
           </div>
         </form>

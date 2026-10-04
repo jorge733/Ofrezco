@@ -324,3 +324,24 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 .lost .lost-home { background: transparent; border-color: rgba(255, 255, 255, .4); box-shadow: none; color: var(--white); }
 .lost .lost-home:hover { background: rgba(255, 255, 255, .1); border-color: var(--white); }
 @media (prefers-reduced-motion: reduce) { .lost *, .lost .welcome-stars::after { animation: none !important; } }
+
+/* ---------- Perfil por pasos ---------- */
+.stepper { counter-reset: paso; display: grid; gap: 6px; grid-template-columns: repeat(4, 1fr); list-style: none; margin: 0 0 4px; padding: 0; }
+.stepper li { align-items: center; color: var(--muted); cursor: pointer; display: flex; flex-direction: column; font-size: .78rem; font-weight: 600; gap: 6px; position: relative; text-align: center; }
+.stepper li::before { background: var(--line); content: ""; height: 3px; left: calc(-50% + 18px); position: absolute; right: calc(50% + 18px); top: 16px; }
+.stepper li:first-child::before { display: none; }
+.stepper span { align-items: center; background: var(--white); border: 2px solid var(--line); border-radius: 50%; display: flex; height: 34px; justify-content: center; position: relative; transition: .2s; width: 34px; z-index: 1; }
+.stepper li.active { color: var(--blue); }
+.stepper li.active span { background: var(--blue); border-color: var(--blue); color: var(--white); box-shadow: 0 0 0 4px var(--mist); }
+.stepper li.done { color: var(--ink); }
+.stepper li.done span { background: var(--mist); border-color: var(--blue); color: var(--blue); }
+.stepper li.done::before, .stepper li.active::before { background: var(--blue); }
+.step { animation: step-in .25s ease; display: grid; gap: 16px; }
+.step[hidden] { display: none; }
+.step-intro { background: var(--cream); border-left: 4px solid var(--orange); border-radius: 10px; color: var(--ink); font-size: .92rem; margin: 0; padding: 12px 14px; }
+.step-actions { display: flex; gap: 10px; }
+.form .step-actions .button { flex: 1; }
+.form .step-actions .button[hidden] { display: none; }
+@keyframes step-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+@media (max-width: 480px) { .stepper li { font-size: .68rem; } }
+.stepper-2 { grid-template-columns: repeat(2, 1fr); }

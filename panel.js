@@ -173,11 +173,85 @@ function abrirFormularioPerfil() {
   pintarImagenesPerfil();
   mostrarMensaje($("#profile-message"), "");
 
+  irAPaso(1);
   $("#profile-view").hidden = true;
   $("#profile-form").hidden = false;
   $("#profile-edit").hidden = true;
   $("#profile-cancel").hidden = !perfil; // sin perfil no hay nada a qué volver
 }
+
+// ---------- Formularios por pasos ----------
+// Convierte un formulario con bloques .step en un asistente con Atrás / Siguiente.
+// puedeSaltar() dice si se puede ir directo a cualquier paso (al editar algo que ya existe).
+function crearPasos(form, puedeSaltar) {
+  const pasos = form.querySelectorAll(".step");
+  const circulos = form.querySelectorAll(".stepper li");
+  const atras = form.querySelector("[data-step-back]");
+  const siguiente = form.querySelector("[data-step-next]");
+  const guardar = form.querySelector("[type=submit]");
+  const mensaje = form.querySelector(".form-message");
+  let actual = 1;
+
+  function irA(numero) {
+    actual = numero;
+    pasos.forEach((paso) => { paso.hidden = Number(paso.dataset.step) !== numero; });
+    circulos.forEach((li, i) => {
+      li.classList.toggle("active", i + 1 === numero);
+      li.classList.toggle("done", i + 1 < numero);
+    });
+    const ultimo = numero === pasos.length;
+    atras.hidden = numero === 1;
+    siguiente.hidden = ultimo;
+    guardar.hidden = !ultimo;
+    mostrarMensaje(mensaje, "");
+  }
+
+  // Revisa los campos obligatorios de un paso; si falta algo, lo marca
+  function valido(numero) {
+    for (const campo of pasos[numero - 1].querySelectorAll("input, textarea, select")) {
+      if (!campo.checkValidity()) {
+        irA(numero);
+        campo.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  const subir = () => form.scrollIntoView({ behavior: "smooth", block: "start" });
+  siguiente.addEventListener("click", () => { if (valido(actual)) { irA(actual + 1); subir(); } });
+  atras.addEventListener("click", () => { irA(actual - 1); subir(); });
+
+  circulos.forEach((li, i) => {
+    li.addEventListener("click", () => {
+      if (i + 1 < actual || (puedeSaltar() && valido(actual))) irA(i + 1);
+    });
+  });
+
+  // Enter en un paso intermedio avanza en vez de guardar
+  form.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && event.target.tagName === "INPUT" && actual < pasos.length) {
+      event.preventDefault();
+      siguiente.click();
+    }
+  });
+
+  // Antes de guardar, revisa todos los pasos (se ejecuta antes que el guardado)
+  form.addEventListener("submit", (event) => {
+    for (let n = 1; n <= pasos.length; n++) {
+      if (!valido(n)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+    }
+  }, true);
+
+  return irA;
+}
+
+const irAPaso = crearPasos($("#profile-form"), () => Boolean(perfil));
+const irAPasoServicio = crearPasos($("#product-form"), () => Boolean(editandoId));
 
 function pintarImagenesPerfil() {
   pintarImagen($("#logo-preview"), imagenesPerfil.logo);
@@ -435,7 +509,7 @@ function abrirFormularioServicio(id = null, producto = {}) {
   pintarImagenServicio();
   $("#product-form-title").textContent = id ? "Editar servicio" : "Nuevo servicio";
   $("#product-submit").textContent = id ? "Guardar cambios" : "Agregar servicio";
-  mostrarMensaje($("#product-message"), "");
+  irAPasoServicio(1);
 
   $("#product-form").hidden = false;
   $("#product-new").hidden = true;
