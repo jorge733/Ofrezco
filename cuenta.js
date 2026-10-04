@@ -53,6 +53,8 @@ function showMessage(text, ok = false) {
 
 function render() {
   const isRegistro = mode === "registro";
+  $("#auth-legal").hidden = !isRegistro;
+  document.title = isRegistro ? "Crear mi página gratis — ServicePlanet" : "Entrar — ServicePlanet";
   $("#auth-eyebrow").textContent = isRegistro ? "CREA TU CUENTA" : "QUÉ BUENO VERTE DE NUEVO";
   $("#auth-title").textContent = isRegistro ? "Empieza tu página" : "Entra a tu panel";
   $("#switch-text").textContent = isRegistro ? "¿Ya tienes cuenta?" : "¿Aún no tienes cuenta?";

@@ -38,7 +38,7 @@ function pintarImagen(elemento, dataUrl) {
 
 function noEncontrado() {
   const slug = obtenerSlug();
-  document.title = "Página no encontrada — Service Planet";
+  document.title = "Página no encontrada — ServicePlanet";
   // Que los buscadores no guarden esta página vacía
   document.head.append(Object.assign(document.createElement("meta"), { name: "robots", content: "noindex" }));
   if (/^[a-z0-9-]{3,40}$/.test(slug)) {
@@ -150,7 +150,7 @@ function mostrarRedes(redes = {}) {
 
 function mostrar(datos, productos) {
   perfil = datos;
-  document.title = `${perfil.nombre} — Service Planet`;
+  document.title = `${perfil.nombre} — ServicePlanet`;
   if (perfil.color) {
     document.documentElement.style.setProperty("--accent", perfil.color);
     // Con colores muy claros (amarillo, celeste…) el texto encima va oscuro para que se lea
@@ -362,7 +362,7 @@ function actualizarBotonWhatsapp() {
   $("#c-whatsapp-texto").textContent = elegido ? `${verbo} ${elegido.nombre}` : `${perfil.reservas ? "Reservar" : "Consultar"} por WhatsApp`;
   const consulta = elegido
     ? `Hola ${perfil.nombre}, quiero consultar por ${elegido.nombre}${elegido.precio ? ` (${elegido.precio})` : ""}.`
-    : `Hola ${perfil.nombre}, vi tu página en Service Planet y quiero hacer una consulta.`;
+    : `Hola ${perfil.nombre}, vi tu página en ServicePlanet y quiero hacer una consulta.`;
   $("#c-whatsapp").href = enlaceWhatsapp(consulta);
 }
 
@@ -432,7 +432,7 @@ function dibujarHoja() {
 
 $("#sheet-form").addEventListener("submit", async (event) => {
   event.preventDefault();
-  const lineas = [`Hola ${perfil.nombre}, soy ${$("#f-nombre").value.trim()}. Te escribo desde tu página de Service Planet.`];
+  const lineas = [`Hola ${perfil.nombre}, soy ${$("#f-nombre").value.trim()}. Te escribo desde tu página de ServicePlanet.`];
 
   if (carrito.size) {
     lineas.push("", "*Mi pedido:*");

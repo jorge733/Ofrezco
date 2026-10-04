@@ -73,3 +73,24 @@ h1 em { color: var(--blue); font-style: normal; }
 @media (max-width: 780px) { .ideas { padding: 78px 0; }.ideas-list { gap: 9px; margin-top: 32px; }.ideas-list li { font-size: .88rem; padding: 8px 14px; } }
 /* En celular el encabezado muestra solo "Entrar"; el botón grande de crear está en la portada */
 @media (max-width: 430px) { .nav-cta { display: none; }.navigation > a[href^="cuenta"]:not(.nav-cta) { color: var(--blue); } }
+
+/* Sección "Tu página incluye" */
+.includes { padding: 100px 0; text-align: center; }.includes h2, .faq h2 { font-size: clamp(2.45rem, 4.3vw, 4.05rem); }
+.includes-grid { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); margin-top: 48px; text-align: left; }
+.includes-grid article { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 24px; }
+.includes-grid span { font-size: 1.6rem; }.includes-grid h3 { font-size: 1.05rem; margin: 12px 0 6px; }.includes-grid p { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+/* Preguntas frecuentes */
+.faq { background: var(--mist); padding: 100px 0; text-align: center; }
+.faq-list { display: grid; gap: 12px; margin: 44px auto 0; max-width: 760px; text-align: left; }
+.faq-list details { background: var(--white); border: 1px solid #dfe7f7; border-radius: 14px; padding: 18px 22px; }
+.faq-list summary { cursor: pointer; font-weight: 700; }.faq-list details p { color: #536176; margin-top: 10px; }
+/* Pie de página */
+.footer-links { display: flex; flex-wrap: wrap; gap: 20px; }.footer-links a { color: var(--muted); font-size: .9rem; font-weight: 600; }.footer-links a:hover { color: var(--blue); }
+/* Páginas legales y de contacto */
+.legal { max-width: 760px; padding-bottom: 80px; padding-top: 50px; }
+.legal h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin-bottom: 8px; }.legal .updated { color: var(--muted); font-size: .88rem; margin-bottom: 36px; }
+.legal h2 { font-family: "DM Sans", Arial, sans-serif; font-size: 1.25rem; margin: 32px 0 10px; }.legal p, .legal li { color: #3d4a60; line-height: 1.7; }.legal ul { margin: 8px 0 0 22px; }.legal a { color: var(--blue); font-weight: 600; }
+@media (max-width: 980px) { .includes-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 780px) { .includes, .faq { padding: 78px 0; } }
+@media (max-width: 430px) { .includes-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .cta-extra { display: none; }.navigation { gap: 14px; }.header { gap: 14px; } }

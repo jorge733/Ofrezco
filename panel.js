@@ -16,7 +16,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 // Enlaces que no se pueden usar porque chocan con páginas o archivos del sitio
-const RESERVADOS = ["cuenta", "panel", "pagina", "index", "style", "app", "script", "firebase", "vercel", "logo", "imagenes", "404"];
+const RESERVADOS = ["cuenta", "panel", "pagina", "index", "style", "app", "script", "firebase", "vercel", "logo", "imagenes", "404", "terminos", "privacidad", "contacto", "robots", "sitemap"];
 
 // Tamaño máximo de cada imagen (se achican antes de guardarlas)
 const TAMANOS = {

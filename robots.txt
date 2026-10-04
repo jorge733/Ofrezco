@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /panel
+Disallow: /cuenta
+
+Sitemap: https://www.serviceplanet.cl/sitemap.xml
