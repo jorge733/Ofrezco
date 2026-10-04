@@ -169,6 +169,15 @@
                 <option value="60" selected>1 hora</option><option value="90">1 hora y media</option><option value="120">2 horas</option><option value="180">3 horas</option>
               </select>
             </label>
+            <div class="meeting-types" id="p-modalidades">
+              <span class="image-label">Tipo de reunión o cita <small class="field-hint">El cliente elige una al reservar. Si no marcas ninguna, no se pregunta.</small></span>
+              <label class="check"><input type="checkbox" value="presencial">🤝 Presencial</label>
+              <label class="check"><input type="checkbox" value="videollamada">💻 Videollamada</label>
+              <label class="check"><input type="checkbox" value="llamada">📞 Llamada telefónica</label>
+            </div>
+            <label id="p-video-campo">Enlace de tu videollamada (opcional) <small class="field-hint">Tu sala fija de Google Meet, Zoom, etc. Se le envía al cliente al reservar.</small>
+              <input id="p-video" type="text" inputmode="url" maxlength="200" placeholder="https://meet.google.com/abc-defg-hij">
+            </label>
             <label>Aviso destacado <small class="field-hint">Ej: 20% de descuento en octubre</small>
               <input id="p-aviso" maxlength="120">
             </label>

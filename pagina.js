@@ -20,6 +20,7 @@ let carrito = new Map();   // nombre del servicio → { producto, cantidad, boto
 let elegido = null;        // servicio elegido cuando no hay carrito
 let uidPerfil = null;      // dueño de la página (para guardar reservas)
 let horaElegida = "";     // turno elegido en la agenda
+let modalidadElegida = ""; // presencial, videollamada o llamada
 
 // Lee el enlace desde serviceplanet.cl/maria-pasteleria (Vercel) o pagina.html?u=maria-pasteleria (local)
 function obtenerSlug() {
@@ -390,6 +391,7 @@ function prepararHoja() {
   $("#f-hora-libre").hidden = usaTurnos();
   $("#f-turnos").hidden = !usaTurnos();
   if (usaTurnos() && $("#f-fecha").value) dibujarTurnos();
+  dibujarModalidades();
   const hoy = new Date();
   $("#f-fecha").min = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   $("#f-mensaje").textContent = "";
@@ -444,12 +446,17 @@ $("#sheet-form").addEventListener("submit", async (event) => {
 
   if (perfil.reservas) {
     const fecha = new Date(`${$("#f-fecha").value}T00:00`).toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
+    if (ofreceModalidades() && !modalidadElegida) return mostrarError("Elige cómo prefieres la cita.");
     const hora = usaTurnos() ? horaElegida : $("#f-hora").value;
     if (usaTurnos()) {
       if (!horaElegida) return mostrarError("Elige una de las horas disponibles.");
       if (!(await guardarReserva())) return;
     }
     lineas.push(`*Reserva:* ${fecha} a las ${hora}`);
+    if (modalidadElegida) {
+      lineas.push(`*Tipo de cita:* ${MODALIDADES[modalidadElegida]}`);
+      if (modalidadElegida === "videollamada" && perfil.enlaceVideo) lineas.push(`*Enlace de la videollamada:* ${perfil.enlaceVideo}`);
+    }
   }
   const nota = $("#f-nota").value.trim();
   if (nota) lineas.push(`*Comentario:* ${nota}`);
@@ -546,6 +553,7 @@ async function guardarReserva() {
     nombre: $("#f-nombre").value.trim().slice(0, 60),
     servicio: servicios.slice(0, 200),
     nota: $("#f-nota").value.trim().slice(0, 300),
+    ...(modalidadElegida && { modalidad: modalidadElegida }), // solo si eligió tipo de cita
     creado: serverTimestamp()
   });
   try {
@@ -593,3 +601,24 @@ $("#c-contacto").addEventListener("click", () => {
 });
 
 cargar();
+
+// ---------- Tipo de cita: presencial, videollamada o llamada ----------
+const MODALIDADES = { presencial: "🤝 Presencial", videollamada: "💻 Videollamada", llamada: "📞 Llamada telefónica" };
+const ofreceModalidades = () => Boolean(perfil.reservas && perfil.modalidades?.length);
+
+function dibujarModalidades() {
+  $("#f-modalidad").hidden = !ofreceModalidades();
+  if (!ofreceModalidades()) { modalidadElegida = ""; return; }
+  // Si solo hay una opción, queda elegida de una vez
+  if (perfil.modalidades.length === 1) modalidadElegida = perfil.modalidades[0];
+  const contenedor = $("#f-modalidades");
+  contenedor.innerHTML = "";
+  perfil.modalidades.filter((m) => MODALIDADES[m]).forEach((m) => {
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "slot" + (m === modalidadElegida ? " active" : "");
+    boton.textContent = MODALIDADES[m];
+    boton.addEventListener("click", () => { modalidadElegida = m; dibujarModalidades(); });
+    contenedor.append(boton);
+  });
+}

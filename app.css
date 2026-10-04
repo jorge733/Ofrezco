@@ -363,3 +363,9 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 .preview-stage[data-device="movil"] { padding: 24px 0; }
 .preview-stage[data-device="movil"] .preview-frame { background: #152238; border-radius: 44px; height: 780px; margin: 0 auto; max-width: calc(100% - 24px); padding: 14px; width: 418px; }
 .preview-stage[data-device="movil"] iframe { border-radius: 30px; height: 100%; width: 100%; }
+#p-video-campo[hidden] { display: none; }
+.meeting-types { display: grid; gap: 8px; }
+.meeting-field { border: 0; display: grid; gap: 8px; margin: 0; padding: 0; }
+.meeting-field[hidden] { display: none; }
+.meeting-options { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+.meeting-options .slot { padding: 11px 8px; }

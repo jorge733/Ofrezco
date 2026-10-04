@@ -45,10 +45,11 @@ service cloud.firestore {
         allow read, delete: if request.auth != null && request.auth.uid == uid;
         allow create: if existsAfter(/databases/$(database)/documents/perfiles/$(uid)/ocupados/$(turno))
                       && !exists(/databases/$(database)/documents/perfiles/$(uid)/ocupados/$(turno))
-                      && request.resource.data.keys().hasOnly(['fecha', 'hora', 'nombre', 'servicio', 'nota', 'creado'])
+                      && request.resource.data.keys().hasOnly(['fecha', 'hora', 'nombre', 'servicio', 'nota', 'modalidad', 'creado'])
                       && request.resource.data.nombre is string && request.resource.data.nombre.size() > 0 && request.resource.data.nombre.size() <= 60
                       && request.resource.data.servicio is string && request.resource.data.servicio.size() <= 200
-                      && request.resource.data.nota is string && request.resource.data.nota.size() <= 300;
+                      && request.resource.data.nota is string && request.resource.data.nota.size() <= 300
+                      && (!('modalidad' in request.resource.data) || request.resource.data.modalidad in ['', 'presencial', 'videollamada', 'llamada']);
       }
     }
   }

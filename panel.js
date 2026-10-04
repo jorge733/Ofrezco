@@ -165,6 +165,9 @@ function abrirFormularioPerfil() {
   $("#p-cierra").value = horario.cierra || "";
   $("#p-carrito").checked = Boolean(perfil?.carrito);
   $("#p-reservas").checked = Boolean(perfil?.reservas);
+  document.querySelectorAll("#p-modalidades input").forEach((c) => { c.checked = (perfil?.modalidades || []).includes(c.value); });
+  $("#p-video").value = perfil?.enlaceVideo || "";
+  mostrarCampoVideo();
   $("#p-aviso").value = perfil?.aviso || "";
   $("#p-experiencia").value = perfil?.experiencia || "";
   $("#p-turno").value = String(perfil?.turno || 60);
@@ -345,6 +348,8 @@ $("#profile-form").addEventListener("submit", async (event) => {
     },
     carrito: $("#p-carrito").checked,
     reservas: $("#p-reservas").checked,
+    modalidades: [...document.querySelectorAll("#p-modalidades input:checked")].map((c) => c.value),
+    enlaceVideo: $("#p-video").value.trim(),
     turno: Number($("#p-turno").value),
     aviso: $("#p-aviso").value.trim(),
     experiencia: Math.min(80, Math.max(0, parseInt($("#p-experiencia").value, 10) || 0)),
@@ -699,6 +704,8 @@ $("#g-imagenes").addEventListener("change", async () => {
 // ---------- Agenda ----------
 
 // Cada reserva tiene el mismo id que su hora ocupada: "2026-10-15_14-30"
+const NOMBRES_MODALIDAD = { presencial: "🤝 Presencial", videollamada: "💻 Videollamada", llamada: "📞 Llamada" };
+
 function escucharReservas() {
   const reservasRef = collection(db, "perfiles", usuario.uid, "reservas");
   // El id ya está en orden cronológico, así que basta con ordenar por id (sin índices extra)
@@ -719,7 +726,7 @@ function escucharReservas() {
       item.innerHTML = '<span class="product-thumb booking-time"></span><div class="product-row-info"><strong></strong><small class="row-tags"></small></div><div class="product-row-actions"><button class="link-button danger" type="button">Cancelar</button></div>';
       item.querySelector(".booking-time").textContent = r.hora;
       item.querySelector("strong").textContent = `${fecha} · ${r.nombre}`;
-      item.querySelector(".row-tags").textContent = [r.servicio, r.nota].filter(Boolean).join(" · ");
+      item.querySelector(".row-tags").textContent = [NOMBRES_MODALIDAD[r.modalidad], r.servicio, r.nota].filter(Boolean).join(" · ");
       item.querySelector("button").addEventListener("click", () => cancelarReserva(documento.id, r));
       lista.append(item);
     });
@@ -733,3 +740,9 @@ async function cancelarReserva(id, reserva) {
   batch.delete(doc(db, "perfiles", usuario.uid, "ocupados", id));
   await batch.commit();
 }
+
+// El enlace de videollamada solo tiene sentido si se ofrece videollamada
+function mostrarCampoVideo() {
+  $("#p-video-campo").hidden = !document.querySelector('#p-modalidades input[value="videollamada"]').checked;
+}
+document.querySelectorAll("#p-modalidades input").forEach((c) => c.addEventListener("change", mostrarCampoVideo));
