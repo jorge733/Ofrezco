@@ -52,6 +52,22 @@
       </div>
     </section>
 
+    <!-- Vista previa de la página pública, en PC o en móvil -->
+    <section class="panel-card preview-card" id="preview-card" hidden>
+      <div class="card-head">
+        <h2>Vista previa</h2>
+        <div class="preview-tabs" role="group" aria-label="Tipo de pantalla">
+          <button type="button" class="active" data-device="pc">🖥️ PC</button>
+          <button type="button" data-device="movil">📱 Móvil</button>
+          <button type="button" id="preview-reload" title="Actualizar vista previa">↻</button>
+        </div>
+      </div>
+      <p class="panel-hint">Así ven tu página tus clientes. Se actualiza sola cuando guardas cambios.</p>
+      <div class="preview-stage" id="preview-stage" data-device="pc">
+        <div class="preview-frame"><iframe id="preview-iframe" title="Vista previa de tu página" loading="lazy"></iframe></div>
+      </div>
+    </section>
+
     <div class="panel-grid">
       <section class="panel-card">
         <div class="card-head">

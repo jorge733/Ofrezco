@@ -408,6 +408,49 @@ function mostrarEnlace() {
   $("#share-whatsapp").href = `https://wa.me/?text=${encodeURIComponent(`Mira mi página: ${url}`)}`;
   $("#share-box").hidden = false;
   dibujarQR(url);
+  actualizarVistaPrevia();
+}
+
+// ---------- Vista previa (PC / móvil) ----------
+const ANCHO_PC = 1280; // la página se dibuja como en una pantalla de PC y se achica para caber
+
+function actualizarVistaPrevia() {
+  if (!perfil) return;
+  $("#preview-card").hidden = false;
+  // el ?v= obliga al navegador a cargarla de nuevo con los cambios
+  $("#preview-iframe").src = `${enlacePublico(perfil.slug)}${enlacePublico(perfil.slug).includes("?") ? "&" : "?"}v=${Date.now()}`;
+  ajustarVistaPrevia();
+}
+
+function ajustarVistaPrevia() {
+  const escenario = $("#preview-stage");
+  const marco = escenario.querySelector(".preview-frame");
+  if (!escenario.clientWidth) return; // todavía no se ve en pantalla
+  if (escenario.dataset.device === "pc") {
+    const escala = Math.min(1, escenario.clientWidth / ANCHO_PC);
+    marco.style.setProperty("--escala", escala);
+    escenario.style.height = `${800 * escala}px`;
+  } else {
+    marco.style.setProperty("--escala", 1);
+    escenario.style.height = "";
+  }
+}
+
+document.querySelectorAll(".preview-tabs [data-device]").forEach((boton) => {
+  boton.addEventListener("click", () => {
+    document.querySelectorAll(".preview-tabs [data-device]").forEach((b) => b.classList.toggle("active", b === boton));
+    $("#preview-stage").dataset.device = boton.dataset.device;
+    ajustarVistaPrevia();
+  });
+});
+$("#preview-reload").addEventListener("click", actualizarVistaPrevia);
+window.addEventListener("resize", ajustarVistaPrevia);
+
+// Si cambian los servicios o las fotos, se recarga (esperando un poco para no recargar muchas veces seguidas)
+let esperaVistaPrevia;
+function refrescarVistaPreviaLuego() {
+  clearTimeout(esperaVistaPrevia);
+  esperaVistaPrevia = setTimeout(actualizarVistaPrevia, 800);
 }
 
 // Código QR para imprimir en el local, tarjetas o flyers
@@ -451,7 +494,12 @@ function activarProductos() {
   escucharReservas();
   escucharGaleria();
   // onSnapshot vuelve a dibujar la lista cada vez que algo cambia en Firestore
-  onSnapshot(query(productosRef(), orderBy("creado")), (snap) => mostrarProductos(snap.docs));
+  let primeraVez = true; // la primera lectura no cuenta como cambio
+  onSnapshot(query(productosRef(), orderBy("creado")), (snap) => {
+    mostrarProductos(snap.docs);
+    if (!primeraVez) refrescarVistaPreviaLuego();
+    primeraVez = false;
+  });
 }
 
 function mostrarProductos(docs) {
@@ -604,7 +652,10 @@ function galeriaRef() {
 
 function escucharGaleria() {
   $("#gallery-card").hidden = false;
+  let primeraVez = true;
   onSnapshot(query(galeriaRef(), orderBy("creado")), (snap) => {
+    if (!primeraVez) refrescarVistaPreviaLuego();
+    primeraVez = false;
     fotosGaleria = snap.size;
     const grilla = $("#gallery-grid");
     grilla.innerHTML = "";
