@@ -221,7 +221,7 @@ kbd { background: var(--mist); border-radius: 4px; font: inherit; font-weight: 7
 .catalog { --accent-color: var(--accent, var(--blue)); }
 .catalog .whatsapp-button, .sheet .whatsapp-button { border: 0; cursor: pointer; font: inherit; font-weight: 700; width: 100%; }
 .catalog .product.selected, .catalog .product:hover { color: var(--accent-color); }
-.catalog .avatar:not(.has-image) { background: var(--accent-color); }
+.catalog .avatar:not(.has-image) { background: var(--accent-color); color: var(--accent-ink, var(--white)); }
 .open-badge { color: #1f8a55; font-size: .8rem !important; font-weight: 700; }
 .open-badge.closed { color: #c0392b; }
 .catalog-notice { background: color-mix(in srgb, var(--accent-color) 12%, white); border-radius: 12px; font-size: .9rem; font-weight: 600; margin-top: 8px; padding: 10px 14px; }
@@ -236,7 +236,7 @@ kbd { background: var(--mist); border-radius: 4px; font: inherit; font-weight: 7
 .category-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
 .category-chips:empty { display: none; }
 .chip { background: var(--white); border: 1px solid var(--line); border-radius: 999px; color: var(--ink); cursor: pointer; flex: 0 0 auto; font-size: .82rem; font-weight: 600; padding: 6px 13px; }
-.chip.active { background: var(--accent-color); border-color: var(--accent-color); color: var(--white); }
+.chip.active { background: var(--accent-color); border-color: var(--accent-color); color: var(--accent-ink, var(--white)); }
 .product-meta { color: var(--muted); font-size: .78rem; }
 .product-meta:empty { display: none; }
 .product-add { font-weight: 700; min-width: 2ch; text-align: right; }
@@ -268,6 +268,15 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 .slots .panel-hint { grid-column: 1 / -1; font-size: .85rem; }
 .slot { background: var(--white); border: 1px solid var(--line); border-radius: 10px; color: var(--ink); cursor: pointer; font-weight: 600; padding: 9px 0; }
 .slot:hover:not(:disabled) { border-color: var(--accent, var(--blue)); }
-.slot.active { background: var(--accent, var(--blue)); border-color: var(--accent, var(--blue)); color: var(--white); }
+.slot.active { background: var(--accent, var(--blue)); border-color: var(--accent, var(--blue)); color: var(--accent-ink, var(--white)); }
 .slot:disabled { background: var(--cream); color: #b5bccb; cursor: not-allowed; text-decoration: line-through; }
 .booking-time { background: var(--mist); color: var(--blue); font-size: .85rem; font-weight: 700; }
+
+/* Color libre: rueda arcoíris + código */
+.color-custom { align-items: end; display: grid; gap: 12px; grid-template-columns: auto 1fr; }
+.form .color-wheel { align-items: center; cursor: pointer; display: flex; font-weight: 500; gap: 8px; }
+.color-wheel input { height: 0; opacity: 0; position: absolute; width: 0; }
+.color-wheel::before { background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red); border: 3px solid var(--white); border-radius: 50%; box-shadow: 0 0 0 1px var(--line); content: ""; height: 30px; width: 30px; }
+.color-wheel.active::before { background: radial-gradient(circle, var(--c) 0 42%, transparent 44%), conic-gradient(red, yellow, lime, cyan, blue, magenta, red); box-shadow: 0 0 0 2px var(--c); }
+.color-wheel:has(input:focus-visible) { outline: 3px solid var(--mist); }
+#p-color-codigo { font-family: ui-monospace, Consolas, monospace; text-transform: lowercase; }

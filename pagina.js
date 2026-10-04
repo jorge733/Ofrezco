@@ -112,7 +112,12 @@ function mostrarRedes(redes = {}) {
 function mostrar(datos, productos) {
   perfil = datos;
   document.title = `${perfil.nombre} — Service Planet`;
-  if (perfil.color) document.documentElement.style.setProperty("--accent", perfil.color);
+  if (perfil.color) {
+    document.documentElement.style.setProperty("--accent", perfil.color);
+    // Con colores muy claros (amarillo, celeste…) el texto encima va oscuro para que se lea
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(perfil.color.slice(i, i + 2), 16));
+    if (0.299 * r + 0.587 * g + 0.114 * b > 170) document.documentElement.style.setProperty("--accent-ink", "#152238");
+  }
   pintarImagen($("#c-portada"), perfil.portada);
   const avatar = $("#c-avatar");
   pintarImagen(avatar, perfil.logo);

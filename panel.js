@@ -167,8 +167,7 @@ function abrirFormularioPerfil() {
   $("#p-reservas").checked = Boolean(perfil?.reservas);
   $("#p-aviso").value = perfil?.aviso || "";
   $("#p-turno").value = String(perfil?.turno || 60);
-  const color = document.querySelector(`#p-color input[value="${perfil?.color || "#1c56d9"}"]`);
-  if (color) color.checked = true;
+  elegirColor(perfil?.color || "#1c56d9");
   imagenesPerfil = { logo: perfil?.logo || "", portada: perfil?.portada || "" };
   pintarImagenesPerfil();
   mostrarMensaje($("#profile-message"), "");
@@ -195,6 +194,47 @@ alElegirImagen($("#p-logo"), TAMANOS.logo, (url) => { imagenesPerfil.logo = url;
 alElegirImagen($("#p-portada"), TAMANOS.portada, (url) => { imagenesPerfil.portada = url; pintarImagenesPerfil(); });
 $("#logo-remove").addEventListener("click", () => { imagenesPerfil.logo = ""; pintarImagenesPerfil(); });
 $("#cover-remove").addEventListener("click", () => { imagenesPerfil.portada = ""; pintarImagenesPerfil(); });
+
+// ---------- Color de la página ----------
+// Se puede elegir un color de la lista, uno libre con la rueda de colores, o escribir su código (#ff7b4a)
+
+let colorElegido = "#1c56d9";
+
+function elegirColor(color) {
+  colorElegido = color.toLowerCase();
+  const deLista = document.querySelector(`#p-color input[value="${colorElegido}"]`);
+  document.querySelectorAll("#p-color input").forEach((r) => { r.checked = r === deLista; });
+  $("#p-color-libre").value = colorElegido;
+  $("#p-color-codigo").value = colorElegido;
+  $(".color-wheel").classList.toggle("active", !deLista);
+  $(".color-wheel").style.setProperty("--c", colorElegido);
+}
+
+// "f60" o "#FF6600" → "#ff6600" (null si no es un código válido)
+function normalizarColor(texto) {
+  let codigo = texto.trim().replace(/^#/, "").toLowerCase();
+  if (/^[0-9a-f]{3}$/.test(codigo)) codigo = codigo.split("").map((c) => c + c).join("");
+  return /^[0-9a-f]{6}$/.test(codigo) ? `#${codigo}` : null;
+}
+
+document.querySelectorAll("#p-color input").forEach((radio) => {
+  radio.addEventListener("change", () => elegirColor(radio.value));
+});
+$("#p-color-libre").addEventListener("input", () => elegirColor($("#p-color-libre").value));
+$("#p-color-codigo").addEventListener("input", () => {
+  const color = normalizarColor($("#p-color-codigo").value);
+  if (color) {
+    colorElegido = color;
+    $("#p-color-libre").value = color;
+    document.querySelectorAll("#p-color input").forEach((r) => { r.checked = r.value === color; });
+    $(".color-wheel").classList.toggle("active", !document.querySelector("#p-color input:checked"));
+    $(".color-wheel").style.setProperty("--c", color);
+  }
+});
+$("#p-color-codigo").addEventListener("change", () => {
+  // Si escribió algo inválido, volvemos a mostrar el último color bueno
+  $("#p-color-codigo").value = colorElegido;
+});
 
 // Mientras escribe el nombre, sugerimos el enlace (hasta que lo edite a mano)
 $("#p-nombre").addEventListener("input", () => {
@@ -232,7 +272,7 @@ $("#profile-form").addEventListener("submit", async (event) => {
     reservas: $("#p-reservas").checked,
     turno: Number($("#p-turno").value),
     aviso: $("#p-aviso").value.trim(),
-    color: document.querySelector("#p-color input:checked")?.value || "#1c56d9"
+    color: colorElegido
   };
   $("#p-slug").value = datos.slug;
 
