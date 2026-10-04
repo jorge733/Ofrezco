@@ -303,3 +303,24 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 .gallery-item { aspect-ratio: 1; background-color: var(--cream); border-radius: 10px; position: relative; }
 .gallery-remove { background: rgba(21, 34, 56, .75); border: 0; border-radius: 50%; color: #fff; cursor: pointer; font-size: .75rem; height: 26px; position: absolute; right: 6px; top: 6px; width: 26px; }
 .gallery-add { justify-self: start; cursor: pointer; }
+
+/* ---------- Página no encontrada (404) ---------- */
+
+.lost { align-items: center; background: radial-gradient(ellipse at 50% 115%, #1c56d9 0%, #0d1d42 45%, #060b18 80%); color: var(--white); display: flex; inset: 0; justify-content: center; min-height: 100vh; overflow: hidden; padding: 32px 20px; position: fixed; text-align: center; }
+.lost > * { position: relative; }
+.lost .welcome-stars { position: absolute; }
+.lost-content { animation: fade-up .8s both; display: grid; justify-items: center; max-width: 560px; }
+.lost-code { align-items: center; color: rgba(255, 255, 255, .92); display: flex; font-family: "DM Sans", Arial, sans-serif; font-size: clamp(5.5rem, 22vw, 9.5rem); font-weight: 700; gap: .04em; letter-spacing: -.04em; line-height: 1; }
+.lost-code img { animation: float 6s ease-in-out infinite; filter: drop-shadow(0 0 40px rgba(76, 134, 255, .6)); height: .82em; width: .82em; }
+.pro-page .lost h1, .lost h1 { font-family: "Playfair Display", Georgia, serif; letter-spacing: -.04em; font-size: clamp(2rem, 6vw, 3.2rem); margin-top: 18px; }
+.lost h1 em { background: linear-gradient(90deg, #ffb08f, var(--orange)); -webkit-background-clip: text; background-clip: text; color: transparent; font-style: normal; }
+.lost-text { color: #c9d6f2; font-size: 1.05rem; line-height: 1.6; margin-top: 14px; }
+.lost-claim { background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16); border-radius: 16px; margin-top: 24px; padding: 16px 20px; width: 100%; }
+.lost-claim strong { color: #ffb08f; word-break: break-all; }
+.lost-claim-hint { color: #c9d6f2; font-size: .9rem; margin-top: 4px; }
+.lost-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 28px; }
+.lost .button { background: var(--orange); border-color: var(--orange); box-shadow: 0 10px 30px rgba(255, 123, 74, .3); }
+.lost .button:hover { background: #ff6530; border-color: #ff6530; }
+.lost .lost-home { background: transparent; border-color: rgba(255, 255, 255, .4); box-shadow: none; color: var(--white); }
+.lost .lost-home:hover { background: rgba(255, 255, 255, .1); border-color: var(--white); }
+@media (prefers-reduced-motion: reduce) { .lost *, .lost .welcome-stars::after { animation: none !important; } }

@@ -36,7 +36,17 @@ function pintarImagen(elemento, dataUrl) {
 }
 
 function noEncontrado() {
-  $("#estado").innerHTML = 'Esta página no existe. <a class="link-button" href="index.html">Ir a Service Planet</a>';
+  const slug = obtenerSlug();
+  document.title = "Página no encontrada — Service Planet";
+  // Que los buscadores no guarden esta página vacía
+  document.head.append(Object.assign(document.createElement("meta"), { name: "robots", content: "noindex" }));
+  if (/^[a-z0-9-]{3,40}$/.test(slug)) {
+    $("#lost-enlace").textContent = `serviceplanet.cl/${slug}`;
+    $("#lost-reclamar").hidden = false;
+    $("#lost-texto").textContent = "Nadie ha creado todavía una página con este enlace. Revisa que esté bien escrito.";
+  }
+  $("#estado").hidden = true;
+  $("#no-encontrado").hidden = false;
 }
 
 async function cargar() {
