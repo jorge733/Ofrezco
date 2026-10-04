@@ -96,6 +96,9 @@
           <label>Descripción
             <textarea id="p-descripcion" rows="3" maxlength="300" placeholder="Cuenta en una o dos frases qué ofreces."></textarea>
           </label>
+          <label>Años de experiencia (opcional)
+            <input id="p-experiencia" type="number" min="0" max="80" inputmode="numeric" placeholder="Ej: 5">
+          </label>
           <label>Dónde atiendes
             <input id="p-zona" maxlength="60" placeholder="Ej: Puerto Varas, a domicilio en Ñuñoa, online">
           </label>
@@ -133,6 +136,16 @@
             <label>Aviso destacado <small class="field-hint">Ej: 20% de descuento en octubre</small>
               <input id="p-aviso" maxlength="120">
             </label>
+          </fieldset>
+          <fieldset class="form-group">
+            <legend>Diseño de tu página</legend>
+            <div class="design-picker">
+              <label class="design-option"><input type="radio" name="diseno" value="profesional" checked><span class="design-name">Profesional con reservas</span><small>Tu diseño actual</small></label>
+              <div class="design-option locked"><span class="design-name">Portada de impacto</span><small>Próximamente · Pro</small></div>
+              <div class="design-option locked"><span class="design-name">Tienda con barra lateral</span><small>Próximamente · Pro</small></div>
+              <div class="design-option locked"><span class="design-name">Link en bio premium</span><small>Próximamente · Pro</small></div>
+              <div class="design-option locked"><span class="design-name">Mini sitio web completo</span><small>Próximamente · Pro</small></div>
+            </div>
           </fieldset>
           <fieldset class="form-group">
             <legend>Color de tu página</legend>
@@ -215,6 +228,14 @@
         </form>
 
         <ul class="product-list" id="product-list"></ul>
+      </section>
+
+      <section class="panel-card" id="gallery-card" hidden>
+        <h2>Trabajos realizados</h2>
+        <p class="panel-hint">Sube fotos de lo que ya hiciste (hasta 12). Es lo que más confianza da a un cliente nuevo.</p>
+        <div class="gallery-grid" id="gallery-grid"></div>
+        <label class="button button-small button-outline gallery-add" id="gallery-add">Subir fotos<input type="file" accept="image/*" multiple id="g-imagenes" hidden></label>
+        <p class="form-message" id="gallery-message" role="alert"></p>
       </section>
 
       <section class="panel-card" id="bookings-card" hidden>

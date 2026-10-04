@@ -61,8 +61,36 @@ async function cargar() {
   } catch (error) {
     console.error(error);
     $("#estado").textContent = "No pudimos cargar esta página. Revisa tu conexión e inténtalo de nuevo.";
+    return;
+  }
+
+  // La galería va aparte: si falla, el resto de la página igual se ve
+  try {
+    const galeria = await getDocs(query(collection(db, "perfiles", uidPerfil, "galeria"), orderBy("creado")));
+    mostrarGaleria(galeria.docs.map((d) => d.data().imagen).filter(Boolean));
+  } catch (error) {
+    console.error(error);
   }
 }
+
+function mostrarGaleria(imagenes) {
+  if (imagenes.length === 0) return;
+  imagenes.forEach((imagen, i) => {
+    const foto = document.createElement("button");
+    foto.type = "button";
+    foto.className = "pro-photo has-image";
+    foto.style.backgroundImage = `url("${imagen}")`;
+    foto.setAttribute("aria-label", `Ver trabajo ${i + 1} en grande`);
+    foto.addEventListener("click", () => {
+      $("#lightbox-img").src = imagen;
+      $("#lightbox").showModal();
+    });
+    $("#c-galeria").append(foto);
+  });
+  $("#c-galeria-seccion").hidden = false;
+}
+$("#lightbox-close").addEventListener("click", () => $("#lightbox").close());
+$("#lightbox").addEventListener("click", (event) => { if (event.target === $("#lightbox")) $("#lightbox").close(); });
 
 // "$5.000 la hora" → 5000 (null si no hay número, ej: "A convenir")
 function precioNumero(texto = "") {
@@ -87,7 +115,7 @@ function estadoHorario(horario) {
     ? horario.dias.includes(hoy) && minutos >= abre && minutos < cierra
     : (horario.dias.includes(hoy) && minutos >= abre) || (horario.dias.includes(ayer) && minutos < cierra);
   const dias = [1, 2, 3, 4, 5, 6, 0].filter((d) => horario.dias.includes(d)).map((d) => DIAS[d]).join(", ");
-  return { abierto, texto: `🕒 ${dias} · ${horario.abre} a ${horario.cierra}` };
+  return { abierto, texto: `${dias} · ${horario.abre} a ${horario.cierra}` };
 }
 
 function mostrarRedes(redes = {}) {
@@ -119,12 +147,20 @@ function mostrar(datos, productos) {
     if (0.299 * r + 0.587 * g + 0.114 * b > 170) document.documentElement.style.setProperty("--accent-ink", "#152238");
   }
   pintarImagen($("#c-portada"), perfil.portada);
-  const avatar = $("#c-avatar");
-  pintarImagen(avatar, perfil.logo);
-  avatar.textContent = perfil.logo ? "" : perfil.nombre.charAt(0).toUpperCase();
+  const inicial = perfil.nombre.charAt(0).toUpperCase();
+  [$("#c-avatar"), $("#c-mini-logo")].forEach((avatar) => {
+    pintarImagen(avatar, perfil.logo);
+    avatar.textContent = perfil.logo ? "" : inicial;
+  });
   $("#c-nombre").textContent = perfil.nombre;
-  $("#c-zona").textContent = perfil.zona || "";
+  $("#c-mini-nombre").textContent = perfil.nombre;
+  $("#c-zona").textContent = perfil.zona ? `📍 ${perfil.zona}` : "";
   $("#c-descripcion").textContent = perfil.descripcion;
+  if (perfil.zona) {
+    $("#c-zona-info").textContent = perfil.zona;
+    $("#c-zona-box").hidden = false;
+  }
+  $("#c-telefono").textContent = `WhatsApp +${perfil.whatsapp}`;
   if (perfil.aviso) {
     $("#c-aviso").textContent = `📣 ${perfil.aviso}`;
     $("#c-aviso").hidden = false;
@@ -133,12 +169,25 @@ function mostrar(datos, productos) {
 
   const estado = estadoHorario(perfil.horario);
   if (estado) {
-    $("#c-abierto").textContent = estado.abierto ? "● Abierto ahora" : "● Cerrado ahora";
+    $("#c-abierto").textContent = estado.abierto ? "Abierto ahora" : "Cerrado ahora";
     $("#c-abierto").classList.toggle("closed", !estado.abierto);
     $("#c-abierto").hidden = false;
     $("#c-horario").textContent = estado.texto;
-    $("#c-horario").hidden = false;
+    $("#c-horario-box").hidden = false;
   }
+
+  // Señales de confianza: solo datos reales que la persona configuró
+  const confianza = [
+    perfil.experiencia && `${perfil.experiencia} ${Number(perfil.experiencia) === 1 ? "año" : "años"} de experiencia`,
+    perfil.reservas && "Reserva en línea",
+    "Respuesta por WhatsApp",
+    perfil.zona && /domicilio/i.test(perfil.zona) && "Atiende a domicilio"
+  ].filter(Boolean);
+  confianza.forEach((texto) => {
+    const li = document.createElement("li");
+    li.textContent = texto;
+    $("#c-confianza").append(li);
+  });
 
   // Destacados primero; los pausados no se muestran
   const visibles = productos
@@ -156,8 +205,10 @@ function mostrar(datos, productos) {
     imagen.style.backgroundColor = COLORES[i % COLORES.length];
     pintarImagen(imagen, producto.imagen);
     imagen.textContent = producto.imagen ? "" : (producto.emoji || producto.nombre.charAt(0).toUpperCase());
-    boton.querySelector("strong").textContent = (producto.destacado ? "⭐ " : "") + producto.nombre;
-    boton.querySelector(".price").textContent = producto.precio;
+    boton.querySelector("strong").textContent = producto.nombre;
+    if (producto.destacado) boton.querySelector("strong").insertAdjacentHTML("afterbegin", '<span class="pro-featured">Destacado</span>');
+    boton.querySelector(".pro-price").textContent = producto.precio;
+    boton.querySelector(".pro-action").textContent = textoAccion();
     boton.querySelector(".product-meta").textContent = producto.duracion ? `⏱ ${producto.duracion}` : "";
     boton.querySelector(".product-desc").textContent = producto.descripcion;
     boton.dataset.categoria = producto.categoria || "";
@@ -166,12 +217,36 @@ function mostrar(datos, productos) {
     lista.append(boton);
   });
 
+  $("#c-cantidad").textContent = visibles.length ? `${visibles.length} ${visibles.length === 1 ? "servicio" : "servicios"}` : "";
   prepararFiltros(visibles);
   actualizarBotonWhatsapp();
 
   $("#estado").hidden = true;
   $("#catalogo").hidden = false;
+  $("#c-whatsapp").hidden = false;
+  ubicarFormulario();
+  prepararHoja();
 }
+
+const textoAccion = () => (perfil.carrito ? "Agregar" : perfil.reservas ? "Reservar" : "Consultar");
+
+// ---------- Formulario: al costado en computador, como hoja en celular ----------
+
+const pantallaGrande = matchMedia("(min-width: 960px)");
+const enLateral = () => pantallaGrande.matches;
+
+function ubicarFormulario() {
+  const formulario = $("#sheet-form");
+  if (enLateral()) {
+    if ($("#sheet").open) $("#sheet").close();
+    $("#pro-side").append(formulario);
+  } else {
+    $("#sheet").append(formulario);
+  }
+  document.body.classList.toggle("side-form", enLateral());
+  actualizarCarrito();
+}
+pantallaGrande.addEventListener("change", () => { if (perfil) ubicarFormulario(); });
 
 // ---------- Buscador y categorías ----------
 
@@ -218,6 +293,15 @@ function elegirServicio(producto, boton) {
   boton.classList.add("selected");
   elegido = producto;
   actualizarBotonWhatsapp();
+  dibujarHoja();
+  if (enLateral()) {
+    $("#f-nombre").focus({ preventScroll: true });
+    $("#pro-side").classList.remove("pulse");
+    void $("#pro-side").offsetWidth; // reinicia la animación
+    $("#pro-side").classList.add("pulse");
+  } else if (perfil.reservas) {
+    abrirHoja();
+  }
 }
 
 function agregarAlCarrito(producto, boton) {
@@ -231,12 +315,10 @@ function cambiarCantidad(nombre, cambio) {
   item.cantidad += cambio;
   if (item.cantidad <= 0) carrito.delete(nombre);
   item.boton.classList.toggle("selected", item.cantidad > 0);
-  item.boton.querySelector(".product-add").textContent = item.cantidad > 0 ? `×${item.cantidad}` : "+";
+  item.boton.querySelector(".pro-action").textContent = item.cantidad > 0 ? `✓ ${item.cantidad} en tu pedido` : textoAccion();
   actualizarCarrito();
-  if ($("#sheet").open) {
-    if (carrito.size === 0) $("#sheet").close();
-    else dibujarHoja();
-  }
+  if ($("#sheet").open && carrito.size === 0) $("#sheet").close();
+  dibujarHoja();
 }
 
 function totalCarrito() {
@@ -259,7 +341,7 @@ function actualizarCarrito() {
   const cantidad = [...carrito.values()].reduce((suma, item) => suma + item.cantidad, 0);
   $("#cart-count").textContent = cantidad;
   $("#cart-total").textContent = textoTotal();
-  $("#cart-bar").hidden = cantidad === 0;
+  $("#cart-bar").hidden = cantidad === 0 || enLateral();
   document.body.classList.toggle("has-cart", cantidad > 0);
 }
 
@@ -282,7 +364,16 @@ $("#cart-bar").addEventListener("click", abrirHoja);
 $("#sheet-close").addEventListener("click", () => $("#sheet").close());
 
 function abrirHoja() {
-  $("#sheet-title").textContent = perfil.reservas ? "Tu reserva" : "Tu pedido";
+  prepararHoja();
+  if (enLateral()) {
+    $("#f-nombre").focus();
+    return;
+  }
+  $("#sheet").showModal();
+}
+
+function prepararHoja() {
+  $("#sheet-title").textContent = perfil.reservas ? "Reserva tu hora" : perfil.carrito ? "Tu pedido" : "Escríbenos";
   $("#f-reserva").hidden = !perfil.reservas;
   $("#f-fecha").required = Boolean(perfil.reservas);
   $("#f-hora").required = Boolean(perfil.reservas) && !usaTurnos();
@@ -293,13 +384,16 @@ function abrirHoja() {
   $("#f-fecha").min = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   $("#f-mensaje").textContent = "";
   dibujarHoja();
-  $("#sheet").showModal();
 }
 
 function dibujarHoja() {
+  if (!perfil) return;
   const lista = $("#cart-list");
   lista.innerHTML = "";
   const items = carrito.size ? [...carrito.values()] : (elegido ? [{ producto: elegido, cantidad: 1 }] : []);
+  $("#sheet-vacio").textContent = items.length ? "" : perfil.carrito
+    ? "Agrega servicios desde la lista para armar tu pedido."
+    : "Elige un servicio de la lista o escríbenos tu consulta.";
   items.forEach(({ producto, cantidad }) => {
     const li = document.createElement("li");
     const nombre = document.createElement("span");
@@ -351,7 +445,7 @@ $("#sheet-form").addEventListener("submit", async (event) => {
   if (nota) lineas.push(`*Comentario:* ${nota}`);
 
   const enlace = enlaceWhatsapp(lineas.join("\n"));
-  $("#sheet").close();
+  if ($("#sheet").open) $("#sheet").close();
   // Tras guardar en la agenda el navegador ya no deja abrir otra pestaña, así que vamos a WhatsApp en la misma
   if (usaTurnos()) location.href = enlace;
   else window.open(enlace, "_blank", "noopener");

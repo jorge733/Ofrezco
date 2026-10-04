@@ -166,6 +166,7 @@ function abrirFormularioPerfil() {
   $("#p-carrito").checked = Boolean(perfil?.carrito);
   $("#p-reservas").checked = Boolean(perfil?.reservas);
   $("#p-aviso").value = perfil?.aviso || "";
+  $("#p-experiencia").value = perfil?.experiencia || "";
   $("#p-turno").value = String(perfil?.turno || 60);
   elegirColor(perfil?.color || "#1c56d9");
   imagenesPerfil = { logo: perfil?.logo || "", portada: perfil?.portada || "" };
@@ -272,6 +273,8 @@ $("#profile-form").addEventListener("submit", async (event) => {
     reservas: $("#p-reservas").checked,
     turno: Number($("#p-turno").value),
     aviso: $("#p-aviso").value.trim(),
+    experiencia: Math.min(80, Math.max(0, parseInt($("#p-experiencia").value, 10) || 0)),
+    diseno: "profesional",
     color: colorElegido
   };
   $("#p-slug").value = datos.slug;
@@ -372,6 +375,7 @@ function activarProductos() {
   if (escuchandoProductos) return;
   escuchandoProductos = true;
   escucharReservas();
+  escucharGaleria();
   // onSnapshot vuelve a dibujar la lista cada vez que algo cambia en Firestore
   onSnapshot(query(productosRef(), orderBy("creado")), (snap) => mostrarProductos(snap.docs));
 }
@@ -513,6 +517,59 @@ async function eliminarProducto(id, nombre) {
   await deleteDoc(doc(productosRef(), id));
   if (editandoId === id) cerrarFormularioServicio();
 }
+
+// ---------- Galería de trabajos ----------
+// Cada foto es un documento aparte (perfiles/{uid}/galeria) para no llenar el perfil, que tiene límite de 1 MB.
+
+const MAX_FOTOS = 12;
+let fotosGaleria = 0;
+
+function galeriaRef() {
+  return collection(db, "perfiles", usuario.uid, "galeria");
+}
+
+function escucharGaleria() {
+  $("#gallery-card").hidden = false;
+  onSnapshot(query(galeriaRef(), orderBy("creado")), (snap) => {
+    fotosGaleria = snap.size;
+    const grilla = $("#gallery-grid");
+    grilla.innerHTML = "";
+    snap.docs.forEach((documento) => {
+      const foto = document.createElement("div");
+      foto.className = "gallery-item";
+      pintarImagen(foto, documento.data().imagen);
+      const quitar = Object.assign(document.createElement("button"), { type: "button", className: "gallery-remove", textContent: "✕" });
+      quitar.setAttribute("aria-label", "Quitar esta foto");
+      quitar.addEventListener("click", async () => {
+        if (confirm("¿Quitar esta foto de tu página?")) await deleteDoc(documento.ref);
+      });
+      foto.append(quitar);
+      grilla.append(foto);
+    });
+    $("#gallery-add").hidden = fotosGaleria >= MAX_FOTOS;
+  }, (error) => {
+    console.error(error);
+    mostrarMensaje($("#gallery-message"), "No pudimos cargar tu galería. Revisa que las reglas de Firestore estén publicadas.");
+  });
+}
+
+$("#g-imagenes").addEventListener("change", async () => {
+  const input = $("#g-imagenes");
+  const archivos = [...input.files].slice(0, MAX_FOTOS - fotosGaleria);
+  input.value = "";
+  const mensaje = $("#gallery-message");
+  mostrarMensaje(mensaje, archivos.length ? "Subiendo fotos…" : "");
+  try {
+    for (const archivo of archivos) {
+      const imagen = await comprimirImagen(archivo, TAMANOS.servicio);
+      await addDoc(galeriaRef(), { imagen, creado: serverTimestamp() });
+    }
+    mostrarMensaje(mensaje, archivos.length ? "Fotos agregadas." : "", true);
+  } catch (error) {
+    console.error(error);
+    mostrarMensaje(mensaje, "No pudimos subir una de las fotos. Prueba con otra en JPG o PNG.");
+  }
+});
 
 // ---------- Agenda ----------
 

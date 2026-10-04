@@ -1,0 +1,137 @@
+/* Página pública — diseño "Profesional con reservas".
+   Usa --accent (el color que eligió la persona) y --accent-ink (texto encima de ese color). */
+
+.pro-page {
+  --accent-color: var(--accent, var(--blue));
+  --on-accent: var(--accent-ink, #ffffff);
+  --surface: #ffffff;
+  --canvas: #f5f6f8;
+  --border: #e4e7ec;
+  --text: #101828;
+  --text-soft: #475467;
+  --text-faint: #667085;
+  background: var(--canvas);
+  color: var(--text);
+}
+.pro-page h1, .pro-page h2 { font-family: "DM Sans", Arial, sans-serif; letter-spacing: -.02em; }
+.pro-wrap { margin: 0 auto; max-width: 1180px; padding: 0 32px; }
+
+/* Barra superior */
+.pro-top { backdrop-filter: saturate(1.4) blur(10px); background: rgba(255, 255, 255, .9); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 30; }
+.pro-top-inner { align-items: center; display: flex; height: 64px; justify-content: space-between; gap: 16px; }
+.pro-brand { align-items: center; display: flex; gap: 10px; min-width: 0; }
+.pro-brand strong { font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pro-brand-logo { font-family: "DM Sans", Arial, sans-serif; font-size: .9rem; font-weight: 700; height: 34px; width: 34px; }
+.pro-top-actions { align-items: center; display: flex; gap: 12px; }
+.pro-ghost { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); cursor: pointer; font: inherit; font-size: .88rem; font-weight: 600; padding: 8px 14px; transition: border-color .2s ease, color .2s ease; }
+.pro-ghost:hover { border-color: var(--accent-color); color: var(--accent-color); }
+.pro-page .open-badge { align-items: center; background: #ecfdf3; border-radius: 999px; color: #067647; display: inline-flex; font-size: .8rem !important; font-weight: 600; gap: 6px; padding: 4px 10px; }
+.pro-page .open-badge::before { background: currentColor; border-radius: 50%; content: ""; height: 7px; width: 7px; }
+.pro-page .open-badge.closed { background: #fef3f2; color: #b42318; }
+
+/* Portada e identidad */
+.pro-hero { background: var(--surface); border-bottom: 1px solid var(--border); }
+.pro-cover { background: var(--cover-default); background-position: center; background-size: cover; height: clamp(180px, 28vw, 340px); }
+.pro-cover:not(.has-image) { background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 55%, #0b1220)); }
+.pro-id { display: flex; gap: 28px; padding-bottom: 32px; }
+.pro-logo { border: 5px solid var(--surface); box-shadow: 0 8px 24px rgba(16, 24, 40, .12); flex: 0 0 auto; font-family: "DM Sans", Arial, sans-serif; font-size: 2.6rem; font-weight: 700; height: 132px; margin-top: -66px; width: 132px; }
+.pro-page .avatar:not(.has-image) { background: var(--accent-color); color: var(--on-accent); }
+.pro-id-text { min-width: 0; padding-top: 18px; }
+.pro-id h1 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.1; }
+.pro-location { color: var(--text-faint); font-size: .95rem; margin-top: 6px; }
+.pro-location:empty { display: none; }
+.pro-description { color: var(--text-soft); font-size: 1.02rem; line-height: 1.6; margin-top: 12px; max-width: 680px; }
+.pro-trust { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin-top: 16px; padding: 0; }
+.pro-trust li { align-items: center; border: 1px solid var(--border); border-radius: 999px; color: var(--text-soft); display: inline-flex; font-size: .82rem; font-weight: 600; gap: 6px; padding: 5px 12px; }
+.pro-trust li::before { color: var(--accent-color); content: "✓"; font-weight: 700; }
+
+/* Contenido + columna lateral */
+.pro-layout { align-items: start; display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr) 380px; padding-bottom: 48px; padding-top: 32px; }
+.pro-main { display: grid; gap: 24px; min-width: 0; }
+.pro-notice { background: color-mix(in srgb, var(--accent-color) 10%, white); border: 1px solid color-mix(in srgb, var(--accent-color) 25%, white); border-radius: 14px; color: var(--text); font-weight: 600; padding: 14px 18px; }
+.pro-section { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; display: grid; gap: 16px; padding: 24px; }
+.pro-section h2 { font-size: 1.3rem; }
+.pro-section-head { align-items: baseline; display: flex; justify-content: space-between; gap: 12px; }
+.pro-count { color: var(--text-faint); font-size: .88rem; }
+.pro-page .catalog-tools { margin-top: 0; }
+.pro-page .catalog-tools input:focus { border-color: var(--accent-color); }
+
+/* Lista de servicios */
+.pro-services { display: grid; }
+.pro-page .pro-service { align-items: center; border-bottom: 1px solid var(--border); border-radius: 0; gap: 16px; padding: 16px 0; }
+.pro-page .pro-service:last-child { border-bottom: 0; }
+.pro-page .pro-service:hover { color: var(--text); }
+.pro-page .pro-service .product-image { border-radius: 14px; font-family: "DM Sans", Arial, sans-serif; font-size: 1.6rem; height: 84px; width: 84px; }
+.pro-page .pro-service .product-info { flex: 1; gap: 4px; min-width: 0; }
+.pro-service strong { align-items: center; display: flex; flex-wrap: wrap; font-size: 1.02rem; gap: 8px; }
+.pro-featured { background: color-mix(in srgb, var(--accent-color) 12%, white); border-radius: 6px; color: var(--accent-color); font-size: .7rem; font-weight: 700; letter-spacing: .04em; padding: 2px 7px; text-transform: uppercase; }
+.pro-page .product-desc { -webkit-box-orient: vertical; -webkit-line-clamp: 2; color: var(--text-soft); display: -webkit-box; font-size: .88rem; line-height: 1.5; overflow: hidden; }
+.pro-page .product-meta { color: var(--text-faint); font-size: .82rem; }
+.pro-service-side { align-items: flex-end; display: flex; flex: 0 0 auto; flex-direction: column; gap: 8px; }
+.pro-price { font-size: 1rem; font-weight: 700; white-space: nowrap; }
+.pro-action { border: 1.5px solid var(--accent-color); border-radius: 10px; color: var(--accent-color); font-size: .85rem; font-weight: 700; padding: 7px 16px; transition: background .2s ease, color .2s ease; white-space: nowrap; }
+.pro-service:hover .pro-action, .pro-service.selected .pro-action { background: var(--accent-color); color: var(--on-accent); }
+.pro-page .pro-service.selected { color: var(--text); background: color-mix(in srgb, var(--accent-color) 5%, white); box-shadow: inset 3px 0 0 var(--accent-color); padding-left: 12px; }
+
+/* Galería */
+.pro-gallery { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.pro-photo { aspect-ratio: 1; border: 0; border-radius: 12px; cursor: zoom-in; transition: transform .2s ease; }
+.pro-photo:hover { transform: scale(1.02); }
+.lightbox { background: transparent; border: 0; margin: auto; max-height: 92vh; max-width: 92vw; overflow: visible; padding: 0; }
+.lightbox::backdrop { background: rgba(10, 14, 25, .85); }
+.lightbox img { border-radius: 12px; display: block; max-height: 88vh; max-width: 92vw; }
+.lightbox .pro-close { position: absolute; right: -6px; top: -44px; }
+.pro-close { background: rgba(255, 255, 255, .95); border: 1px solid var(--border); border-radius: 50%; color: var(--text); cursor: pointer; font-size: 1rem; height: 36px; text-decoration: none !important; width: 36px; }
+
+/* Información */
+.pro-info { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.pro-info-item { display: grid; gap: 4px; }
+.pro-info-label { color: var(--text-faint); font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.pro-info-item p { color: var(--text); font-weight: 500; }
+.pro-page .social-links { margin-top: 6px; }
+.pro-section > .pro-ghost { justify-self: start; }
+
+/* Formulario: tarjeta fija al costado (computador) */
+.pro-side { position: sticky; top: 88px; }
+.pro-side:empty { display: none; }
+.pro-side .pro-form { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 12px 32px rgba(16, 24, 40, .08); padding: 24px; }
+.pro-side .pro-close { display: none; }
+.pro-side.pulse .pro-form { animation: pulso .6s ease; }
+@keyframes pulso { 40% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color) 35%, transparent); } }
+.pro-form h2 { font-size: 1.3rem; }
+.pro-form .card-head { margin-bottom: 0; }
+.pro-form #sheet-vacio:empty { display: none; }
+.pro-form input:focus, .pro-form textarea:focus { border-color: var(--accent-color); }
+.pro-form .whatsapp-button { border: 0; cursor: pointer; font: inherit; font-weight: 700; margin-top: 0; width: 100%; }
+.pro-secure { color: var(--text-faint); font-size: .78rem; text-align: center; }
+.pro-page .cart-list li { border-color: var(--border); }
+
+/* Botón flotante de WhatsApp (celular) */
+.whatsapp-float { align-items: center; background: #20b96b; border-radius: 999px; bottom: 16px; box-shadow: 0 10px 28px rgba(16, 24, 40, .25); color: #fff; display: flex; font-weight: 700; gap: 10px; left: 50%; max-width: calc(100% - 32px); padding: 14px 22px; position: fixed; transform: translateX(-50%); white-space: nowrap; z-index: 25; }
+.side-form .whatsapp-float, .has-cart .whatsapp-float { display: none; }
+.pro-page .cart-bar { background: var(--text); }
+
+.pro-footer { align-items: center; border-top: 1px solid var(--border); color: var(--text-faint); display: flex; flex-wrap: wrap; font-size: .85rem; gap: 8px 24px; justify-content: center; padding: 28px 16px 40px; }
+.pro-footer a:hover { color: var(--accent-color); }
+
+@media (max-width: 959px) {
+  .pro-layout { grid-template-columns: 1fr; }
+  .pro-footer { padding-bottom: 100px; }
+}
+
+@media (max-width: 640px) {
+  .pro-wrap { padding: 0 16px; }
+  .pro-top-inner { height: 56px; }
+  .pro-id { display: block; padding-bottom: 22px; }
+  .pro-logo { font-size: 2rem; height: 96px; margin-top: -48px; width: 96px; }
+  .pro-id-text { padding-top: 12px; }
+  .pro-layout { gap: 16px; padding-top: 16px; }
+  .pro-main { gap: 16px; }
+  .pro-section { border-radius: 16px; padding: 18px; }
+  .pro-page .pro-service { align-items: flex-start; gap: 12px; }
+  .pro-page .pro-service .product-image { height: 68px; width: 68px; }
+  .pro-service-side { align-self: center; }
+  .pro-action { padding: 6px 12px; }
+  .pro-top .pro-ghost { padding: 7px 11px; }
+  .pro-brand strong { max-width: 40vw; }
+}

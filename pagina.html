@@ -11,46 +11,99 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="pagina.css">
 </head>
-<body>
-  <main class="container public-main">
-    <p class="public-status" id="estado">Cargando…</p>
+<body class="pro-page">
+  <p class="public-status" id="estado">Cargando…</p>
 
-    <article class="catalog" id="catalogo" hidden>
-      <div class="catalog-cover" id="c-portada"></div>
-      <div class="catalog-body">
-        <div class="catalog-id">
-          <div class="avatar catalog-logo" id="c-avatar" aria-hidden="true"></div>
-          <div>
-            <h1 id="c-nombre"></h1>
-            <p id="c-zona"></p>
-            <p class="open-badge" id="c-abierto" hidden></p>
-          </div>
+  <div id="catalogo" hidden>
+    <!-- Barra superior fija: tu marca, si estás abierto y compartir -->
+    <header class="pro-top">
+      <div class="pro-wrap pro-top-inner">
+        <div class="pro-brand">
+          <span class="avatar pro-brand-logo" id="c-mini-logo" aria-hidden="true"></span>
+          <strong id="c-mini-nombre"></strong>
         </div>
-        <p class="catalog-intro" id="c-descripcion"></p>
-        <p class="catalog-notice" id="c-aviso" hidden></p>
-        <div class="social-links" id="c-redes"></div>
-        <p class="catalog-hours" id="c-horario" hidden></p>
-
-        <div class="catalog-tools" id="c-herramientas" hidden>
-          <input type="search" id="c-buscar" placeholder="Buscar servicio…" aria-label="Buscar servicio">
-          <div class="category-chips" id="c-categorias"></div>
-        </div>
-        <div class="products" id="c-productos"></div>
-        <p class="catalog-empty" id="c-sin-resultados" hidden>No encontramos servicios con esa búsqueda.</p>
-
-        <a class="whatsapp-button" id="c-whatsapp" target="_blank" rel="noopener">
-          <span id="c-whatsapp-texto">Consultar por WhatsApp</span> <span aria-hidden="true">↗</span>
-        </a>
-        <div class="catalog-actions">
-          <button class="link-button" type="button" id="c-compartir">Compartir esta página</button>
-          <button class="link-button" type="button" id="c-contacto">Guardar contacto</button>
+        <div class="pro-top-actions">
+          <span class="open-badge" id="c-abierto" hidden></span>
+          <button class="pro-ghost" type="button" id="c-compartir">Compartir</button>
         </div>
       </div>
-    </article>
-  </main>
+    </header>
 
-  <!-- Barra del carrito (solo si el perfil lo tiene activado) -->
+    <!-- Portada a todo el ancho -->
+    <section class="pro-hero">
+      <div class="pro-cover" id="c-portada"></div>
+      <div class="pro-wrap pro-id">
+        <div class="avatar pro-logo" id="c-avatar" aria-hidden="true"></div>
+        <div class="pro-id-text">
+          <h1 id="c-nombre"></h1>
+          <p class="pro-location" id="c-zona"></p>
+          <p class="pro-description" id="c-descripcion"></p>
+          <ul class="pro-trust" id="c-confianza"></ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="pro-wrap pro-layout">
+      <main class="pro-main">
+        <p class="pro-notice" id="c-aviso" hidden></p>
+
+        <section class="pro-section">
+          <div class="pro-section-head">
+            <h2>Servicios</h2>
+            <span class="pro-count" id="c-cantidad"></span>
+          </div>
+          <div class="catalog-tools" id="c-herramientas" hidden>
+            <input type="search" id="c-buscar" placeholder="Buscar servicio…" aria-label="Buscar servicio">
+            <div class="category-chips" id="c-categorias"></div>
+          </div>
+          <div class="pro-services" id="c-productos"></div>
+          <p class="catalog-empty" id="c-sin-resultados" hidden>No encontramos servicios con esa búsqueda.</p>
+        </section>
+
+        <section class="pro-section" id="c-galeria-seccion" hidden>
+          <h2>Trabajos realizados</h2>
+          <div class="pro-gallery" id="c-galeria"></div>
+        </section>
+
+        <section class="pro-section">
+          <h2>Información</h2>
+          <div class="pro-info">
+            <div class="pro-info-item" id="c-horario-box" hidden>
+              <span class="pro-info-label">Horario</span>
+              <p id="c-horario"></p>
+            </div>
+            <div class="pro-info-item" id="c-zona-box" hidden>
+              <span class="pro-info-label">Dónde atiende</span>
+              <p id="c-zona-info"></p>
+            </div>
+            <div class="pro-info-item">
+              <span class="pro-info-label">Contacto</span>
+              <p id="c-telefono"></p>
+              <div class="social-links" id="c-redes"></div>
+            </div>
+          </div>
+          <button class="pro-ghost" type="button" id="c-contacto">Guardar contacto en mi teléfono</button>
+        </section>
+      </main>
+
+      <!-- En computador el formulario vive aquí; en celular se abre como hoja -->
+      <aside class="pro-side" id="pro-side"></aside>
+    </div>
+
+    <footer class="pro-footer">
+      <a href="index.html">Página creada con <strong>Service Planet</strong></a>
+      <a href="cuenta.html">Crea la tuya gratis →</a>
+    </footer>
+  </div>
+
+  <!-- Botón flotante (celular) -->
+  <a class="whatsapp-float" id="c-whatsapp" target="_blank" rel="noopener" hidden>
+    <span id="c-whatsapp-texto">Consultar por WhatsApp</span> <span aria-hidden="true">↗</span>
+  </a>
+
+  <!-- Barra del carrito (celular, solo si el perfil lo tiene activado) -->
   <button class="cart-bar" type="button" id="cart-bar" hidden>
     <span><strong id="cart-count">0</strong> en tu pedido</span>
     <span id="cart-total"></span>
@@ -59,14 +112,15 @@
 
   <!-- Hoja de pedido / reserva que arma el mensaje de WhatsApp -->
   <dialog class="sheet" id="sheet">
-    <form class="form" id="sheet-form" method="dialog">
+    <form class="form pro-form" id="sheet-form" method="dialog">
       <div class="card-head">
         <h2 id="sheet-title">Tu pedido</h2>
-        <button class="link-button" type="button" id="sheet-close" aria-label="Cerrar">✕</button>
+        <button class="link-button pro-close" type="button" id="sheet-close" aria-label="Cerrar">✕</button>
       </div>
+      <p class="panel-hint" id="sheet-vacio"></p>
       <ul class="cart-list" id="cart-list"></ul>
       <p class="cart-sum" id="cart-sum"></p>
-      <label>Tu nombre<input id="f-nombre" required maxlength="60" autocomplete="name"></label>
+      <label>Tu nombre<input id="f-nombre" required maxlength="60" autocomplete="name" placeholder="Camila Rojas"></label>
       <div class="form-row form-row-even" id="f-reserva" hidden>
         <label>Fecha<input id="f-fecha" type="date"></label>
         <label id="f-hora-libre">Hora<input id="f-hora" type="time"></label>
@@ -78,20 +132,22 @@
       <label>Comentario (opcional)<textarea id="f-nota" rows="2" maxlength="300" placeholder="Dirección, detalles, preguntas…"></textarea></label>
       <p class="form-message" id="f-mensaje" role="alert"></p>
       <button class="whatsapp-button" type="submit">Enviar por WhatsApp <span aria-hidden="true">↗</span></button>
+      <p class="pro-secure">Tu mensaje se abre en WhatsApp. No pagas nada aquí.</p>
     </form>
   </dialog>
 
-  <footer class="public-footer">
-    <a class="logo" href="index.html"><img src="logo.svg" alt="" width="36" height="36">Service<span>Planet</span></a>
-    <a href="cuenta.html">Crea tu página gratis →</a>
-  </footer>
+  <!-- Foto de la galería en grande -->
+  <dialog class="lightbox" id="lightbox">
+    <button class="pro-close" type="button" id="lightbox-close" aria-label="Cerrar">✕</button>
+    <img id="lightbox-img" alt="">
+  </dialog>
 
   <!-- Molde de cada servicio (pagina.js lo copia y lo llena) -->
   <template id="producto-molde">
-    <button class="product" type="button">
+    <button class="product pro-service" type="button">
       <span class="product-image" aria-hidden="true"></span>
-      <span class="product-info"><strong></strong><span class="price"></span><span class="product-meta"></span><span class="product-desc"></span></span>
-      <span class="product-add" aria-hidden="true">+</span>
+      <span class="product-info"><strong></strong><span class="product-meta"></span><span class="product-desc"></span></span>
+      <span class="pro-service-side"><span class="pro-price"></span><span class="product-add pro-action"></span></span>
     </button>
   </template>
 
