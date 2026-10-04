@@ -447,6 +447,31 @@ function cerrarFormularioServicio() {
   $("#product-new").hidden = false;
 }
 
+// ---------- Precio en pesos chilenos ----------
+// "5000 la hora" → "$5.000 la hora", "Desde 24000" → "Desde $24.000".
+// Solo toca números de 3 o más cifras (o que ya tengan $), así "2 horas" queda igual.
+function formatearPesos(texto) {
+  return texto.replace(/(\$\s*)?(\d[\d.]*)/g, (todo, signo, numero) => {
+    const cifras = numero.replace(/\./g, "");
+    if (!signo && cifras.length < 3) return todo;
+    return "$" + Number(cifras).toLocaleString("es-CL");
+  });
+}
+
+$("#pr-precio").addEventListener("input", () => {
+  const campo = $("#pr-precio");
+  // Recordamos cuántas letras/cifras "reales" hay antes del cursor para dejarlo en el mismo lugar
+  const antes = campo.value.slice(0, campo.selectionStart).replace(/[$.\s]/g, "").length;
+  const nuevo = formatearPesos(campo.value);
+  if (nuevo === campo.value) return;
+  campo.value = nuevo;
+  let posicion = 0;
+  for (let contadas = 0; posicion < nuevo.length && contadas < antes; posicion++) {
+    if (!/[$.\s]/.test(nuevo[posicion])) contadas++;
+  }
+  campo.setSelectionRange(posicion, posicion);
+});
+
 $("#product-new").addEventListener("click", () => abrirFormularioServicio());
 $("#product-cancel").addEventListener("click", cerrarFormularioServicio);
 alElegirImagen($("#pr-imagen"), TAMANOS.servicio, (url) => { imagenServicio = url; pintarImagenServicio(); });
