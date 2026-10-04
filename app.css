@@ -376,3 +376,48 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 .toast span { font-size: .9rem; opacity: .85; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 .auth-legal { margin-top: 12px; text-align: center; }.auth-legal a { color: var(--blue); font-weight: 600; }
+
+/* ---------- Panel con barra lateral (estilo ChatGPT) ---------- */
+.dash { display: flex; min-height: 100vh; }
+.sidebar { background: var(--white); border-right: 1px solid var(--line); display: flex; flex: 0 0 auto; flex-direction: column; gap: 14px; height: 100vh; overflow: hidden; padding: 14px 12px; position: sticky; top: 0; transition: width .2s ease; width: 260px; z-index: 50; }
+.sidebar-top { align-items: center; display: flex; gap: 6px; justify-content: space-between; min-height: 44px; }
+.sidebar-logo { align-items: center; display: flex; font-size: 1.25rem; gap: 8px; padding-left: 6px; white-space: nowrap; }
+.side-toggle { background: none; border: 0; border-radius: 10px; color: var(--ink); cursor: pointer; flex: 0 0 auto; font-size: 1.2rem; height: 40px; width: 40px; }
+.side-toggle:hover { background: var(--cream); }
+.side-nav, .sidebar-bottom { display: grid; gap: 4px; }
+.sidebar-bottom { border-top: 1px solid var(--line); margin-top: auto; padding-top: 12px; }
+.side-item { align-items: center; background: none; border: 0; border-radius: 12px; color: var(--ink); cursor: pointer; display: flex; font: inherit; font-size: .95rem; font-weight: 600; gap: 12px; padding: 10px 12px; text-align: left; white-space: nowrap; width: 100%; }
+.side-item:hover { background: var(--cream); }
+.side-item.active { background: var(--mist); color: var(--blue); }
+.side-icon { flex: 0 0 24px; font-size: 1.1rem; text-align: center; }
+.side-client { background: var(--blue); color: var(--white); }
+.side-client:hover { background: var(--blue); filter: brightness(1.1); }
+.sidebar .user-email { overflow: hidden; padding: 4px 12px; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Achicada: solo íconos */
+.dash.collapsed .sidebar { width: 68px; }
+.dash.collapsed .side-label, .dash.collapsed .sidebar-logo { display: none; }
+.dash.collapsed .sidebar-top { justify-content: center; }
+
+.dash-main { flex: 1; margin: 0 auto; max-width: 1100px; min-width: 0; padding-left: 40px; padding-right: 40px; }
+.dash-main [data-view]:not(.view-active) { display: none !important; }
+.mobile-bar, .side-backdrop { display: none; }
+
+/* Vista cliente a pantalla completa; el mismo botón queda flotando como "Vista propietario" */
+.client-view { background: var(--white); inset: 0; position: fixed; z-index: 900; }
+.client-view iframe { border: 0; display: block; height: 100%; width: 100%; }
+.dash.cliente #client-toggle { bottom: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, .3); position: fixed; right: 20px; width: auto; z-index: 1000; }
+.dash.cliente #client-toggle .side-label { display: inline; }
+.dash.cliente .sidebar { border: 0; padding: 0; width: 0 !important; z-index: 1000; }
+
+@media (max-width: 780px) {
+  .sidebar { box-shadow: 0 0 40px rgba(0, 0, 0, .2); left: -290px; position: fixed; transition: left .25s ease; width: 270px; }
+  .dash.menu-open .sidebar { left: 0; }
+  .dash.collapsed .sidebar { width: 270px; }
+  .dash.collapsed .side-label { display: revert; }
+  .dash.collapsed .sidebar-logo { display: flex; }
+  .dash.menu-open .side-backdrop { background: rgba(6, 11, 24, .45); display: block; inset: 0; position: fixed; z-index: 40; }
+  .dash-main { padding-left: 16px; padding-right: 16px; }
+  .mobile-bar { align-items: center; display: flex; gap: 8px; padding-bottom: 8px; }
+  .mobile-bar .logo { align-items: center; display: flex; font-size: 1.2rem; gap: 6px; }
+}

@@ -11,16 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="app.css?v=2">
 </head>
 <body>
-  <header class="header container">
-    <a class="logo" href="index.html" aria-label="ServicePlanet, ir al inicio"><img src="logo.svg" alt="" width="36" height="36">Service<span>Planet</span></a>
-    <nav class="navigation">
-      <span class="user-email" id="user-email"></span>
-      <button class="button button-small" type="button" id="logout">Cerrar sesión</button>
-    </nav>
-  </header>
 
   <!-- Bienvenida animada: aparece solo la primera vez que alguien entra sin perfil -->
   <div class="welcome" id="welcome" hidden>
@@ -33,14 +26,40 @@
     <button class="button" type="button" id="welcome-start">Comenzar a construirlo <span aria-hidden="true">→</span></button>
   </div>
 
-  <main class="container app-main" id="panel" hidden>
+  <div class="dash" id="panel" hidden>
+  <!-- Barra lateral (se puede achicar, como la de ChatGPT) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <a class="logo sidebar-logo" href="index.html" aria-label="ServicePlanet, ir al inicio"><img src="logo.svg" alt="" width="32" height="32"><span class="side-label">Service<span>Planet</span></span></a>
+      <button class="side-toggle" type="button" id="side-toggle" aria-label="Achicar o expandir menú" title="Achicar / expandir menú">☰</button>
+    </div>
+    <nav class="side-nav" aria-label="Secciones del panel">
+      <button class="side-item" type="button" data-go="inicio" title="Inicio"><span class="side-icon" aria-hidden="true">🏠</span><span class="side-label">Inicio</span></button>
+      <button class="side-item" type="button" data-go="perfil" title="Tu perfil"><span class="side-icon" aria-hidden="true">👤</span><span class="side-label">Tu perfil</span></button>
+      <button class="side-item" type="button" data-go="servicios" title="Tus servicios"><span class="side-icon" aria-hidden="true">🛠️</span><span class="side-label">Tus servicios</span></button>
+      <button class="side-item" type="button" data-go="trabajos" title="Tus trabajos"><span class="side-icon" aria-hidden="true">📸</span><span class="side-label">Tus trabajos</span></button>
+      <button class="side-item" type="button" data-go="agenda" title="Tu agenda"><span class="side-icon" aria-hidden="true">📅</span><span class="side-label">Tu agenda</span></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="side-item side-client" type="button" id="client-toggle" title="Ver tu página como tus clientes"><span class="side-icon" aria-hidden="true">👁️</span><span class="side-label" id="client-toggle-text">Vista cliente</span></button>
+      <span class="user-email side-label" id="user-email"></span>
+      <button class="side-item" type="button" id="logout" title="Cerrar sesión"><span class="side-icon" aria-hidden="true">🚪</span><span class="side-label">Cerrar sesión</span></button>
+    </div>
+  </aside>
+  <div class="side-backdrop" id="side-backdrop"></div>
+
+  <main class="dash-main app-main">
+    <div class="mobile-bar">
+      <button class="side-toggle" type="button" id="side-open" aria-label="Abrir menú">☰</button>
+      <a class="logo" href="index.html"><img src="logo.svg" alt="" width="28" height="28">Service<span>Planet</span></a>
+    </div>
     <div class="panel-head">
       <p class="eyebrow" id="panel-greeting">TU PANEL</p>
       <h1>Arma tu página</h1>
     </div>
 
     <!-- Aparece cuando el perfil ya está guardado -->
-    <section class="share-box" id="share-box" hidden>
+    <section class="share-box" id="share-box" data-view="inicio" hidden>
       <div>
         <p class="share-label">Tu página está en</p>
         <a class="share-link" id="share-link" target="_blank" rel="noopener"></a>
@@ -54,7 +73,7 @@
     </section>
 
     <!-- Vista previa de la página pública, en PC o en móvil -->
-    <section class="panel-card preview-card" id="preview-card" hidden>
+    <section class="panel-card preview-card" id="preview-card" data-view="inicio" hidden>
       <div class="card-head">
         <h2>Vista previa</h2>
         <div class="preview-tabs" role="group" aria-label="Tipo de pantalla">
@@ -69,8 +88,7 @@
       </div>
     </section>
 
-    <div class="panel-grid">
-      <section class="panel-card">
+      <section class="panel-card" data-view="perfil">
         <div class="card-head">
           <h2>Tu perfil</h2>
           <button class="button button-small button-outline" type="button" id="profile-edit" hidden>Editar datos</button>
@@ -228,7 +246,7 @@
         </form>
       </section>
 
-      <section class="panel-card" id="services-card">
+      <section class="panel-card" id="services-card" data-view="servicios">
         <h2>Tus servicios</h2>
         <p class="panel-hint" id="products-locked">Guarda tu perfil primero para empezar a agregar tus servicios.</p>
 
@@ -302,7 +320,7 @@
         <ul class="product-list" id="product-list"></ul>
       </section>
 
-      <section class="panel-card" id="gallery-card" hidden>
+      <section class="panel-card" id="gallery-card" data-view="trabajos" hidden>
         <h2>Trabajos realizados</h2>
         <p class="panel-hint">Sube fotos de lo que ya hiciste (hasta 12). Es lo que más confianza da a un cliente nuevo.</p>
         <div class="gallery-grid" id="gallery-grid"></div>
@@ -310,7 +328,7 @@
         <p class="form-message" id="gallery-message" role="alert"></p>
       </section>
 
-      <section class="panel-card" id="bookings-card" hidden>
+      <section class="panel-card" id="bookings-card" data-view="agenda" hidden>
         <div class="card-head">
           <h2>Tu agenda</h2>
           <button class="button button-small button-outline" type="button" id="notif-activar" hidden>🔔 Activar avisos</button>
@@ -319,8 +337,11 @@
         <p class="panel-hint" id="notif-estado"></p>
         <ul class="product-list" id="booking-list"></ul>
       </section>
-    </div>
   </main>
+  </div>
+
+  <!-- Vista cliente: tu página a pantalla completa, tal como la ven tus clientes -->
+  <div class="client-view" id="client-view" hidden><iframe id="client-iframe" title="Tu página como la ven tus clientes"></iframe></div>
 
   <!-- Molde de cada servicio en la lista (panel.js lo copia y lo llena) -->
   <template id="product-item">
@@ -338,6 +359,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-  <script type="module" src="panel.js"></script>
+  <script type="module" src="panel.js?v=2"></script>
 </body>
 </html>

@@ -135,3 +135,8 @@
   .pro-top .pro-ghost { padding: 7px 11px; }
   .pro-brand strong { max-width: 40vw; }
 }
+
+/* Nunca mostrar barra de desplazamiento horizontal en la página pública */
+html, body { overflow-x: clip; }
+.category-chips { scrollbar-width: none; }
+.category-chips::-webkit-scrollbar { display: none; }

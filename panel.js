@@ -90,6 +90,7 @@ onAuthStateChanged(auth, async (user) => {
     mostrarBienvenida();
   }
   $("#panel").hidden = false;
+  mostrarVista(perfil ? "inicio" : "perfil");
 });
 
 $("#logout").addEventListener("click", () => signOut(auth));
@@ -451,6 +452,56 @@ document.querySelectorAll(".preview-tabs [data-device]").forEach((boton) => {
 });
 $("#preview-reload").addEventListener("click", actualizarVistaPrevia);
 window.addEventListener("resize", ajustarVistaPrevia);
+// ---------- Barra lateral: cada sección se ve por separado ----------
+const dash = $("#panel");
+const ES_MOVIL = window.matchMedia("(max-width: 780px)");
+
+function mostrarVista(nombre) {
+  dash.querySelectorAll(".dash-main [data-view]").forEach((s) => s.classList.toggle("view-active", s.dataset.view === nombre));
+  dash.querySelectorAll(".side-item[data-go]").forEach((b) => b.classList.toggle("active", b.dataset.go === nombre));
+  dash.classList.remove("menu-open");
+  window.scrollTo({ top: 0 });
+  if (nombre === "inicio") ajustarVistaPrevia();
+}
+
+dash.querySelectorAll(".side-item[data-go]").forEach((boton) => {
+  boton.addEventListener("click", () => mostrarVista(boton.dataset.go));
+});
+
+// En PC achica/expande la barra; en el celular la cierra
+try { if (localStorage.getItem("barraAchicada") === "1") dash.classList.add("collapsed"); } catch {}
+$("#side-toggle").addEventListener("click", () => {
+  if (ES_MOVIL.matches) { dash.classList.remove("menu-open"); return; }
+  const achicada = dash.classList.toggle("collapsed");
+  try { localStorage.setItem("barraAchicada", achicada ? "1" : "0"); } catch {}
+  setTimeout(ajustarVistaPrevia, 220); // cuando termina la animación
+});
+$("#side-open").addEventListener("click", () => dash.classList.add("menu-open"));
+$("#side-backdrop").addEventListener("click", () => dash.classList.remove("menu-open"));
+
+// Trabajos y agenda aparecen en el menú solo cuando su sección está disponible
+[["#gallery-card", "trabajos"], ["#bookings-card", "agenda"]].forEach(([tarjeta, vista]) => {
+  const sincronizar = () => {
+    const boton = dash.querySelector(`.side-item[data-go="${vista}"]`);
+    boton.hidden = $(tarjeta).hidden;
+    if (boton.hidden && boton.classList.contains("active")) mostrarVista("inicio");
+  };
+  new MutationObserver(sincronizar).observe($(tarjeta), { attributes: true, attributeFilter: ["hidden"] });
+  sincronizar();
+});
+
+// Vista cliente: tu página a pantalla completa. El mismo botón sirve para volver.
+$("#client-toggle").addEventListener("click", () => {
+  if (!perfil) { mostrarVista("perfil"); return; }
+  const activa = dash.classList.toggle("cliente");
+  $("#client-view").hidden = !activa;
+  $("#client-toggle-text").textContent = activa ? "Vista propietario" : "Vista cliente";
+  $("#client-toggle").querySelector(".side-icon").textContent = activa ? "🛠️" : "👁️";
+  document.body.style.overflow = activa ? "hidden" : "";
+  dash.classList.remove("menu-open");
+  if (activa) $("#client-iframe").src = $("#preview-iframe").src || enlacePublico(perfil.slug);
+});
+
 
 // Si cambian los servicios o las fotos, se recarga (esperando un poco para no recargar muchas veces seguidas)
 let esperaVistaPrevia;
@@ -567,7 +618,7 @@ function abrirFormularioServicio(id = null, producto = {}) {
 
   $("#product-form").hidden = false;
   $("#product-new").hidden = true;
-  $("#services-card").scrollIntoView({ behavior: "smooth", block: "start" });
+  mostrarVista("servicios");
   $("#pr-nombre").focus({ preventScroll: true });
 }
 
@@ -853,7 +904,7 @@ function avisarReserva(r) {
     // Si el push está activo, la notificación ya la manda la Cloud Function (así no llega repetida)
     if (!pushActivo && puedeNotificar && Notification.permission === "granted") {
       const aviso = new Notification("📅 ¡Nueva reserva!", { body: texto, icon: "apple-touch-icon.png" });
-      aviso.onclick = () => { window.focus(); $("#bookings-card").scrollIntoView({ behavior: "smooth" }); aviso.close(); };
+      aviso.onclick = () => { window.focus(); mostrarVista("agenda"); aviso.close(); };
     }
   }
 }
