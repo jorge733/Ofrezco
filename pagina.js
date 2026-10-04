@@ -297,7 +297,8 @@ function prepararFiltros(productos) {
 
 // ---------- Pedido por WhatsApp ----------
 
-const enlaceWhatsapp = (texto) => `https://wa.me/${perfil.whatsapp}?text=${encodeURIComponent(texto)}`;
+// Vamos directo a api.whatsapp.com: el desvío de wa.me rompe los emojis (💻 llegaba como �)
+const enlaceWhatsapp = (texto) => `https://api.whatsapp.com/send?phone=${perfil.whatsapp}&text=${encodeURIComponent(texto)}`;
 
 function elegirServicio(producto, boton) {
   $("#c-productos").querySelectorAll(".product.selected").forEach((b) => b.classList.remove("selected"));
