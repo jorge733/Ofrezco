@@ -28,6 +28,12 @@ service cloud.firestore {
         allow write: if request.auth != null && request.auth.uid == uid;
       }
 
+      // Dispositivos donde el dueño activó las notificaciones push: solo el dueño los ve y los guarda.
+      // (La Cloud Function los lee con permisos de administrador, sin pasar por estas reglas.)
+      match /dispositivos/{token} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+
       // Horas tomadas de la agenda: cualquiera las ve (sin datos personales) y cualquiera puede tomar una libre.
       // "create" falla si la hora ya existe: así nadie puede reservar dos veces la misma hora.
       match /ocupados/{turno} {

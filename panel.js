@@ -1,9 +1,10 @@
-import { auth, db } from "./firebase.js";
+import { app, auth, db } from "./firebase.js";
 import { comprimirImagen } from "./imagenes.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 import {
   doc,
   getDoc,
+  setDoc,
   writeBatch,
   collection,
   addDoc,
@@ -709,6 +710,7 @@ const NOMBRES_MODALIDAD = { presencial: "🤝 Presencial", videollamada: "💻 V
 function escucharReservas() {
   const reservasRef = collection(db, "perfiles", usuario.uid, "reservas");
   // El id ya está en orden cronológico, así que basta con ordenar por id (sin índices extra)
+  registrarDispositivo(); // renueva el token de notificaciones de este dispositivo
   let primeraLectura = true; // las reservas que ya existían no se avisan
   onSnapshot(reservasRef, (snap) => {
     if (!primeraLectura) {
@@ -753,8 +755,15 @@ function mostrarCampoVideo() {
 document.querySelectorAll("#p-modalidades input").forEach((c) => c.addEventListener("change", mostrarCampoVideo));
 
 // ---------- Avisos de reservas nuevas ----------
-// Funcionan mientras el panel esté abierto (aunque sea en otra pestaña).
-const puedeNotificar = "Notification" in window;
+// Dos tipos de aviso:
+// 1) Con el panel abierto: sonido + cuadro flotante (escucharReservas → avisarReserva).
+// 2) En segundo plano (panel cerrado o celular bloqueado): notificación "push" que envía
+//    la Cloud Function de la carpeta functions/ usando Firebase Cloud Messaging.
+// Clave pública "Web Push" (Firebase → Configuración del proyecto → Cloud Messaging → Certificados web push)
+const CLAVE_VAPID = "BCcGnEAj8PwYddZWSIrQy4HpIu5juTJpctTPmr8XXaaixwetcC2IuS2NiCRbMPzpAcBDiQ9x49nLAbScOYFXz2I";
+
+const puedeNotificar = "Notification" in window && "serviceWorker" in navigator;
+let pushActivo = false;
 let reservasSinVer = 0;
 const tituloOriginal = document.title;
 
@@ -763,22 +772,47 @@ function pintarEstadoAvisos() {
   const estado = $("#notif-estado");
   if (!puedeNotificar) {
     boton.hidden = true;
-    estado.textContent = "🔔 Te avisaremos aquí con un sonido cuando llegue una reserva nueva.";
+    estado.textContent = "🔔 Este navegador no permite notificaciones. Te avisaremos aquí con un sonido mientras tengas el panel abierto.";
   } else if (Notification.permission === "granted") {
     boton.hidden = true;
-    estado.textContent = "🔔 Avisos activados: te avisamos cuando llegue una reserva nueva, mientras tengas el panel abierto.";
+    estado.textContent = pushActivo
+      ? "🔔 Notificaciones activadas en este dispositivo: te avisamos de cada reserva, aunque tengas el panel cerrado."
+      : "🔔 Avisos activados mientras tengas el panel abierto.";
   } else if (Notification.permission === "denied") {
     boton.hidden = true;
     estado.textContent = "🔕 Bloqueaste los avisos en este navegador. Puedes permitirlos desde el candado junto a la dirección.";
   } else {
     boton.hidden = false;
-    estado.textContent = "";
+    estado.textContent = "Activa los avisos para enterarte de cada reserva, aunque tengas el panel cerrado.";
   }
 }
 pintarEstadoAvisos();
 
+// Registra este navegador/celular para recibir notificaciones push.
+// Su "token" se guarda en perfiles/{uid}/dispositivos, de donde lo lee la Cloud Function.
+async function registrarDispositivo() {
+  if (!puedeNotificar || Notification.permission !== "granted" || !usuario || CLAVE_VAPID.startsWith("PEGA")) return;
+  try {
+    const { getMessaging, getToken, isSupported } = await import("https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js");
+    if (!(await isSupported())) return;
+    const registro = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+    const token = await getToken(getMessaging(app), { vapidKey: CLAVE_VAPID, serviceWorkerRegistration: registro });
+    if (!token) return;
+    await setDoc(doc(db, "perfiles", usuario.uid, "dispositivos", token), {
+      token,
+      navegador: navigator.userAgent.slice(0, 200),
+      actualizado: serverTimestamp()
+    });
+    pushActivo = true;
+  } catch (error) {
+    console.error("No se pudo activar las notificaciones push", error);
+  }
+  pintarEstadoAvisos();
+}
+
 $("#notif-activar").addEventListener("click", async () => {
   await Notification.requestPermission();
+  await registrarDispositivo();
   pintarEstadoAvisos();
 });
 
@@ -816,7 +850,8 @@ function avisarReserva(r) {
   if (document.hidden) {
     reservasSinVer++;
     document.title = `(${reservasSinVer}) ${tituloOriginal}`;
-    if (puedeNotificar && Notification.permission === "granted") {
+    // Si el push está activo, la notificación ya la manda la Cloud Function (así no llega repetida)
+    if (!pushActivo && puedeNotificar && Notification.permission === "granted") {
       const aviso = new Notification("📅 ¡Nueva reserva!", { body: texto, icon: "apple-touch-icon.png" });
       aviso.onclick = () => { window.focus(); $("#bookings-card").scrollIntoView({ behavior: "smooth" }); aviso.close(); };
     }
