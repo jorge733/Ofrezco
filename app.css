@@ -369,3 +369,9 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 .meeting-field[hidden] { display: none; }
 .meeting-options { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
 .meeting-options .slot { padding: 11px 8px; }
+
+/* ---------- Aviso de reserva nueva ---------- */
+.toast { animation: toast-in .3s ease; background: var(--ink); border-left: 5px solid var(--orange); border-radius: 14px; bottom: 24px; box-shadow: 0 12px 30px rgba(0, 0, 0, .25); color: var(--white); display: grid; gap: 4px; max-width: min(380px, calc(100% - 32px)); padding: 14px 18px; position: fixed; right: 16px; z-index: 50; }
+.toast[hidden] { display: none; }
+.toast span { font-size: .9rem; opacity: .85; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }

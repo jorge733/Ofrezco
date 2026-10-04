@@ -709,7 +709,12 @@ const NOMBRES_MODALIDAD = { presencial: "🤝 Presencial", videollamada: "💻 V
 function escucharReservas() {
   const reservasRef = collection(db, "perfiles", usuario.uid, "reservas");
   // El id ya está en orden cronológico, así que basta con ordenar por id (sin índices extra)
+  let primeraLectura = true; // las reservas que ya existían no se avisan
   onSnapshot(reservasRef, (snap) => {
+    if (!primeraLectura) {
+      snap.docChanges().filter((c) => c.type === "added").forEach((c) => avisarReserva(c.doc.data()));
+    }
+    primeraLectura = false;
     const lista = $("#booking-list");
     lista.innerHTML = "";
     const hoy = new Date().toLocaleDateString("en-CA"); // AAAA-MM-DD
@@ -746,3 +751,78 @@ function mostrarCampoVideo() {
   $("#p-video-campo").hidden = !document.querySelector('#p-modalidades input[value="videollamada"]').checked;
 }
 document.querySelectorAll("#p-modalidades input").forEach((c) => c.addEventListener("change", mostrarCampoVideo));
+
+// ---------- Avisos de reservas nuevas ----------
+// Funcionan mientras el panel esté abierto (aunque sea en otra pestaña).
+const puedeNotificar = "Notification" in window;
+let reservasSinVer = 0;
+const tituloOriginal = document.title;
+
+function pintarEstadoAvisos() {
+  const boton = $("#notif-activar");
+  const estado = $("#notif-estado");
+  if (!puedeNotificar) {
+    boton.hidden = true;
+    estado.textContent = "🔔 Te avisaremos aquí con un sonido cuando llegue una reserva nueva.";
+  } else if (Notification.permission === "granted") {
+    boton.hidden = true;
+    estado.textContent = "🔔 Avisos activados: te avisamos cuando llegue una reserva nueva, mientras tengas el panel abierto.";
+  } else if (Notification.permission === "denied") {
+    boton.hidden = true;
+    estado.textContent = "🔕 Bloqueaste los avisos en este navegador. Puedes permitirlos desde el candado junto a la dirección.";
+  } else {
+    boton.hidden = false;
+    estado.textContent = "";
+  }
+}
+pintarEstadoAvisos();
+
+$("#notif-activar").addEventListener("click", async () => {
+  await Notification.requestPermission();
+  pintarEstadoAvisos();
+});
+
+// Un "ding" corto hecho con el navegador (sin archivos de audio)
+function sonarAviso() {
+  try {
+    const audio = new AudioContext();
+    [880, 1320].forEach((frecuencia, i) => {
+      const nota = audio.createOscillator();
+      const volumen = audio.createGain();
+      nota.frequency.value = frecuencia;
+      volumen.gain.setValueAtTime(0.2, audio.currentTime + i * 0.15);
+      volumen.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + i * 0.15 + 0.4);
+      nota.connect(volumen).connect(audio.destination);
+      nota.start(audio.currentTime + i * 0.15);
+      nota.stop(audio.currentTime + i * 0.15 + 0.4);
+    });
+  } catch { /* algunos navegadores no dejan sonar sin un clic previo */ }
+}
+
+function avisarReserva(r) {
+  const fecha = new Date(`${r.fecha}T00:00`).toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
+  const texto = `${r.nombre} reservó el ${fecha} a las ${r.hora}${r.modalidad ? ` · ${NOMBRES_MODALIDAD[r.modalidad]}` : ""}`;
+
+  // Aviso dentro del panel
+  const toast = $("#toast");
+  toast.innerHTML = "<strong>📅 ¡Nueva reserva!</strong><span></span>";
+  toast.querySelector("span").textContent = texto;
+  toast.hidden = false;
+  clearTimeout(toast.espera);
+  toast.espera = setTimeout(() => { toast.hidden = true; }, 8000);
+  sonarAviso();
+
+  // Si estás en otra pestaña: aviso del sistema y contador en el título
+  if (document.hidden) {
+    reservasSinVer++;
+    document.title = `(${reservasSinVer}) ${tituloOriginal}`;
+    if (puedeNotificar && Notification.permission === "granted") {
+      const aviso = new Notification("📅 ¡Nueva reserva!", { body: texto, icon: "apple-touch-icon.png" });
+      aviso.onclick = () => { window.focus(); $("#bookings-card").scrollIntoView({ behavior: "smooth" }); aviso.close(); };
+    }
+  }
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) { reservasSinVer = 0; document.title = tituloOriginal; }
+});
