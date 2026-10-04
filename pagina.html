@@ -24,16 +24,62 @@
           <div>
             <h1 id="c-nombre"></h1>
             <p id="c-zona"></p>
+            <p class="open-badge" id="c-abierto" hidden></p>
           </div>
         </div>
         <p class="catalog-intro" id="c-descripcion"></p>
+        <p class="catalog-notice" id="c-aviso" hidden></p>
+        <div class="social-links" id="c-redes"></div>
+        <p class="catalog-hours" id="c-horario" hidden></p>
+
+        <div class="catalog-tools" id="c-herramientas" hidden>
+          <input type="search" id="c-buscar" placeholder="Buscar servicio…" aria-label="Buscar servicio">
+          <div class="category-chips" id="c-categorias"></div>
+        </div>
         <div class="products" id="c-productos"></div>
+        <p class="catalog-empty" id="c-sin-resultados" hidden>No encontramos servicios con esa búsqueda.</p>
+
         <a class="whatsapp-button" id="c-whatsapp" target="_blank" rel="noopener">
           <span id="c-whatsapp-texto">Consultar por WhatsApp</span> <span aria-hidden="true">↗</span>
         </a>
+        <div class="catalog-actions">
+          <button class="link-button" type="button" id="c-compartir">Compartir esta página</button>
+          <button class="link-button" type="button" id="c-contacto">Guardar contacto</button>
+        </div>
       </div>
     </article>
   </main>
+
+  <!-- Barra del carrito (solo si el perfil lo tiene activado) -->
+  <button class="cart-bar" type="button" id="cart-bar" hidden>
+    <span><strong id="cart-count">0</strong> en tu pedido</span>
+    <span id="cart-total"></span>
+    <span>Ver pedido →</span>
+  </button>
+
+  <!-- Hoja de pedido / reserva que arma el mensaje de WhatsApp -->
+  <dialog class="sheet" id="sheet">
+    <form class="form" id="sheet-form" method="dialog">
+      <div class="card-head">
+        <h2 id="sheet-title">Tu pedido</h2>
+        <button class="link-button" type="button" id="sheet-close" aria-label="Cerrar">✕</button>
+      </div>
+      <ul class="cart-list" id="cart-list"></ul>
+      <p class="cart-sum" id="cart-sum"></p>
+      <label>Tu nombre<input id="f-nombre" required maxlength="60" autocomplete="name"></label>
+      <div class="form-row form-row-even" id="f-reserva" hidden>
+        <label>Fecha<input id="f-fecha" type="date"></label>
+        <label id="f-hora-libre">Hora<input id="f-hora" type="time"></label>
+      </div>
+      <div class="slots-field" id="f-turnos" hidden>
+        <span class="image-label">Horas disponibles</span>
+        <div class="slots" id="f-slots"><p class="panel-hint">Elige una fecha para ver las horas libres.</p></div>
+      </div>
+      <label>Comentario (opcional)<textarea id="f-nota" rows="2" maxlength="300" placeholder="Dirección, detalles, preguntas…"></textarea></label>
+      <p class="form-message" id="f-mensaje" role="alert"></p>
+      <button class="whatsapp-button" type="submit">Enviar por WhatsApp <span aria-hidden="true">↗</span></button>
+    </form>
+  </dialog>
 
   <footer class="public-footer">
     <a class="logo" href="index.html"><img src="logo.svg" alt="" width="36" height="36">Service<span>Planet</span></a>
@@ -44,8 +90,8 @@
   <template id="producto-molde">
     <button class="product" type="button">
       <span class="product-image" aria-hidden="true"></span>
-      <span class="product-info"><strong></strong><span class="price"></span><span class="product-desc"></span></span>
-      <span aria-hidden="true">+</span>
+      <span class="product-info"><strong></strong><span class="price"></span><span class="product-meta"></span><span class="product-desc"></span></span>
+      <span class="product-add" aria-hidden="true">+</span>
     </button>
   </template>
 

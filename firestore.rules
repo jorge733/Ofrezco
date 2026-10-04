@@ -21,6 +21,29 @@ service cloud.firestore {
         allow read: if true;
         allow write: if request.auth != null && request.auth.uid == uid;
       }
+
+      // Horas tomadas de la agenda: cualquiera las ve (sin datos personales) y cualquiera puede tomar una libre.
+      // "create" falla si la hora ya existe: así nadie puede reservar dos veces la misma hora.
+      match /ocupados/{turno} {
+        allow read: if true;
+        allow create: if turno.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}$')
+                      && request.resource.data.keys().hasOnly(['fecha', 'hora', 'creado'])
+                      && request.resource.data.fecha is string
+                      && request.resource.data.hora is string
+                      && turno == request.resource.data.fecha + '_' + request.resource.data.hora.replace(':', '-');
+        allow delete: if request.auth != null && request.auth.uid == uid;
+      }
+
+      // Datos de cada reserva: solo el dueño los ve. Se crean junto con su hora ocupada.
+      match /reservas/{turno} {
+        allow read, delete: if request.auth != null && request.auth.uid == uid;
+        allow create: if existsAfter(/databases/$(database)/documents/perfiles/$(uid)/ocupados/$(turno))
+                      && !exists(/databases/$(database)/documents/perfiles/$(uid)/ocupados/$(turno))
+                      && request.resource.data.keys().hasOnly(['fecha', 'hora', 'nombre', 'servicio', 'nota', 'creado'])
+                      && request.resource.data.nombre is string && request.resource.data.nombre.size() > 0 && request.resource.data.nombre.size() <= 60
+                      && request.resource.data.servicio is string && request.resource.data.servicio.size() <= 200
+                      && request.resource.data.nota is string && request.resource.data.nota.size() <= 300;
+      }
     }
   }
 }

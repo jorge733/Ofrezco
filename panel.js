@@ -157,6 +157,18 @@ function abrirFormularioPerfil() {
     $("#p-slug").value = perfil.slug;
     slugEditado = true;
   }
+  const redes = perfil?.redes || {};
+  ["instagram", "tiktok", "facebook", "web", "email"].forEach((red) => { $(`#p-${red}`).value = redes[red] || ""; });
+  const horario = perfil?.horario || {};
+  document.querySelectorAll("#p-dias input").forEach((c) => { c.checked = (horario.dias || []).includes(Number(c.value)); });
+  $("#p-abre").value = horario.abre || "";
+  $("#p-cierra").value = horario.cierra || "";
+  $("#p-carrito").checked = Boolean(perfil?.carrito);
+  $("#p-reservas").checked = Boolean(perfil?.reservas);
+  $("#p-aviso").value = perfil?.aviso || "";
+  $("#p-turno").value = String(perfil?.turno || 60);
+  const color = document.querySelector(`#p-color input[value="${perfil?.color || "#1c56d9"}"]`);
+  if (color) color.checked = true;
   imagenesPerfil = { logo: perfil?.logo || "", portada: perfil?.portada || "" };
   pintarImagenesPerfil();
   mostrarMensaje($("#profile-message"), "");
@@ -203,7 +215,24 @@ $("#profile-form").addEventListener("submit", async (event) => {
     whatsapp: limpiarWhatsapp($("#p-whatsapp").value),
     slug: crearSlug($("#p-slug").value),
     logo: imagenesPerfil.logo,
-    portada: imagenesPerfil.portada
+    portada: imagenesPerfil.portada,
+    redes: {
+      instagram: $("#p-instagram").value.trim().replace(/^@/, ""),
+      tiktok: $("#p-tiktok").value.trim().replace(/^@/, ""),
+      facebook: $("#p-facebook").value.trim(),
+      web: $("#p-web").value.trim(),
+      email: $("#p-email").value.trim()
+    },
+    horario: {
+      dias: [...document.querySelectorAll("#p-dias input:checked")].map((c) => Number(c.value)),
+      abre: $("#p-abre").value,
+      cierra: $("#p-cierra").value
+    },
+    carrito: $("#p-carrito").checked,
+    reservas: $("#p-reservas").checked,
+    turno: Number($("#p-turno").value),
+    aviso: $("#p-aviso").value.trim(),
+    color: document.querySelector("#p-color input:checked")?.value || "#1c56d9"
   };
   $("#p-slug").value = datos.slug;
 
@@ -261,7 +290,28 @@ function mostrarEnlace() {
   $("#share-link").textContent = url.replace(/^https?:\/\//, "");
   $("#share-whatsapp").href = `https://wa.me/?text=${encodeURIComponent(`Mira mi página: ${url}`)}`;
   $("#share-box").hidden = false;
+  dibujarQR(url);
 }
+
+// Código QR para imprimir en el local, tarjetas o flyers
+function dibujarQR(url) {
+  if (typeof qrcode !== "function") return; // si la librería no cargó, simplemente no mostramos el QR
+  const qr = qrcode(0, "M");
+  qr.addData(url);
+  qr.make();
+  $("#share-qr").innerHTML = qr.createSvgTag({ cellSize: 3, margin: 2, scalable: true });
+}
+
+$("#download-qr").addEventListener("click", () => {
+  if (typeof qrcode !== "function") return alert("No pudimos crear el QR. Recarga la página.");
+  const qr = qrcode(0, "M");
+  qr.addData($("#share-link").href);
+  qr.make();
+  const enlace = document.createElement("a");
+  enlace.href = qr.createDataURL(12, 4);
+  enlace.download = `qr-${perfil.slug}.gif`;
+  enlace.click();
+});
 
 $("#copy-link").addEventListener("click", async () => {
   await navigator.clipboard.writeText($("#share-link").href);
@@ -278,8 +328,10 @@ function productosRef() {
 function activarProductos() {
   $("#products-locked").hidden = true;
   if ($("#product-form").hidden) $("#product-new").hidden = false;
+  $("#bookings-card").hidden = !perfil.reservas;
   if (escuchandoProductos) return;
   escuchandoProductos = true;
+  escucharReservas();
   // onSnapshot vuelve a dibujar la lista cada vez que algo cambia en Firestore
   onSnapshot(query(productosRef(), orderBy("creado")), (snap) => mostrarProductos(snap.docs));
 }
@@ -287,6 +339,11 @@ function activarProductos() {
 function mostrarProductos(docs) {
   const lista = $("#product-list");
   lista.innerHTML = "";
+
+  // Sugerimos las categorías que ya usó para que no las escriba distinto cada vez
+  const categorias = [...new Set(docs.map((d) => d.data().categoria).filter(Boolean))];
+  $("#categorias").innerHTML = "";
+  categorias.forEach((c) => $("#categorias").append(new Option(c)));
 
   if (docs.length === 0) {
     lista.innerHTML = '<li class="panel-hint">Aún no has agregado servicios.</li>';
@@ -301,6 +358,13 @@ function mostrarProductos(docs) {
     miniatura.textContent = producto.imagen ? "" : (producto.emoji || producto.nombre.charAt(0).toUpperCase());
     item.querySelector("strong").textContent = producto.nombre;
     item.querySelector(".price").textContent = producto.precio;
+    item.querySelector(".row-tags").textContent = [
+      producto.destacado && "⭐ Destacado",
+      producto.oculto && "⏸ Pausado",
+      producto.categoria,
+      producto.duracion && `⏱ ${producto.duracion}`
+    ].filter(Boolean).join(" · ");
+    item.classList.toggle("paused", Boolean(producto.oculto));
     item.querySelector('[data-action="editar"]').addEventListener("click", () => abrirFormularioServicio(documento.id, producto));
     item.querySelector('[data-action="eliminar"]').addEventListener("click", () => eliminarProducto(documento.id, producto.nombre));
     lista.append(item);
@@ -319,6 +383,10 @@ function abrirFormularioServicio(id = null, producto = {}) {
   $("#pr-nombre").value = producto.nombre || "";
   $("#pr-precio").value = producto.precio || "";
   $("#pr-descripcion").value = producto.descripcion || "";
+  $("#pr-categoria").value = producto.categoria || "";
+  $("#pr-duracion").value = producto.duracion || "";
+  $("#pr-destacado").checked = Boolean(producto.destacado);
+  $("#pr-oculto").checked = Boolean(producto.oculto);
   imagenServicio = producto.imagen || "";
   pintarImagenServicio();
   $("#product-form-title").textContent = id ? "Editar servicio" : "Nuevo servicio";
@@ -352,6 +420,10 @@ $("#product-form").addEventListener("submit", async (event) => {
     nombre: $("#pr-nombre").value.trim(),
     precio: $("#pr-precio").value.trim(),
     descripcion: $("#pr-descripcion").value.trim(),
+    categoria: $("#pr-categoria").value.trim(),
+    duracion: $("#pr-duracion").value.trim(),
+    destacado: $("#pr-destacado").checked,
+    oculto: $("#pr-oculto").checked,
     imagen: imagenServicio
   };
 
@@ -375,4 +447,42 @@ async function eliminarProducto(id, nombre) {
   if (!confirm(`¿Eliminar "${nombre}"?`)) return;
   await deleteDoc(doc(productosRef(), id));
   if (editandoId === id) cerrarFormularioServicio();
+}
+
+// ---------- Agenda ----------
+
+// Cada reserva tiene el mismo id que su hora ocupada: "2026-10-15_14-30"
+function escucharReservas() {
+  const reservasRef = collection(db, "perfiles", usuario.uid, "reservas");
+  // El id ya está en orden cronológico, así que basta con ordenar por id (sin índices extra)
+  onSnapshot(reservasRef, (snap) => {
+    const lista = $("#booking-list");
+    lista.innerHTML = "";
+    const hoy = new Date().toLocaleDateString("en-CA"); // AAAA-MM-DD
+    const proximas = snap.docs.filter((d) => d.data().fecha >= hoy).sort((a, b) => a.id.localeCompare(b.id));
+    if (proximas.length === 0) {
+      lista.innerHTML = '<li class="panel-hint">No tienes reservas próximas.</li>';
+      return;
+    }
+    proximas.forEach((documento) => {
+      const r = documento.data();
+      const fecha = new Date(`${r.fecha}T00:00`).toLocaleDateString("es-CL", { weekday: "short", day: "numeric", month: "short" });
+      const item = document.createElement("li");
+      item.className = "product-row";
+      item.innerHTML = '<span class="product-thumb booking-time"></span><div class="product-row-info"><strong></strong><small class="row-tags"></small></div><div class="product-row-actions"><button class="link-button danger" type="button">Cancelar</button></div>';
+      item.querySelector(".booking-time").textContent = r.hora;
+      item.querySelector("strong").textContent = `${fecha} · ${r.nombre}`;
+      item.querySelector(".row-tags").textContent = [r.servicio, r.nota].filter(Boolean).join(" · ");
+      item.querySelector("button").addEventListener("click", () => cancelarReserva(documento.id, r));
+      lista.append(item);
+    });
+  });
+}
+
+async function cancelarReserva(id, reserva) {
+  if (!confirm(`¿Cancelar la reserva de ${reserva.nombre} (${reserva.fecha} ${reserva.hora})? Recuerda avisarle por WhatsApp.`)) return;
+  const batch = writeBatch(db);
+  batch.delete(doc(db, "perfiles", usuario.uid, "reservas", id));
+  batch.delete(doc(db, "perfiles", usuario.uid, "ocupados", id));
+  await batch.commit();
 }

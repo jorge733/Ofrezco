@@ -44,9 +44,11 @@
         <p class="share-label">Tu página está en</p>
         <a class="share-link" id="share-link" target="_blank" rel="noopener"></a>
       </div>
+      <div class="share-qr" id="share-qr" title="Código QR de tu página"></div>
       <div class="share-actions">
         <button class="button button-small" type="button" id="copy-link">Copiar enlace</button>
         <a class="button button-small button-outline" id="share-whatsapp" target="_blank" rel="noopener">Compartir por WhatsApp</a>
+        <button class="button button-small button-outline" type="button" id="download-qr">Descargar QR</button>
       </div>
     </section>
 
@@ -100,6 +102,49 @@
           <label>WhatsApp
             <input id="p-whatsapp" type="tel" required placeholder="+56 9 1234 5678">
           </label>
+          <fieldset class="form-group">
+            <legend>Redes y contacto <small>(opcional)</small></legend>
+            <label>Instagram<span class="input-prefix"><span>@</span><input id="p-instagram" maxlength="40" placeholder="tu_usuario"></span></label>
+            <label>TikTok<span class="input-prefix"><span>@</span><input id="p-tiktok" maxlength="40" placeholder="tu_usuario"></span></label>
+            <label>Facebook<input id="p-facebook" maxlength="120" placeholder="facebook.com/tu-pagina"></label>
+            <label>Sitio web<input id="p-web" maxlength="120" placeholder="www.tusitio.cl"></label>
+            <label>Correo<input id="p-email" type="email" maxlength="80" placeholder="hola@tusitio.cl"></label>
+          </fieldset>
+          <fieldset class="form-group">
+            <legend>Horario de atención <small>(opcional)</small></legend>
+            <div class="day-picker" id="p-dias">
+              <label><input type="checkbox" value="1">Lu</label><label><input type="checkbox" value="2">Ma</label><label><input type="checkbox" value="3">Mi</label><label><input type="checkbox" value="4">Ju</label><label><input type="checkbox" value="5">Vi</label><label><input type="checkbox" value="6">Sá</label><label><input type="checkbox" value="0">Do</label>
+            </div>
+            <div class="form-row form-row-even">
+              <label>Desde<input id="p-abre" type="time"></label>
+              <label>Hasta<input id="p-cierra" type="time"></label>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <legend>Cómo te piden</legend>
+            <label class="check"><input type="checkbox" id="p-carrito">Carrito: el cliente elige varios servicios y te envía el pedido con el total</label>
+            <label class="check"><input type="checkbox" id="p-reservas">Reservas: el cliente elige fecha y hora antes de escribirte</label>
+            <label>Duración de cada turno <small class="field-hint">Las horas reservadas se bloquean solas. Usa tu horario de atención.</small>
+              <select id="p-turno">
+                <option value="15">15 minutos</option><option value="30">30 minutos</option><option value="45">45 minutos</option>
+                <option value="60" selected>1 hora</option><option value="90">1 hora y media</option><option value="120">2 horas</option><option value="180">3 horas</option>
+              </select>
+            </label>
+            <label>Aviso destacado <small class="field-hint">Ej: 20% de descuento en octubre</small>
+              <input id="p-aviso" maxlength="120">
+            </label>
+          </fieldset>
+          <fieldset class="form-group">
+            <legend>Color de tu página</legend>
+            <div class="color-picker" id="p-color">
+              <label style="--c:#1c56d9"><input type="radio" name="color" value="#1c56d9" checked><span>Azul</span></label>
+              <label style="--c:#ff7b4a"><input type="radio" name="color" value="#ff7b4a"><span>Naranja</span></label>
+              <label style="--c:#20a464"><input type="radio" name="color" value="#20a464"><span>Verde</span></label>
+              <label style="--c:#8b3fd9"><input type="radio" name="color" value="#8b3fd9"><span>Morado</span></label>
+              <label style="--c:#e0457b"><input type="radio" name="color" value="#e0457b"><span>Rosa</span></label>
+              <label style="--c:#152238"><input type="radio" name="color" value="#152238"><span>Negro</span></label>
+            </div>
+          </fieldset>
           <label>Tu enlace
             <span class="input-prefix"><span>serviceplanet.cl/</span><input id="p-slug" required maxlength="40" placeholder="maria-pasteleria"></span>
           </label>
@@ -143,6 +188,17 @@
           <label>Precio
             <span class="input-prefix"><span aria-hidden="true">💵</span><input id="pr-precio" maxlength="40" placeholder="Ej: $5.000 la hora, Desde $24.000, A convenir"></span>
           </label>
+          <div class="form-row form-row-even">
+            <label>Categoría (opcional)
+              <input id="pr-categoria" maxlength="30" list="categorias" placeholder="Ej: Tortas, Clases">
+            </label>
+            <label>Duración (opcional)
+              <input id="pr-duracion" maxlength="30" placeholder="Ej: 1 hora, 45 min">
+            </label>
+          </div>
+          <datalist id="categorias"></datalist>
+          <label class="check"><input type="checkbox" id="pr-destacado">⭐ Destacado (aparece primero)</label>
+          <label class="check"><input type="checkbox" id="pr-oculto">Pausado (no se muestra en tu página)</label>
           <label>Descripción (opcional)
             <textarea id="pr-descripcion" rows="2" maxlength="200"></textarea>
           </label>
@@ -156,6 +212,12 @@
 
         <ul class="product-list" id="product-list"></ul>
       </section>
+
+      <section class="panel-card" id="bookings-card" hidden>
+        <h2>Tu agenda</h2>
+        <p class="panel-hint">Reservas que te hicieron desde tu página. Al cancelar una, esa hora vuelve a quedar libre.</p>
+        <ul class="product-list" id="booking-list"></ul>
+      </section>
     </div>
   </main>
 
@@ -163,7 +225,7 @@
   <template id="product-item">
     <li class="product-row">
       <span class="product-thumb" aria-hidden="true"></span>
-      <div class="product-row-info"><strong></strong><span class="price"></span></div>
+      <div class="product-row-info"><strong></strong><span class="price"></span><small class="row-tags"></small></div>
       <div class="product-row-actions">
         <button class="link-button" type="button" data-action="editar">Editar</button>
         <button class="link-button danger" type="button" data-action="eliminar">Eliminar</button>
@@ -171,6 +233,7 @@
     </li>
   </template>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
   <script type="module" src="panel.js"></script>
 </body>
 </html>
