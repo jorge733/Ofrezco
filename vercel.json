@@ -1,6 +1,9 @@
 {
   "cleanUrls": true,
+  "functions": {
+    "api/pagina.js": { "includeFiles": "pagina.html" }
+  },
   "rewrites": [
-    { "source": "/:slug", "destination": "/pagina" }
+    { "source": "/:slug", "destination": "/api/pagina?slug=:slug" }
   ]
 }
