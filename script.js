@@ -194,3 +194,58 @@ if (mostrarBloque("testimonio", MOSTRAR_TESTIMONIO)) {
 }
 
 mostrarBloque("quienes-somos", MOSTRAR_QUIENES_SOMOS);
+
+// ==== Video o GIF corto del editor en "Cómo funciona" ====
+// TODO: cuando tengas el video, súbelo junto a index.html y escribe aquí su nombre
+// (por ejemplo "editor.mp4" o "editor.gif") y una imagen de portada para "poster".
+// Mientras "src" esté vacío, el espacio no se muestra.
+const VIDEO_EDITOR = {
+  src: "",
+  poster: "",
+  descripcion: "Video corto: así se arma una página en el editor de ServicePlanet"
+};
+
+const videoEditor = document.querySelector("#video-editor");
+if (VIDEO_EDITOR.src && videoEditor) {
+  videoEditor.hidden = false;
+  const sinMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Se carga solo cuando está por aparecer en pantalla, para no hacer más lenta la portada
+  const cargarVideo = () => {
+    let media;
+    if (VIDEO_EDITOR.src.endsWith(".gif")) {
+      // Con "reducir movimiento" se muestra la portada fija en vez del GIF animado
+      media = Object.assign(document.createElement("img"), {
+        src: sinMovimiento && VIDEO_EDITOR.poster ? VIDEO_EDITOR.poster : VIDEO_EDITOR.src,
+        alt: VIDEO_EDITOR.descripcion,
+        decoding: "async"
+      });
+    } else {
+      media = Object.assign(document.createElement("video"), {
+        src: VIDEO_EDITOR.src,
+        poster: VIDEO_EDITOR.poster,
+        muted: true,
+        loop: true,
+        playsInline: true,
+        autoplay: !sinMovimiento,
+        controls: sinMovimiento,
+        preload: sinMovimiento ? "none" : "auto"
+      });
+      media.setAttribute("aria-label", VIDEO_EDITOR.descripcion);
+      media.setAttribute("muted", ""); // iPhone reproduce automáticamente solo si el atributo está en el HTML
+      media.setAttribute("playsinline", "");
+    }
+    videoEditor.append(media);
+  };
+
+  if ("IntersectionObserver" in window) {
+    const observador = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) return;
+      observador.disconnect();
+      cargarVideo();
+    }, { rootMargin: "300px" });
+    observador.observe(videoEditor);
+  } else {
+    cargarVideo();
+  }
+}
