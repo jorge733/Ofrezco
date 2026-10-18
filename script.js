@@ -75,3 +75,22 @@ tabs.forEach((tab) => {
 });
 
 showExample("pasteleria");
+
+// Botón fijo en celular: aparece cuando el botón de la portada sale por arriba de la pantalla
+// y se esconde mientras se ve cualquier otro botón "Crear mi página gratis" (para no repetirlo).
+const stickyCta = document.querySelector("#sticky-cta");
+const heroCta = document.querySelector("#hero-cta");
+if (stickyCta && heroCta && "IntersectionObserver" in window) {
+  const ctasEnPantalla = new Set();
+  let heroPasado = false;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) ctasEnPantalla.add(entry.target);
+      else ctasEnPantalla.delete(entry.target);
+      if (entry.target === heroCta) heroPasado = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+    });
+    stickyCta.classList.toggle("visible", heroPasado && ctasEnPantalla.size === 0);
+  });
+  document.querySelectorAll("[data-main-cta]").forEach((cta) => observer.observe(cta));
+  document.body.classList.add("has-sticky-cta");
+}

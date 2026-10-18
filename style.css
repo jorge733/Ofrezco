@@ -15,7 +15,7 @@ html { scroll-behavior: smooth; }
 body { background: var(--cream); color: var(--ink); font-family: "DM Sans", Arial, sans-serif; line-height: 1.5; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
-.container { margin: 0 auto; max-width: 1200px; padding-left: 32px; padding-right: 32px; }
+.container { margin: 0 auto; max-width: 1200px; padding-left: max(32px, env(safe-area-inset-left)); padding-right: max(32px, env(safe-area-inset-right)); }
 .header { align-items: center; display: flex; justify-content: space-between; padding-bottom: 24px; padding-top: 24px; }
 .logo { align-items: center; color: var(--ink); display: inline-flex; font-family: "DM Sans", Arial, sans-serif; font-size: 1.5rem; font-weight: 700; gap: 9px; letter-spacing: -0.045em; white-space: nowrap; }
 .logo img { height: 1.55em; width: 1.55em; }
@@ -58,7 +58,7 @@ h1 em { color: var(--blue); font-style: normal; }
 .step-number { color: var(--orange); font-size: .8rem; font-weight: 700; letter-spacing: .1em; }.step-card h3 { font-size: 1.2rem; margin: 17px 0 10px; }.step-card p { color: #536176; font-size: .95rem; line-height: 1.6; }
 .cta { background: var(--orange); color: var(--white); padding: 103px 0; text-align: center; }.cta .eyebrow { color: var(--ink); }.button-light { background: var(--white); border-color: var(--white); color: var(--ink); margin-top: 30px; }.button-light:hover { background: var(--ink); border-color: var(--ink); color: var(--white); }
 .footer { align-items: center; display: flex; justify-content: space-between; padding-bottom: 34px; padding-top: 34px; }.footer p { color: var(--muted); font-size: .88rem; }
-@media (max-width: 780px) { .container { padding-left: 23px; padding-right: 23px; }.navigation > a:first-child { display: none; }.hero { display: flex; flex-direction: column; min-height: auto; padding-bottom: 88px; padding-top: 65px; }.hero-content { width: 100%; }.catalog-preview { transform: none; }.preview-label { left: 0; }.steps { padding: 78px 0; }.steps-grid { grid-template-columns: 1fr; margin-top: 38px; }.cta { padding: 80px 0; }.footer { align-items: flex-start; flex-direction: column; gap: 11px; } }
+@media (max-width: 780px) { .container { padding-left: max(23px, env(safe-area-inset-left)); padding-right: max(23px, env(safe-area-inset-right)); }.navigation > a:first-child { display: none; }.hero { display: flex; flex-direction: column; min-height: auto; padding-bottom: 88px; padding-top: 65px; }.hero-content { width: 100%; }.catalog-preview { transform: none; }.preview-label { left: 0; }.steps { padding: 78px 0; }.steps-grid { grid-template-columns: 1fr; margin-top: 38px; }.cta { padding: 80px 0; }.footer { align-items: flex-start; flex-direction: column; gap: 11px; } }
 @media (max-width: 430px) { .header { padding-top: 19px; }.logo { font-size: 1.3rem; }.button-small { font-size: .83rem; padding: 9px 13px; } h1 { font-size: 3.25rem; }.hero-actions { align-items: flex-start; flex-direction: column; gap: 18px; }.catalog-preview { box-shadow: 10px 12px 0 var(--orange); padding: 21px; } }
 
 /* Pestañas de ejemplos y sección "Para todo lo que ofreces" */
@@ -94,3 +94,17 @@ h1 em { color: var(--blue); font-style: normal; }
 @media (max-width: 780px) { .includes, .faq { padding: 78px 0; } }
 @media (max-width: 430px) { .includes-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .cta-extra { display: none; }.navigation { gap: 14px; }.header { gap: 14px; } }
+/* Botón "Crear mi página gratis" repetido al final de algunas secciones */
+.section-cta { margin-top: 48px; text-align: center; }
+@media (max-width: 780px) { .section-cta { margin-top: 36px; } }
+/* Botón fijo en celular: aparece cuando el botón de la portada sale de la pantalla (script.js) */
+.sticky-cta { display: none; }
+@media (max-width: 767px) {
+  .sticky-cta { background: rgba(255, 249, 239, .96); border-top: 1px solid var(--line); bottom: 0; display: block; left: 0; padding: 12px max(16px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); position: fixed; right: 0; transform: translateY(100%); transition: transform .25s ease, visibility .25s; visibility: hidden; z-index: 20; }
+  .sticky-cta.visible { transform: none; visibility: visible; }
+  .sticky-cta .button { width: 100%; }
+  .sticky-cta .button:hover { transform: none; }
+  /* Espacio extra al final para que el botón fijo no tape el pie de página */
+  body.has-sticky-cta { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
