@@ -34,7 +34,7 @@ h1 em { color: var(--blue); font-style: normal; }
 .hero-text { font-size: 1.13rem; line-height: 1.65; margin: 27px 0; max-width: 510px; }
 .hero-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 25px; }
 .text-link { font-weight: 700; }
-.microcopy { color: var(--muted); font-size: .82rem; margin-top: 22px; }
+.microcopy { color: var(--muted); font-size: .82rem; margin-top: 22px; }.nowrap { white-space: nowrap; }
 .preview-wrap { position: relative; }
 .preview-label { color: var(--blue); font-size: .68rem; font-weight: 700; left: -14px; letter-spacing: .14em; position: absolute; top: -25px; transform: rotate(-3deg); }
 .catalog-preview { background: var(--white); border: 1px solid var(--line); border-radius: 24px; box-shadow: 16px 18px 0 var(--orange); padding: 27px; transform: rotate(2deg); }
@@ -54,7 +54,7 @@ h1 em { color: var(--blue); font-style: normal; }
 .product:hover .product-arrow { color: var(--blue); transform: translateX(3px); }
 .whatsapp-button { align-items: center; background: #20b96b; border-radius: 12px; color: var(--white); display: flex; font-size: .91rem; font-weight: 700; justify-content: space-between; margin-top: 18px; padding: 14px 16px; transition: background .2s ease, transform .2s ease; }
 .whatsapp-button:hover { background: #159554; transform: translateY(-2px); }
-.whatsapp-tag { font-size: .78rem; }
+.whatsapp-button { gap: 10px; }.whatsapp-tag { flex: 0 0 auto; font-size: .78rem; }
 /* Botón de muestra (sin página demo): no es un enlace, así que no reacciona al pasar el mouse */
 .whatsapp-button.is-sample { cursor: default; }.whatsapp-button.is-sample:hover { background: #20b96b; transform: none; }
 .whatsapp-button.is-sample .whatsapp-tag { background: rgba(255, 255, 255, .2); border-radius: 999px; font-size: .68rem; letter-spacing: .1em; padding: 4px 9px; text-transform: uppercase; }
