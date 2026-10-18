@@ -17,8 +17,9 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 .container { margin: 0 auto; max-width: 1200px; padding-left: max(32px, env(safe-area-inset-left)); padding-right: max(32px, env(safe-area-inset-right)); }
 .header { align-items: center; display: flex; justify-content: space-between; padding-bottom: 24px; padding-top: 24px; }
-.logo { align-items: center; color: var(--ink); display: inline-flex; font-family: "DM Sans", Arial, sans-serif; font-size: 1.5rem; font-weight: 700; gap: 9px; letter-spacing: -0.045em; white-space: nowrap; }
-.logo img { height: 1.55em; width: 1.55em; }
+.logo { align-items: center; color: var(--ink); display: inline-flex; font-family: "DM Sans", Arial, sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.045em; white-space: nowrap; }
+/* El espacio va solo después del ícono: un "gap" separaría "Service" y "Planet" */
+.logo img { height: 1.55em; margin-right: 9px; width: 1.55em; }
 .logo span { color: var(--blue); }
 .navigation { align-items: center; display: flex; gap: 28px; font-size: .95rem; font-weight: 600; }
 .navigation > a:first-child:hover, .text-link:hover { color: var(--blue); }

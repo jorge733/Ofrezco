@@ -382,6 +382,7 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 .sidebar { background: var(--white); border-right: 1px solid var(--line); display: flex; flex: 0 0 auto; flex-direction: column; gap: 14px; height: 100vh; overflow: hidden; padding: 14px 12px; position: sticky; top: 0; transition: width .2s ease; width: 260px; z-index: 50; }
 .sidebar-top { align-items: center; display: flex; gap: 6px; justify-content: space-between; min-height: 44px; }
 .sidebar-logo { align-items: center; display: flex; font-size: 1.25rem; gap: 8px; padding-left: 6px; white-space: nowrap; }
+.sidebar-logo img { margin-right: 0; }
 .side-toggle { background: none; border: 0; border-radius: 10px; color: var(--ink); cursor: pointer; flex: 0 0 auto; font-size: 1.2rem; height: 40px; width: 40px; }
 .side-toggle:hover { background: var(--cream); }
 .side-nav, .sidebar-bottom { display: grid; gap: 4px; }
@@ -419,5 +420,5 @@ body.has-cart .public-footer { padding-bottom: 110px; }
   .dash.menu-open .side-backdrop { background: rgba(6, 11, 24, .45); display: block; inset: 0; position: fixed; z-index: 40; }
   .dash-main { padding-left: 16px; padding-right: 16px; }
   .mobile-bar { align-items: center; display: flex; gap: 8px; padding-bottom: 8px; }
-  .mobile-bar .logo { align-items: center; display: flex; font-size: 1.2rem; gap: 6px; }
+  .mobile-bar .logo { align-items: center; display: flex; font-size: 1.2rem; }.mobile-bar .logo img { margin-right: 6px; }
 }
