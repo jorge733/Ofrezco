@@ -7,7 +7,7 @@
   --white: #ffffff;
   --mist: #eaf1ff;
   --line: #e7ded0;
-  --muted: #657086;
+  --muted: #5f6a80; /* 5,2:1 sobre crema y 4,8:1 sobre celeste (WCAG AA) */
 }
 
 * { box-sizing: border-box; margin: 0; }
@@ -156,3 +156,16 @@ h1 em { color: var(--blue); font-style: normal; }
 .steps-media { aspect-ratio: 16 / 10; background: var(--white); border: 1px solid #dfe7f7; border-radius: 22px; margin: 44px auto 0; max-width: 880px; overflow: hidden; }
 .steps-media video, .steps-media img { display: block; height: 100%; object-fit: cover; width: 100%; }
 @media (max-width: 780px) { .steps-media { border-radius: 16px; margin-top: 32px; } }
+/* Foco visible para quien navega con teclado */
+:focus-visible { border-radius: 6px; outline: 3px solid var(--blue); outline-offset: 3px; }
+.button:focus-visible, .example-tab:focus-visible { border-radius: 999px; }
+.cta :focus-visible { outline-color: var(--ink); }
+/* En el FAQ se marca la pregunta completa, no solo el texto */
+.faq-list summary:focus-visible { outline: none; }
+.faq-list details:has(summary:focus-visible) { outline: 3px solid var(--blue); outline-offset: 2px; }
+@supports not selector(:has(*)) { .faq-list summary:focus-visible { outline: 3px solid var(--blue); } }
+/* Quien pide menos movimiento: sin desplazamientos suaves ni saltos al pasar el mouse */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .button:hover, .whatsapp-button:hover, .step-card:hover, .product:hover .product-arrow { transform: none; }
+}

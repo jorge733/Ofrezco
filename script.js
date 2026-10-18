@@ -91,7 +91,11 @@ function showExample(key) {
     itemsList.append(button);
   });
 
-  tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.example === key));
+  tabs.forEach((tab) => {
+    const activa = tab.dataset.example === key;
+    tab.classList.toggle("active", activa);
+    tab.setAttribute("aria-pressed", String(activa));
+  });
 }
 
 tabs.forEach((tab) => {
