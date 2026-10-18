@@ -49,9 +49,14 @@ h1 em { color: var(--blue); font-style: normal; }
 .product-image { align-items: center; border-radius: 13px; display: flex; flex: 0 0 auto; font-size: 1.65rem; height: 58px; justify-content: center; width: 58px; }
 .cake { background: #ffe5d8; }.brownie { background: #e9e0ff; }
 .product-info { display: grid; gap: 2px; }.product-info strong { font-size: .91rem; }.product-info small { color: var(--muted); font-size: .8rem; }
-.product > span:last-child { font-size: 1.2rem; margin-left: auto; }
+.product-arrow { color: var(--muted); font-size: 1.35rem; line-height: 1; margin-left: auto; transition: color .2s ease, transform .2s ease; }
+.product:hover .product-arrow { color: var(--blue); transform: translateX(3px); }
 .whatsapp-button { align-items: center; background: #20b96b; border-radius: 12px; color: var(--white); display: flex; font-size: .91rem; font-weight: 700; justify-content: space-between; margin-top: 18px; padding: 14px 16px; transition: background .2s ease, transform .2s ease; }
 .whatsapp-button:hover { background: #159554; transform: translateY(-2px); }
+.whatsapp-tag { font-size: .78rem; }
+/* Botón de muestra (sin página demo): no es un enlace, así que no reacciona al pasar el mouse */
+.whatsapp-button.is-sample { cursor: default; }.whatsapp-button.is-sample:hover { background: #20b96b; transform: none; }
+.whatsapp-button.is-sample .whatsapp-tag { background: rgba(255, 255, 255, .2); border-radius: 999px; font-size: .68rem; letter-spacing: .1em; padding: 4px 9px; text-transform: uppercase; }
 .steps { background: var(--mist); padding: 100px 0; text-align: center; }.steps h2, .cta h2 { font-size: clamp(2.45rem, 4.3vw, 4.05rem); }
 .steps-grid { display: grid; gap: 24px; grid-template-columns: repeat(3, 1fr); margin-top: 52px; text-align: left; }
 .step-card { background: var(--white); border: 1px solid #dfe7f7; border-radius: 18px; padding: 30px; transition: transform .2s ease, box-shadow .2s ease; }.step-card:hover { box-shadow: 0 12px 27px rgba(28, 86, 217, .11); transform: translateY(-4px); }
