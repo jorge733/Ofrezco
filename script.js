@@ -118,3 +118,79 @@ if (stickyCta && heroCta && "IntersectionObserver" in window) {
   document.querySelectorAll("[data-main-cta]").forEach((cta) => observer.observe(cta));
   document.body.classList.add("has-sticky-cta");
 }
+
+// ==== Bloques de confianza ====
+// Cada bloque queda oculto hasta que su flag sea true. Para revisarlos antes de publicarlos,
+// abre la portada con ?vista-previa al final (por ejemplo localhost:5500/?vista-previa).
+const MOSTRAR_PAGINAS_REALES = false;
+const MOSTRAR_TESTIMONIO = false;
+const MOSTRAR_QUIENES_SOMOS = false; // TODO: completa tu foto, nombre y texto en index.html
+
+// TODO: estos negocios son DATOS DE EJEMPLO, no existen. Reemplázalos por páginas reales
+// (con permiso de sus dueños) antes de cambiar MOSTRAR_PAGINAS_REALES a true.
+// "enlace" es lo que va después de serviceplanet.cl/
+const paginasReales = [
+  { nombre: "Pastelería de ejemplo", rubro: "Repostería", comuna: "Maipú", enlace: "ejemplo-pasteleria" },
+  { nombre: "Gasfitería de ejemplo", rubro: "Gasfitería", comuna: "Puente Alto", enlace: "ejemplo-gasfiteria" },
+  { nombre: "Clases de ejemplo", rubro: "Clases particulares", comuna: "Ñuñoa", enlace: "ejemplo-clases" }
+];
+
+// TODO: este testimonio es un EJEMPLO, no es real. Reemplázalo por uno real (con permiso)
+// antes de cambiar MOSTRAR_TESTIMONIO a true. "foto" puede quedar vacía: se muestra la inicial.
+const testimonio = {
+  foto: "", // por ejemplo "testimonio-ana.jpg"
+  nombre: "Nombre de ejemplo",
+  comuna: "Comuna de ejemplo",
+  frase: "Aquí va lo que te contó un emprendedor real sobre su página."
+};
+
+const vistaPrevia = new URLSearchParams(location.search).has("vista-previa");
+
+function mostrarBloque(id, activo) {
+  const bloque = document.getElementById(id);
+  if (!bloque || !(activo || vistaPrevia)) return null;
+  bloque.hidden = false;
+  bloque.classList.toggle("preview-mode", !activo);
+  return bloque;
+}
+
+// Círculo con la inicial, igual que el de la tarjeta de ejemplo de la portada
+function avatarInicial(nombre) {
+  const avatar = document.createElement("span");
+  avatar.className = "avatar";
+  avatar.setAttribute("aria-hidden", "true");
+  avatar.textContent = nombre.charAt(0);
+  return avatar;
+}
+
+if (mostrarBloque("paginas-reales", MOSTRAR_PAGINAS_REALES)) {
+  const grid = document.querySelector("#showcase-grid");
+  paginasReales.forEach((pagina) => {
+    const card = document.createElement("a");
+    card.className = "showcase-card";
+    card.href = `/${pagina.enlace}`;
+    card.innerHTML = `
+      <span class="showcase-head"><span><strong></strong><small></small></span></span>
+      <span class="showcase-link"><span></span> <span aria-hidden="true">→</span></span>`;
+    card.querySelector(".showcase-head").prepend(avatarInicial(pagina.nombre));
+    card.querySelector("strong").textContent = pagina.nombre;
+    card.querySelector("small").textContent = `${pagina.rubro} · ${pagina.comuna}`;
+    card.querySelector(".showcase-link span").textContent = `serviceplanet.cl/${pagina.enlace}`;
+    grid.append(card);
+  });
+}
+
+if (mostrarBloque("testimonio", MOSTRAR_TESTIMONIO)) {
+  const tarjeta = document.querySelector("#testimonio-tarjeta");
+  tarjeta.innerHTML = `<blockquote></blockquote><figcaption><span><strong></strong><small></small></span></figcaption>`;
+  tarjeta.querySelector("blockquote").textContent = testimonio.frase;
+  tarjeta.querySelector("strong").textContent = testimonio.nombre;
+  tarjeta.querySelector("small").textContent = testimonio.comuna;
+  let foto = avatarInicial(testimonio.nombre);
+  if (testimonio.foto) {
+    foto = Object.assign(document.createElement("img"), { src: testimonio.foto, alt: `Foto de ${testimonio.nombre}`, width: 47, height: 47, loading: "lazy", decoding: "async" });
+  }
+  tarjeta.querySelector("figcaption").prepend(foto);
+}
+
+mostrarBloque("quienes-somos", MOSTRAR_QUIENES_SOMOS);

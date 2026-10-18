@@ -135,6 +135,24 @@
       </div>
     </section>
 
+    <!-- Páginas reales: se arma desde la lista "paginasReales" de script.js y queda oculta
+         hasta que MOSTRAR_PAGINAS_REALES sea true. TODO: cargar negocios reales (con su permiso). -->
+    <section class="showcase" id="paginas-reales" data-flag hidden>
+      <div class="container">
+        <p class="eyebrow">PÁGINAS REALES</p>
+        <h2>Emprendedores que ya<br>tienen su página.</h2>
+        <div class="showcase-grid" id="showcase-grid"></div>
+      </div>
+    </section>
+
+    <!-- Testimonio: se arma desde "testimonio" en script.js y queda oculto
+         hasta que MOSTRAR_TESTIMONIO sea true. TODO: cargar un testimonio real (con su permiso). -->
+    <section class="testimonial-section" id="testimonio" data-flag hidden>
+      <div class="container">
+        <figure class="testimonial" id="testimonio-tarjeta"></figure>
+      </div>
+    </section>
+
     <section class="includes" id="incluye">
       <div class="container">
         <p class="eyebrow">SIN LETRA CHICA</p>
@@ -175,6 +193,23 @@
           <li>🧶 Tejidos a mano</li>
           <li>✨ Y todo lo que imagines</li>
         </ul>
+      </div>
+    </section>
+
+    <!-- Quiénes somos: oculto hasta que MOSTRAR_QUIENES_SOMOS sea true en script.js.
+         TODO: escribe tu nombre y tus 2 líneas, y cambia el círculo por tu foto, por ejemplo:
+         <img class="about-photo" src="tu-foto.jpg" alt="Foto de TU NOMBRE" width="120" height="120" loading="lazy" decoding="async"> -->
+    <section class="about" id="quienes-somos" data-flag hidden>
+      <div class="container">
+        <div class="about-card">
+          <div class="about-photo about-photo-empty" aria-hidden="true">Tu foto</div>
+          <div class="about-text">
+            <p class="eyebrow">QUIÉNES SOMOS</p>
+            <h2>Hola, soy [Tu nombre].</h2>
+            <p>[Línea 1: por qué creaste ServicePlanet.]</p>
+            <p>[Línea 2: qué quieres lograr con los emprendedores que lo usan.]</p>
+          </div>
+        </div>
       </div>
     </section>
 

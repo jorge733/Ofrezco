@@ -114,3 +114,36 @@ h1 em { color: var(--blue); font-style: normal; }
   body.has-sticky-cta { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
 }
 @media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
+/* Páginas reales (oculta con un flag en script.js) */
+.showcase { padding: 100px 0; text-align: center; }.showcase h2, .about h2 { font-size: clamp(2.45rem, 4.3vw, 4.05rem); }
+.showcase-grid { display: grid; gap: 18px; grid-template-columns: repeat(3, 1fr); margin-top: 48px; text-align: left; }
+.showcase-card { background: var(--white); border: 1px solid var(--line); border-radius: 18px; display: grid; gap: 18px; padding: 24px; transition: transform .2s ease, box-shadow .2s ease; }
+.showcase-card:hover { box-shadow: 0 12px 27px rgba(28, 86, 217, .11); transform: translateY(-4px); }
+.showcase-head { align-items: center; display: flex; gap: 12px; }
+.showcase-head strong { display: block; font-size: 1.02rem; }.showcase-head small { color: var(--muted); font-size: .85rem; }
+.showcase-link { border-top: 1px solid #eee8de; color: var(--blue); font-size: .88rem; font-weight: 700; overflow-wrap: anywhere; padding-top: 14px; }
+/* Testimonio (oculto con un flag en script.js) */
+/* Va seguida de "Tu página incluye", que ya trae su propio espacio arriba */
+.testimonial-section { padding: 0; }
+.showcase[hidden] + .testimonial-section { padding-top: 100px; }
+.testimonial { background: var(--white); border: 1px solid var(--line); border-radius: 24px; box-shadow: 12px 14px 0 var(--orange); margin: 0 auto; max-width: 760px; padding: 40px 44px; }
+.testimonial blockquote { font-family: "Playfair Display", Georgia, serif; font-size: clamp(1.35rem, 2.4vw, 1.75rem); font-weight: 600; letter-spacing: -.02em; line-height: 1.3; margin: 0; }
+.testimonial blockquote::before { color: var(--orange); content: "“"; display: block; font-size: 3.2rem; height: .55em; line-height: 1; }
+.testimonial figcaption { align-items: center; display: flex; gap: 12px; margin-top: 26px; }
+.testimonial figcaption img { border-radius: 50%; height: 47px; object-fit: cover; width: 47px; }
+.testimonial figcaption strong { display: block; font-size: .95rem; }.testimonial figcaption small { color: var(--muted); font-size: .85rem; }
+/* Quiénes somos (oculto con un flag en script.js) */
+.about { padding: 0 0 100px; }
+.about-card { align-items: center; background: var(--white); border: 1px solid var(--line); border-radius: 24px; display: grid; gap: 36px; grid-template-columns: auto 1fr; margin: 0 auto; max-width: 860px; padding: 40px 44px; }
+.about-photo { border-radius: 50%; height: 120px; object-fit: cover; width: 120px; }
+.about-photo-empty { align-items: center; background: var(--mist); border: 2px dashed #b9c8ea; color: var(--muted); display: flex; font-size: .8rem; font-weight: 600; justify-content: center; }
+.about h2 { font-size: clamp(2rem, 3.4vw, 2.8rem); margin-bottom: 14px; }
+.about-text p:not(.eyebrow) { color: #536176; font-size: 1.02rem; line-height: 1.65; }
+/* Aviso visible solo en ?vista-previa, para no confundir datos de ejemplo con reales */
+.testimonial-section.preview-mode, .about.preview-mode { padding-top: 64px; }
+[data-flag].preview-mode { outline: 2px dashed var(--orange); outline-offset: -10px; position: relative; }
+[data-flag].preview-mode::before { background: var(--orange); border-radius: 999px; color: var(--white); content: "VISTA PREVIA · DATOS DE EJEMPLO"; font-size: .65rem; font-weight: 700; left: 50%; letter-spacing: .12em; padding: 5px 12px; position: absolute; top: 18px; transform: translateX(-50%); white-space: nowrap; z-index: 1; }
+@media (max-width: 980px) { .showcase-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 780px) { .showcase { padding: 78px 0; }.about { padding-bottom: 78px; }.showcase[hidden] + .testimonial-section { padding-top: 78px; }.testimonial, .about-card { padding: 30px 26px; }.about-card { gap: 22px; grid-template-columns: 1fr; justify-items: start; } }
+@media (max-width: 600px) { .showcase-grid { grid-template-columns: 1fr; }.testimonial { box-shadow: 10px 12px 0 var(--orange); } }
+@media (prefers-reduced-motion: reduce) { .showcase-card { transition: none; }.showcase-card:hover { transform: none; } }
