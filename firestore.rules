@@ -2,6 +2,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Una fecha real, desde ayer (por las diferencias de zona horaria) hasta un año más
+    function fechaDeAgendaValida(fecha) {
+      return fecha is string
+        && fecha.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && timestamp.value(fecha + 'T00:00:00Z') >= request.time - duration.value(2, 'd')
+        && timestamp.value(fecha + 'T00:00:00Z') <= request.time + duration.value(366, 'd');
+    }
+
     // Enlaces únicos: cualquiera puede leerlos, solo el dueño puede crearlos o borrarlos.
     // "create" falla si el enlace ya existe, así nadie puede quitarle el suyo a otra persona.
     match /slugs/{slug} {
@@ -47,13 +55,18 @@ service cloud.firestore {
 
       // Horas tomadas de la agenda: cualquiera las ve (sin datos personales) y cualquiera puede tomar una libre.
       // "create" falla si la hora ya existe: así nadie puede reservar dos veces la misma hora.
+      // Solo se puede tomar junto con su reserva, para que el dueño siempre vea quién ocupó cada hora y pueda liberarla.
       match /ocupados/{turno} {
         allow read: if true;
         allow create: if turno.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}$')
                       && request.resource.data.keys().hasOnly(['fecha', 'hora', 'creado'])
-                      && request.resource.data.fecha is string
+                      && fechaDeAgendaValida(request.resource.data.fecha)
                       && request.resource.data.hora is string
-                      && turno == request.resource.data.fecha + '_' + request.resource.data.hora.replace(':', '-');
+                      && request.resource.data.hora.matches('^[0-9]{2}:[0-9]{2}$')
+                      && turno == request.resource.data.fecha + '_' + request.resource.data.hora.replace(':', '-')
+                      && request.resource.data.creado == request.time
+                      && get(/databases/$(database)/documents/perfiles/$(uid)).data.get('reservas', false) == true
+                      && existsAfter(/databases/$(database)/documents/perfiles/$(uid)/reservas/$(turno));
         allow delete: if request.auth != null && request.auth.uid == uid;
       }
 
@@ -63,6 +76,9 @@ service cloud.firestore {
         allow create: if existsAfter(/databases/$(database)/documents/perfiles/$(uid)/ocupados/$(turno))
                       && !exists(/databases/$(database)/documents/perfiles/$(uid)/ocupados/$(turno))
                       && request.resource.data.keys().hasOnly(['fecha', 'hora', 'nombre', 'servicio', 'nota', 'modalidad', 'creado'])
+                      && request.resource.data.fecha == getAfter(/databases/$(database)/documents/perfiles/$(uid)/ocupados/$(turno)).data.fecha
+                      && request.resource.data.hora == getAfter(/databases/$(database)/documents/perfiles/$(uid)/ocupados/$(turno)).data.hora
+                      && request.resource.data.creado == request.time
                       && request.resource.data.nombre is string && request.resource.data.nombre.size() > 0 && request.resource.data.nombre.size() <= 60
                       && request.resource.data.servicio is string && request.resource.data.servicio.size() <= 200
                       && request.resource.data.nota is string && request.resource.data.nota.size() <= 300

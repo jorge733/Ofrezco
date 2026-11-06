@@ -406,6 +406,7 @@ function prepararHoja() {
   dibujarModalidades();
   const hoy = new Date();
   $("#f-fecha").min = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  $("#f-fecha").max = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000 + 365 * 86400000).toISOString().slice(0, 10); // se reserva hasta un año adelante
   $("#f-mensaje").textContent = "";
   dibujarHoja();
 }
