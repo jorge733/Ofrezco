@@ -13,6 +13,8 @@ const { crearProveedor } = require("./tienda/flow");
 const { decidirCompra, compraVencida } = require("./tienda/compras");
 
 const REGION = "southamerica-west1";
+// Las tareas programadas de Google (Cloud Scheduler) no existen en Santiago: esta corre en Sao Paulo
+const REGION_PROGRAMADAS = "southamerica-east1";
 const SITIO = process.env.SITIO || "https://www.serviceplanet.cl";
 const BASE_FUNCIONES = `https://${REGION}-${process.env.GCLOUD_PROJECT || "ofrezco-2583a"}.cloudfunctions.net`;
 const UNA_HORA_EN_SEGUNDOS = 60 * 60;
@@ -133,7 +135,7 @@ exports.retornoPagoFlow = onRequest({ region: REGION }, async (req, res) => {
 });
 
 // Cada día se revisan los pagos sin confirmar, por si un aviso de Flow no llegó
-exports.revisarComprasPendientes = onSchedule({ schedule: "every day 08:00", timeZone: "America/Santiago", region: REGION, timeoutSeconds: 300 }, async () => {
+exports.revisarComprasPendientes = onSchedule({ schedule: "every day 08:00", timeZone: "America/Santiago", region: REGION_PROGRAMADAS, timeoutSeconds: 300 }, async () => {
   const pendientes = await db().collection("compras").where("estado", "==", "pendiente").get();
   if (pendientes.empty) return;
   const proveedor = crearProveedor();
