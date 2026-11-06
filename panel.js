@@ -90,7 +90,7 @@ onAuthStateChanged(auth, async (user) => {
     mostrarBienvenida();
   }
   $("#panel").hidden = false;
-  mostrarVista(perfil ? "inicio" : "perfil");
+  mostrarVista(!perfil ? "perfil" : location.hash === "#tienda" ? "tienda" : "inicio");
 });
 
 $("#logout").addEventListener("click", () => signOut(auth));

@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="app.css?v=2">
+  <link rel="stylesheet" href="app.css?v=3">
 </head>
 <body>
 
@@ -54,6 +54,7 @@
       <button class="side-item" type="button" data-go="servicios" title="Tus servicios"><span class="side-icon" aria-hidden="true">🛠️</span><span class="side-label">Tus servicios</span></button>
       <button class="side-item" type="button" data-go="trabajos" title="Tus trabajos"><span class="side-icon" aria-hidden="true">📸</span><span class="side-label">Tus trabajos</span></button>
       <button class="side-item" type="button" data-go="agenda" title="Tu agenda"><span class="side-icon" aria-hidden="true">📅</span><span class="side-label">Tu agenda</span></button>
+      <button class="side-item" type="button" data-go="tienda" title="Tienda"><span class="side-icon" aria-hidden="true">🛍️</span><span class="side-label">Tienda</span></button>
     </nav>
     <div class="sidebar-bottom">
       <button class="side-item side-client" type="button" id="client-toggle" title="Ver tu página como tus clientes"><span class="side-icon" aria-hidden="true">👁️</span><span class="side-label" id="client-toggle-text">Vista cliente</span></button>
@@ -225,10 +226,10 @@
             <legend>Diseño de tu página</legend>
             <div class="design-picker">
               <label class="design-option"><input type="radio" name="diseno" value="profesional" checked><span class="design-name">Profesional con reservas</span><small>Tu diseño actual</small></label>
-              <div class="design-option locked"><span class="design-name">Portada de impacto</span><small>Próximamente · Pro</small></div>
-              <div class="design-option locked"><span class="design-name">Tienda con barra lateral</span><small>Próximamente · Pro</small></div>
-              <div class="design-option locked"><span class="design-name">Link en bio premium</span><small>Próximamente · Pro</small></div>
-              <div class="design-option locked"><span class="design-name">Mini sitio web completo</span><small>Próximamente · Pro</small></div>
+              <div class="design-option locked"><span class="design-name">Portada de impacto</span><small>Próximamente en la Tienda</small></div>
+              <div class="design-option locked"><span class="design-name">Tienda con barra lateral</span><small>Próximamente</small></div>
+              <div class="design-option locked"><span class="design-name">Link en bio premium</span><small>Próximamente</small></div>
+              <div class="design-option locked"><span class="design-name">Mini sitio web completo</span><small>Próximamente</small></div>
             </div>
           </fieldset>
           <fieldset class="form-group">
@@ -335,6 +336,14 @@
         <ul class="product-list" id="product-list"></ul>
       </section>
 
+      <section class="panel-card" id="store-card" data-view="tienda">
+        <h2>Tienda</h2>
+        <p class="panel-hint">Tu página es gratis. Si quieres algo más, compra solo lo que necesites: <strong>pagas una vez y queda activo mientras exista tu cuenta</strong>, sin mensualidades.</p>
+        <ul class="store-list" id="tienda-lista"></ul>
+        <p class="form-message" id="tienda-mensaje" role="status" aria-live="polite"></p>
+        <p class="panel-hint store-note">El pago se hace en Flow, y ServicePlanet no ve ni guarda los datos de tu tarjeta. Al comprar aceptas los <a href="terminos.html">Términos</a>.</p>
+      </section>
+
       <section class="panel-card" id="gallery-card" data-view="trabajos" hidden>
         <h2>Trabajos realizados</h2>
         <p class="panel-hint">Sube fotos de lo que ya hiciste (hasta 12). Es lo que más confianza da a un cliente nuevo.</p>
@@ -374,6 +383,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-  <script type="module" src="panel.js?v=2"></script>
+  <script type="module" src="panel.js?v=3"></script>
+  <script type="module" src="tienda.js?v=1"></script>
 </body>
 </html>

@@ -50,6 +50,16 @@ function noEncontrado() {
   $("#no-encontrado").hidden = false;
 }
 
+// Funciones compradas en la tienda (las escriben las Cloud Functions en publico/{uid})
+async function aplicarFunciones(uid) {
+  try {
+    const snap = await getDoc(doc(db, "publico", uid));
+    if ((snap.data()?.funciones || []).includes("quitarMarca")) document.querySelector(".pro-footer").hidden = true;
+  } catch (error) {
+    console.error(error); // si falla, la página se ve igual, con el pie de ServicePlanet
+  }
+}
+
 async function cargar() {
   const slug = obtenerSlug();
   if (!slug) return noEncontrado();
@@ -69,6 +79,7 @@ async function cargar() {
     if (!perfilSnap.exists()) return noEncontrado();
 
     mostrar(perfilSnap.data(), productosSnap.docs.map((d) => d.data()));
+    aplicarFunciones(uid);
   } catch (error) {
     console.error(error);
     $("#estado").textContent = "No pudimos cargar esta página. Revisa tu conexión e inténtalo de nuevo.";

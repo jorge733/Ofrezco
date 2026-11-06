@@ -7,6 +7,9 @@ const { getMessaging } = require("firebase-admin/messaging");
 
 initializeApp();
 
+// Tienda: compras de pago único con Flow (ver tienda.js)
+Object.assign(exports, require("./tienda"));
+
 const MODALIDADES = { presencial: "🤝 Presencial", videollamada: "💻 Videollamada", llamada: "📞 Llamada" };
 
 exports.avisarReserva = onDocumentCreated("perfiles/{uid}/reservas/{reservaId}", async (event) => {

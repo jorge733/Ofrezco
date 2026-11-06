@@ -422,3 +422,17 @@ body.has-cart .public-footer { padding-bottom: 110px; }
   .mobile-bar { align-items: center; display: flex; gap: 8px; padding-bottom: 8px; }
   .mobile-bar .logo { align-items: center; display: flex; font-size: 1.2rem; }.mobile-bar .logo img { margin-right: 6px; }
 }
+/* Tienda del panel */
+.store-list { display: grid; gap: 12px; list-style: none; margin: 18px 0 12px; padding: 0; }
+.store-item { align-items: center; border: 1px solid var(--line); border-radius: 14px; display: flex; gap: 16px; justify-content: space-between; padding: 16px; }
+.store-item strong { display: block; margin-bottom: 4px; }
+.store-item p { color: var(--muted); font-size: .9rem; margin: 0; }
+.store-buy { align-items: flex-end; display: flex; flex-direction: column; flex-shrink: 0; gap: 8px; }
+.store-price { font-size: 1.1rem; font-weight: 700; }
+.store-state { color: var(--muted); font-size: .85rem; font-weight: 600; }
+.store-owned .store-state { color: #1f8a55; }
+.store-note { font-size: .82rem; margin-top: 8px; }
+@media (max-width: 560px) {
+  .store-item { align-items: stretch; flex-direction: column; }
+  .store-buy { align-items: center; flex-direction: row; justify-content: space-between; }
+}
