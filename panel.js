@@ -17,7 +17,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 // Enlaces que no se pueden usar porque chocan con páginas o archivos del sitio
-const RESERVADOS = ["cuenta", "panel", "pagina", "index", "style", "app", "script", "firebase", "vercel", "logo", "imagenes", "404", "terminos", "privacidad", "contacto", "robots", "sitemap"];
+const RESERVADOS = ["cuenta", "cuentas", "panel", "pagina", "paginas", "index", "style", "app", "script", "firebase", "vercel", "logo", "imagenes", "404", "terminos", "privacidad", "contacto", "robots", "sitemap", "tienda", "precios", "planes", "invita", "api", "admin", "administrador", "ayuda", "soporte", "login", "registro", "entrar", "blog", "inicio", "home", "serviceplanet", "service-planet", "ofrezco", "oficial", "www", "mail", "correo", "pago", "pagos", "flow", "seguridad", "legal", "nosotros", "faq", "demo", "ejemplo", "functions", "favicon", "apple-touch-icon", "og-image"];
 
 // Tamaño máximo de cada imagen (se achican antes de guardarlas)
 const TAMANOS = {

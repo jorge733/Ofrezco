@@ -2,6 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Enlaces que nadie puede usar: chocan con el sitio o podrían hacerse pasar por ServicePlanet.
+    // Si cambias esta lista, cambia también RESERVADOS en panel.js (hay un test que lo revisa).
+    function enlacesReservados() {
+      return ['cuenta', 'cuentas', 'panel', 'pagina', 'paginas', 'index', 'style', 'app', 'script', 'firebase', 'vercel', 'logo', 'imagenes', '404', 'terminos', 'privacidad', 'contacto', 'robots', 'sitemap', 'tienda', 'precios', 'planes', 'invita', 'api', 'admin', 'administrador', 'ayuda', 'soporte', 'login', 'registro', 'entrar', 'blog', 'inicio', 'home', 'serviceplanet', 'service-planet', 'ofrezco', 'oficial', 'www', 'mail', 'correo', 'pago', 'pagos', 'flow', 'seguridad', 'legal', 'nosotros', 'faq', 'demo', 'ejemplo', 'functions', 'favicon', 'apple-touch-icon', 'og-image'];
+    }
+
     // Una fecha real, desde ayer (por las diferencias de zona horaria) hasta un año más
     function fechaDeAgendaValida(fecha) {
       return fecha is string
@@ -16,7 +22,8 @@ service cloud.firestore {
       allow read: if true;
       allow create: if request.auth != null
                     && request.resource.data.uid == request.auth.uid
-                    && slug.matches('^[a-z0-9-]{3,40}$');
+                    && slug.matches('^[a-z0-9-]{3,40}$')
+                    && !(slug in enlacesReservados());
       allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
 
