@@ -32,7 +32,7 @@
 /* Portada e identidad */
 .pro-hero { background: var(--surface); border-bottom: 1px solid var(--border); }
 .pro-cover { background: var(--cover-default); background-position: center; background-size: cover; height: clamp(180px, 28vw, 340px); }
-.pro-cover:not(.has-image) { background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 55%, #0b1220)); }
+.pro-cover:not(.has-image) { background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 40%, #0b1220)); }
 .pro-id { display: flex; gap: 28px; padding-bottom: 32px; }
 .pro-logo { border: 5px solid var(--surface); box-shadow: 0 8px 24px rgba(16, 24, 40, .12); flex: 0 0 auto; font-family: "DM Sans", Arial, sans-serif; font-size: 2.6rem; font-weight: 700; height: 132px; margin-top: -66px; width: 132px; }
 .pro-page .avatar:not(.has-image) { background: var(--accent-color); color: var(--on-accent); }
@@ -140,3 +140,127 @@
 html, body { overflow-x: clip; }
 .category-chips { scrollbar-width: none; }
 .category-chips::-webkit-scrollbar { display: none; }
+
+/* ---------- Diseños de pago (la Tienda los vende; pagina.js pone body[data-diseno]) ---------- */
+.vista-previa { background: #101828; color: #fff; font-size: .85rem; margin: 0; padding: 10px 16px; text-align: center; }
+.diseno-cta { align-items: center; background: var(--accent-color); border-radius: 12px; color: var(--on-accent); display: inline-flex; font-weight: 700; gap: 8px; margin-top: 22px; padding: 14px 26px; transition: transform .2s ease; }
+.diseno-cta:hover { transform: translateY(-2px); }
+[data-diseno] .pro-section, [data-diseno] .diseno-contacto { scroll-margin-top: 80px; }
+[data-diseno] .pro-footer { padding-bottom: 96px; }
+
+/* Servicios como tarjetas (Tienda con barra lateral y Mini sitio) */
+[data-diseno="tiendaLateral"] .pro-services, [data-diseno="miniSitio"] .pro-services { gap: 16px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+[data-diseno="tiendaLateral"] .pro-page .pro-service, [data-diseno="miniSitio"] .pro-page .pro-service,
+body[data-diseno="tiendaLateral"] .pro-service, body[data-diseno="miniSitio"] .pro-service { align-items: stretch; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; display: flex; flex-direction: column; gap: 12px; padding: 12px; text-align: left; transition: box-shadow .2s ease, transform .2s ease; }
+body[data-diseno="tiendaLateral"] .pro-service:last-child, body[data-diseno="miniSitio"] .pro-service:last-child { border-bottom: 1px solid var(--border); }
+body[data-diseno="tiendaLateral"] .pro-service:hover, body[data-diseno="miniSitio"] .pro-service:hover { box-shadow: 0 12px 28px rgba(16, 24, 40, .1); transform: translateY(-2px); }
+body[data-diseno="tiendaLateral"] .pro-service .product-image, body[data-diseno="miniSitio"] .pro-service .product-image { aspect-ratio: 4 / 3; border-radius: 12px; font-size: 2.4rem; height: auto; width: 100%; }
+body[data-diseno="tiendaLateral"] .pro-service-side, body[data-diseno="miniSitio"] .pro-service-side { align-items: center; align-self: stretch; flex-direction: row; justify-content: space-between; margin-top: auto; }
+body[data-diseno="tiendaLateral"] .pro-service-side, body[data-diseno="miniSitio"] .pro-service-side { flex-wrap: wrap; gap: 8px; }
+body[data-diseno="tiendaLateral"] .pro-service.selected, body[data-diseno="miniSitio"] .pro-service.selected { border-color: var(--accent-color); box-shadow: inset 0 0 0 1px var(--accent-color); padding-left: 12px; }
+
+body[data-diseno="tiendaLateral"] .pro-service .product-info, body[data-diseno="miniSitio"] .pro-service .product-info { align-content: start; }
+
+/* Portada de impacto: la portada ocupa casi toda la primera pantalla */
+[data-diseno="portadaImpacto"] .pro-hero { align-items: flex-end; background: #0b1220; border: 0; display: flex; min-height: min(84vh, 780px); overflow: hidden; position: relative; }
+[data-diseno="portadaImpacto"] .pro-cover { height: auto; inset: 0; position: absolute; }
+[data-diseno="portadaImpacto"] .pro-cover::after { background: linear-gradient(to top, rgba(11, 18, 32, .92) 8%, rgba(11, 18, 32, .45) 55%, rgba(11, 18, 32, .2)); content: ""; inset: 0; position: absolute; }
+[data-diseno="portadaImpacto"] .pro-id { display: block; padding-bottom: 56px; padding-top: 56px; position: relative; width: 100%; z-index: 1; }
+[data-diseno="portadaImpacto"] .pro-logo { margin: 0 0 18px; }
+[data-diseno="portadaImpacto"] .pro-id-text { padding-top: 0; }
+[data-diseno="portadaImpacto"] .pro-id h1 { color: #fff; font-family: "Playfair Display", Georgia, serif; font-size: clamp(2.6rem, 7vw, 5.2rem); letter-spacing: -.01em; line-height: 1.04; text-wrap: balance; }
+[data-diseno="portadaImpacto"] .pro-location, [data-diseno="portadaImpacto"] .pro-description { color: rgba(255, 255, 255, .9); }
+[data-diseno="portadaImpacto"] .pro-description { font-size: 1.12rem; }
+[data-diseno="portadaImpacto"] .pro-trust li { border-color: rgba(255, 255, 255, .4); color: #fff; }
+[data-diseno="portadaImpacto"] .pro-trust li::before { color: #fff; }
+
+/* Tienda con barra lateral: tu marca fija a la izquierda y los servicios como vitrina */
+@media (min-width: 960px) {
+  body[data-diseno="tiendaLateral"] #catalogo { display: grid; grid-template-areas: "top top" "marca vitrina" "pie pie"; grid-template-columns: 320px minmax(0, 1fr); }
+  [data-diseno="tiendaLateral"] .pro-top { grid-area: top; }
+  [data-diseno="tiendaLateral"] .pro-top .pro-wrap { max-width: none; }
+  [data-diseno="tiendaLateral"] .pro-hero { align-self: start; border-bottom: 0; border-right: 1px solid var(--border); grid-area: marca; height: calc(100vh - 65px); overflow-y: auto; position: sticky; top: 65px; }
+  [data-diseno="tiendaLateral"] .pro-cover { height: 120px; }
+  [data-diseno="tiendaLateral"] .pro-id { display: block; padding: 0 24px 24px; }
+  [data-diseno="tiendaLateral"] .pro-logo { font-size: 2rem; height: 88px; margin-top: -44px; width: 88px; }
+  [data-diseno="tiendaLateral"] .pro-id-text { padding-top: 14px; }
+  [data-diseno="tiendaLateral"] .pro-id h1 { font-size: 1.55rem; }
+  [data-diseno="tiendaLateral"] .pro-description { font-size: .95rem; }
+  [data-diseno="tiendaLateral"] .pro-layout { grid-area: vitrina; grid-template-columns: minmax(0, 1fr); max-width: none; padding: 28px 32px 48px; width: 100%; }
+  [data-diseno="tiendaLateral"] .pro-footer { grid-area: pie; }
+}
+@media (max-width: 959px) {
+  [data-diseno="tiendaLateral"] .pro-services { gap: 10px; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); }
+}
+
+/* Link en bio premium: una sola columna, pensada para Instagram o TikTok */
+body[data-diseno="linkBio"] { background: linear-gradient(165deg, color-mix(in srgb, var(--accent-color) 55%, #0b1220), #0b1220 85%) fixed; }
+[data-diseno="linkBio"] .pro-top { backdrop-filter: none; background: transparent; border: 0; position: static; }
+[data-diseno="linkBio"] .pro-top-inner { justify-content: flex-end; }
+[data-diseno="linkBio"] .pro-brand { display: none; }
+[data-diseno="linkBio"] .pro-hero { background: transparent; border: 0; }
+[data-diseno="linkBio"] .pro-cover { display: none; }
+[data-diseno="linkBio"] .pro-id { align-items: center; flex-direction: column; gap: 14px; max-width: 600px; padding-bottom: 24px; text-align: center; }
+[data-diseno="linkBio"] .pro-logo { font-size: 2.4rem; height: 112px; margin: 0 auto; width: 112px; }
+[data-diseno="linkBio"] .pro-id-text { padding-top: 0; }
+[data-diseno="linkBio"] .pro-id h1 { color: #fff; font-size: clamp(1.7rem, 6vw, 2.2rem); }
+[data-diseno="linkBio"] .pro-location, [data-diseno="linkBio"] .pro-description { color: rgba(255, 255, 255, .88); margin-left: auto; margin-right: auto; }
+[data-diseno="linkBio"] .pro-trust { justify-content: center; }
+[data-diseno="linkBio"] .pro-trust li { border-color: rgba(255, 255, 255, .35); color: #fff; }
+[data-diseno="linkBio"] .pro-trust li::before { color: #fff; }
+[data-diseno="linkBio"] .pro-layout { grid-template-columns: minmax(0, 1fr); max-width: 600px; padding-top: 8px; }
+[data-diseno="linkBio"] .pro-section { background: transparent; border: 0; padding: 0; }
+[data-diseno="linkBio"] .pro-section h2 { color: #fff; font-size: 1.05rem; }
+[data-diseno="linkBio"] .pro-count { color: rgba(255, 255, 255, .7); }
+[data-diseno="linkBio"] .pro-services { gap: 10px; }
+body[data-diseno="linkBio"] .pro-service, body[data-diseno="linkBio"] .pro-service:last-child { background: #fff; border: 0; border-radius: 18px; padding: 12px 16px 12px 12px; text-align: left; transition: transform .2s ease; }
+body[data-diseno="linkBio"] .pro-service:hover { transform: translateY(-2px); }
+body[data-diseno="linkBio"] .pro-service.selected { box-shadow: inset 0 0 0 2px var(--accent-color); padding-left: 12px; }
+body[data-diseno="linkBio"] .pro-service .product-image { border-radius: 12px; font-size: 1.3rem; height: 58px; width: 58px; }
+body[data-diseno="linkBio"] .product-desc { -webkit-line-clamp: 1; }
+[data-diseno="linkBio"] .pro-action { display: none; }
+[data-diseno="linkBio"] .pro-gallery { grid-template-columns: repeat(3, 1fr); }
+[data-diseno="linkBio"] #c-informacion { background: #fff; border-radius: 18px; padding: 20px; }
+[data-diseno="linkBio"] #c-informacion h2 { color: var(--text); }
+[data-diseno="linkBio"] .pro-footer { border: 0; color: rgba(255, 255, 255, .75); }
+[data-diseno="linkBio"] .pro-footer a:hover { color: #fff; }
+[data-diseno="linkBio"] .pro-notice { background: #fff; }
+
+/* Mini sitio web completo: menú, presentación a dos columnas y secciones a todo el ancho */
+.diseno-nav { display: flex; gap: 22px; }
+.diseno-nav a { color: var(--text-soft); font-size: .92rem; font-weight: 600; }
+.diseno-nav a:hover { color: var(--accent-color); }
+[data-diseno="miniSitio"] .pro-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+[data-diseno="miniSitio"] .pro-cover { grid-column: 2; grid-row: 1; height: auto; min-height: 480px; }
+[data-diseno="miniSitio"] .pro-id { align-items: flex-start; align-self: center; display: block; grid-column: 1; grid-row: 1; margin: 0 0 0 auto; max-width: 590px; padding-bottom: 48px; padding-top: 48px; width: 100%; }
+[data-diseno="miniSitio"] .pro-logo { font-size: 1.8rem; height: 76px; margin-top: 0; width: 76px; }
+[data-diseno="miniSitio"] .pro-id-text { padding-top: 20px; }
+[data-diseno="miniSitio"] .pro-id h1 { font-size: clamp(2.2rem, 4.4vw, 3.6rem); line-height: 1.08; }
+[data-diseno="miniSitio"] .pro-layout { display: block; max-width: none; padding: 0; }
+[data-diseno="miniSitio"] .pro-main { gap: 0; }
+[data-diseno="miniSitio"] .pro-notice { border-radius: 0; margin: 0; text-align: center; }
+[data-diseno="miniSitio"] .pro-section { background: var(--canvas); border: 0; border-radius: 0; gap: 24px; padding: 64px max(32px, calc((100% - 1116px) / 2)); }
+[data-diseno="miniSitio"] #c-galeria-seccion { background: var(--surface); }
+[data-diseno="miniSitio"] #c-informacion { background: var(--surface); border-top: 1px solid var(--border); }
+[data-diseno="miniSitio"] .pro-section h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); }
+[data-diseno="miniSitio"] .pro-gallery { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.diseno-contacto { background: var(--accent-color); color: var(--on-accent); padding: 64px 32px; text-align: center; }
+.diseno-contacto h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); }
+.diseno-contacto p { margin: 10px auto 0; max-width: 520px; }
+.diseno-contacto .diseno-cta { background: #fff; color: #101828; }
+@media (max-width: 759px) {
+  .diseno-nav { display: none; }
+  [data-diseno="miniSitio"] .pro-hero { display: block; }
+  [data-diseno="miniSitio"] .pro-cover { min-height: 220px; }
+  [data-diseno="miniSitio"] .pro-id { max-width: none; padding-bottom: 32px; padding-top: 24px; }
+  [data-diseno="miniSitio"] .pro-section { padding: 40px 16px; }
+  [data-diseno="miniSitio"] .pro-services { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  [data-diseno="miniSitio"] .pro-gallery { grid-template-columns: repeat(2, 1fr); }
+  .diseno-contacto { padding: 44px 16px; }
+}
+@media (max-width: 640px) {
+  [data-diseno="portadaImpacto"] .pro-hero { min-height: 78vh; }
+  [data-diseno="portadaImpacto"] .pro-id { padding-bottom: 32px; padding-top: 32px; }
+  [data-diseno="portadaImpacto"] .pro-logo { margin: 0 0 14px; }
+  [data-diseno="linkBio"] .pro-id { display: flex; }
+}

@@ -106,5 +106,5 @@ test("los precios del panel coinciden con los del servidor, y solo lo construido
     assert.match(fila[0], new RegExp(`precio: ${producto.precio}\\b`));
     assert.match(fila[0], new RegExp(`disponible: ${producto.disponible}\\b`));
   }
-  assert.deepEqual(Object.keys(CATALOGO).filter((id) => CATALOGO[id].disponible), ["quitarMarca"]);
+  assert.deepEqual(Object.keys(CATALOGO).filter((id) => CATALOGO[id].disponible), ["quitarMarca", "portadaImpacto", "tiendaLateral", "linkBio", "miniSitio"]);
 });

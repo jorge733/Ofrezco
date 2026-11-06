@@ -2,14 +2,17 @@
 // El cobro y la activación los hace el servidor (functions/tienda.js). Aquí solo se muestra y se pide comprar.
 import { app, auth, db } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-functions.js";
 
 // Si cambias un precio, cámbialo también en functions/tienda/catalogo.js (los tests avisan si no coinciden)
 const PRODUCTOS = [
   { id: "quitarMarca", precio: 14990, disponible: true, nombre: "Quitar la marca ServicePlanet", texto: "Tu página deja de mostrar \"Página creada con ServicePlanet\" al pie." },
-  { id: "estadisticas", precio: 12990, disponible: false, nombre: "Estadísticas de visitas", texto: "Mira cuántas personas visitan tu página y te escriben por WhatsApp." },
-  { id: "portadaImpacto", precio: 9990, disponible: false, nombre: "Diseño Portada de impacto", texto: "Un diseño más llamativo para la primera impresión de tu página." }
+  { id: "portadaImpacto", precio: 9990, disponible: true, diseno: true, nombre: "Diseño Portada de impacto", texto: "Tu portada ocupa casi toda la pantalla, con tu nombre en grande." },
+  { id: "tiendaLateral", precio: 9990, disponible: true, diseno: true, nombre: "Diseño Tienda con barra lateral", texto: "Tu marca fija a un costado y tus servicios como vitrina de tarjetas." },
+  { id: "linkBio", precio: 9990, disponible: true, diseno: true, nombre: "Diseño Link en bio premium", texto: "Una sola columna con fondo de tu color, ideal para Instagram y TikTok." },
+  { id: "miniSitio", precio: 9990, disponible: true, diseno: true, nombre: "Diseño Mini sitio web completo", texto: "Menú, presentación a dos columnas y secciones a todo el ancho." },
+  { id: "estadisticas", precio: 12990, disponible: false, nombre: "Estadísticas de visitas", texto: "Mira cuántas personas visitan tu página y te escriben por WhatsApp." }
 ];
 
 const MENSAJES_RETORNO = {
@@ -22,6 +25,10 @@ const $ = (selector) => document.querySelector(selector);
 const pesos = (monto) => `$${monto.toLocaleString("es-CL")}`;
 const comprar = httpsCallable(getFunctions(app, "southamerica-west1"), "comprarFuncion");
 let activas = [];
+let enlace = ""; // el enlace de la página de esta persona, para ver los diseños de ejemplo
+const vistaPrevia = (id) => (["localhost", "127.0.0.1"].includes(location.hostname)
+  ? `pagina.html?u=${enlace}&vista-diseno=${id}`
+  : `/${enlace}?vista-diseno=${id}`);
 
 function mensaje(texto, ok = false) {
   const caja = $("#tienda-mensaje");
@@ -38,6 +45,9 @@ function pintar() {
       Object.assign(document.createElement("strong"), { textContent: producto.nombre }),
       Object.assign(document.createElement("p"), { textContent: producto.texto })
     );
+    if (producto.diseno && enlace) {
+      info.append(Object.assign(document.createElement("a"), { className: "store-example", href: vistaPrevia(producto.id), target: "_blank", rel: "noopener", textContent: "Ver cómo queda mi página ↗" }));
+    }
     const compra = document.createElement("div");
     compra.className = "store-buy";
     compra.append(Object.assign(document.createElement("span"), { className: "store-price", textContent: pesos(producto.precio) }));
@@ -45,6 +55,7 @@ function pintar() {
     if (activas.includes(producto.id)) {
       item.classList.add("store-owned");
       compra.append(Object.assign(document.createElement("span"), { className: "store-state", textContent: "✓ Activa" }));
+      if (producto.diseno) compra.append(Object.assign(document.createElement("span"), { className: "store-hint", textContent: "Elígelo en Tu perfil" }));
     } else if (!producto.disponible) {
       compra.append(Object.assign(document.createElement("span"), { className: "store-state", textContent: "Próximamente" }));
     } else {
@@ -70,7 +81,26 @@ async function iniciarCompra(producto, boton) {
   }
 }
 
+// Los diseños del formulario de perfil: se pueden elegir solo si están comprados; si no, llevan a la Tienda
+function pintarDisenos() {
+  document.querySelectorAll(".design-option[data-funcion]").forEach((opcion) => {
+    const producto = PRODUCTOS.find((p) => p.id === opcion.dataset.funcion);
+    const comprado = activas.includes(producto.id);
+    opcion.classList.toggle("locked", !comprado);
+    opcion.querySelector("input").disabled = !comprado;
+    opcion.querySelector("small").textContent = comprado ? "Comprado" : `${pesos(producto.precio)} · Ver en la Tienda`;
+  });
+}
+document.querySelectorAll(".design-option[data-funcion]").forEach((opcion) => {
+  opcion.addEventListener("click", (evento) => {
+    if (!opcion.classList.contains("locked")) return;
+    evento.preventDefault();
+    document.querySelector('.side-item[data-go="tienda"]').click();
+  });
+});
+
 pintar();
+pintarDisenos();
 
 const retorno = MENSAJES_RETORNO[new URLSearchParams(location.search).get("compra")];
 if (retorno) {
@@ -83,5 +113,10 @@ onAuthStateChanged(auth, (usuario) => {
   onSnapshot(doc(db, "publico", usuario.uid), (snap) => {
     activas = snap.data()?.funciones || [];
     pintar();
+    pintarDisenos();
   }, (error) => console.error(error));
+  getDoc(doc(db, "perfiles", usuario.uid)).then((perfil) => {
+    enlace = perfil.data()?.slug || "";
+    pintar();
+  }).catch((error) => console.error(error));
 });

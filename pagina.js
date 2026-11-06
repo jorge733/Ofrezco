@@ -51,12 +51,66 @@ function noEncontrado() {
 }
 
 // Funciones compradas en la tienda (las escriben las Cloud Functions en publico/{uid})
-async function aplicarFunciones(uid) {
+async function leerFunciones(uid) {
   try {
     const snap = await getDoc(doc(db, "publico", uid));
-    if ((snap.data()?.funciones || []).includes("quitarMarca")) document.querySelector(".pro-footer").hidden = true;
+    return snap.data()?.funciones || [];
   } catch (error) {
-    console.error(error); // si falla, la página se ve igual, con el pie de ServicePlanet
+    console.error(error); // si falla, la página se ve igual: con el diseño normal y el pie de ServicePlanet
+    return [];
+  }
+}
+
+// Diseños que se compran en la Tienda. "?vista-diseno=..." muestra uno de ejemplo, avisando que es una vista previa.
+const DISENOS = {
+  portadaImpacto: "Portada de impacto",
+  tiendaLateral: "Tienda con barra lateral",
+  linkBio: "Link en bio premium",
+  miniSitio: "Mini sitio web completo"
+};
+const DISENOS_SIN_FORMULARIO_LATERAL = ["tiendaLateral", "linkBio", "miniSitio"];
+let disenoActivo = "";
+
+function aplicarFunciones(datos, funciones) {
+  if (funciones.includes("quitarMarca")) $(".pro-footer").hidden = true;
+  const vista = new URLSearchParams(location.search).get("vista-diseno");
+  const esVista = Object.hasOwn(DISENOS, vista || "");
+  const comprado = Object.hasOwn(DISENOS, datos.diseno || "") && funciones.includes(datos.diseno);
+  disenoActivo = esVista ? vista : comprado ? datos.diseno : "";
+  if (disenoActivo) document.body.dataset.diseno = disenoActivo;
+  if (esVista) {
+    $("#catalogo").before(Object.assign(document.createElement("p"), {
+      className: "vista-previa",
+      textContent: `Vista previa del diseño "${DISENOS[vista]}". Se ve solo con este enlace: tu página no ha cambiado.`
+    }));
+  }
+}
+
+// Lo que los diseños agregan a la página (el resto lo hace pagina.css)
+function decorarDiseno() {
+  const botonA = (texto, href, externo = false) => Object.assign(document.createElement("a"), {
+    className: "diseno-cta", textContent: texto, href, ...(externo ? { target: "_blank", rel: "noopener" } : {})
+  });
+  if (disenoActivo === "portadaImpacto" || disenoActivo === "miniSitio") {
+    $(".pro-id-text").append(botonA("Ver servicios ↓", "#c-servicios"));
+  }
+  if (disenoActivo === "miniSitio") {
+    const menu = Object.assign(document.createElement("nav"), { className: "diseno-nav" });
+    menu.setAttribute("aria-label", "Secciones de la página");
+    [["Servicios", "#c-servicios"], ["Trabajos", "#c-galeria-seccion"], ["Información", "#c-informacion"], ["Contacto", "#c-contacto-final"]].forEach(([texto, href]) => {
+      const enlace = Object.assign(document.createElement("a"), { textContent: texto, href });
+      if (href === "#c-galeria-seccion") Object.assign(enlace, { id: "c-nav-trabajos", hidden: true });
+      menu.append(enlace);
+    });
+    $(".pro-brand").after(menu);
+
+    const contacto = Object.assign(document.createElement("section"), { className: "diseno-contacto", id: "c-contacto-final" });
+    contacto.append(
+      Object.assign(document.createElement("h2"), { textContent: "¿Conversamos?" }),
+      Object.assign(document.createElement("p"), { textContent: `Escríbele a ${perfil.nombre} por WhatsApp y resuelve tus dudas.` }),
+      botonA("Escribir por WhatsApp ↗", enlaceWhatsapp(`Hola, vi tu página en ServicePlanet y quiero hacer una consulta.`), true)
+    );
+    $(".pro-footer").before(contacto);
   }
 }
 
@@ -72,14 +126,15 @@ async function cargar() {
     uidPerfil = uid;
 
     // 2) Con eso cargamos el perfil y los servicios
-    const [perfilSnap, productosSnap] = await Promise.all([
+    const [perfilSnap, productosSnap, funciones] = await Promise.all([
       getDoc(doc(db, "perfiles", uid)),
-      getDocs(query(collection(db, "perfiles", uid, "productos"), orderBy("creado")))
+      getDocs(query(collection(db, "perfiles", uid, "productos"), orderBy("creado"))),
+      leerFunciones(uid)
     ]);
     if (!perfilSnap.exists()) return noEncontrado();
 
+    aplicarFunciones(perfilSnap.data(), funciones);
     mostrar(perfilSnap.data(), productosSnap.docs.map((d) => d.data()));
-    aplicarFunciones(uid);
   } catch (error) {
     console.error(error);
     $("#estado").textContent = "No pudimos cargar esta página. Revisa tu conexión e inténtalo de nuevo.";
@@ -110,6 +165,7 @@ function mostrarGaleria(imagenes) {
     $("#c-galeria").append(foto);
   });
   $("#c-galeria-seccion").hidden = false;
+  if ($("#c-nav-trabajos")) $("#c-nav-trabajos").hidden = false;
 }
 $("#lightbox-close").addEventListener("click", () => $("#lightbox").close());
 $("#lightbox").addEventListener("click", (event) => { if (event.target === $("#lightbox")) $("#lightbox").close(); });
@@ -242,6 +298,7 @@ function mostrar(datos, productos) {
   $("#c-cantidad").textContent = visibles.length ? `${visibles.length} ${visibles.length === 1 ? "servicio" : "servicios"}` : "";
   prepararFiltros(visibles);
   actualizarBotonWhatsapp();
+  decorarDiseno();
 
   $("#estado").hidden = true;
   $("#catalogo").hidden = false;
@@ -255,7 +312,7 @@ const textoAccion = () => (perfil.carrito ? "Agregar" : perfil.reservas ? "Reser
 // ---------- Formulario: al costado en computador, como hoja en celular ----------
 
 const pantallaGrande = matchMedia("(min-width: 960px)");
-const enLateral = () => pantallaGrande.matches;
+const enLateral = () => pantallaGrande.matches && !DISENOS_SIN_FORMULARIO_LATERAL.includes(disenoActivo);
 
 function ubicarFormulario() {
   const formulario = $("#sheet-form");

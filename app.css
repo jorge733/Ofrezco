@@ -290,7 +290,7 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 .design-option:has(input:checked) .design-name::before { color: var(--blue); content: "✓ "; }
 .design-name { font-size: .88rem; font-weight: 600; }
 .design-option small { color: var(--muted); font-size: .76rem; font-weight: 500; }
-.design-option.locked { background: var(--cream); cursor: not-allowed; }
+.form .design-option.locked { background: var(--cream); cursor: pointer; }
 .design-option.locked .design-name { color: var(--muted); }
 .design-option.locked small { color: var(--orange); font-weight: 700; }
 .design-option.locked::after { content: "🔒"; font-size: .8rem; position: absolute; right: 10px; top: 10px; }
@@ -436,3 +436,5 @@ body.has-cart .public-footer { padding-bottom: 110px; }
   .store-item { align-items: stretch; flex-direction: column; }
   .store-buy { align-items: center; flex-direction: row; justify-content: space-between; }
 }
+.store-example { color: var(--blue); font-size: .85rem; font-weight: 600; margin-top: 6px; display: inline-block; }
+.store-hint { color: #1f8a55; font-size: .78rem; font-weight: 500; text-align: right; }

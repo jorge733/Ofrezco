@@ -169,6 +169,8 @@ function abrirFormularioPerfil() {
   $("#p-reservas").checked = Boolean(perfil?.reservas);
   document.querySelectorAll("#p-modalidades input").forEach((c) => { c.checked = (perfil?.modalidades || []).includes(c.value); });
   $("#p-video").value = perfil?.enlaceVideo || "";
+  const opcionesDiseno = [...document.querySelectorAll('input[name="diseno"]')];
+  (opcionesDiseno.find((o) => o.value === perfil?.diseno) || opcionesDiseno[0]).checked = true;
   mostrarCampoVideo();
   $("#p-aviso").value = perfil?.aviso || "";
   $("#p-experiencia").value = perfil?.experiencia || "";
@@ -355,7 +357,7 @@ $("#profile-form").addEventListener("submit", async (event) => {
     turno: Number($("#p-turno").value),
     aviso: $("#p-aviso").value.trim(),
     experiencia: Math.min(80, Math.max(0, parseInt($("#p-experiencia").value, 10) || 0)),
-    diseno: "profesional",
+    diseno: document.querySelector('input[name="diseno"]:checked')?.value || "profesional",
     color: colorElegido
   };
   $("#p-slug").value = datos.slug;

@@ -3,8 +3,11 @@
 // "disponible: false" se ve como "Próximamente" y no se puede comprar: nadie paga por algo que aún no existe.
 const CATALOGO = {
   quitarMarca: { nombre: "Quitar la marca ServicePlanet", precio: 14990, disponible: true },
-  estadisticas: { nombre: "Estadísticas de visitas", precio: 12990, disponible: false },
-  portadaImpacto: { nombre: "Diseño Portada de impacto", precio: 9990, disponible: false }
+  portadaImpacto: { nombre: "Diseño Portada de impacto", precio: 9990, disponible: true },
+  tiendaLateral: { nombre: "Diseño Tienda con barra lateral", precio: 9990, disponible: true },
+  linkBio: { nombre: "Diseño Link en bio premium", precio: 9990, disponible: true },
+  miniSitio: { nombre: "Diseño Mini sitio web completo", precio: 9990, disponible: true },
+  estadisticas: { nombre: "Estadísticas de visitas", precio: 12990, disponible: false }
 };
 
 module.exports = { CATALOGO };
