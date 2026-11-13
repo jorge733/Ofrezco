@@ -66,9 +66,21 @@ const DISENOS = {
   portadaImpacto: "Portada de impacto",
   tiendaLateral: "Tienda con barra lateral",
   linkBio: "Link en bio premium",
-  miniSitio: "Mini sitio web completo"
+  miniSitio: "Mini sitio web completo",
+  vehiculos: "Venta de vehículos"
 };
-const DISENOS_SIN_FORMULARIO_LATERAL = ["tiendaLateral", "linkBio", "miniSitio"];
+const DISENOS_SIN_FORMULARIO_LATERAL = ["tiendaLateral", "linkBio", "miniSitio", "vehiculos"];
+const esVehiculos = () => disenoActivo === "vehiculos";
+
+// Año, kilómetros, combustible y transmisión (los guarda el panel con el diseño "Venta de vehículos")
+function fichaVehiculo(producto) {
+  return [
+    producto.anio && String(producto.anio),
+    Number.isFinite(producto.kilometraje) && `${producto.kilometraje.toLocaleString("es-CL")} km`,
+    producto.combustible,
+    producto.transmision
+  ].filter(Boolean);
+}
 let disenoActivo = "";
 
 function aplicarFunciones(datos, funciones) {
@@ -93,6 +105,9 @@ function decorarDiseno() {
   });
   if (disenoActivo === "portadaImpacto" || disenoActivo === "miniSitio") {
     $(".pro-id-text").append(botonA("Ver servicios ↓", "#c-servicios"));
+  }
+  if (esVehiculos()) {
+    $(".pro-id-text").append(botonA("Ver vehículos ↓", "#c-servicios"));
   }
   if (disenoActivo === "miniSitio") {
     const menu = Object.assign(document.createElement("nav"), { className: "diseno-nav" });
@@ -272,6 +287,15 @@ function mostrar(datos, productos) {
     .filter((p) => !p.oculto)
     .sort((a, b) => Number(Boolean(b.destacado)) - Number(Boolean(a.destacado)));
 
+  if (esVehiculos()) {
+    $("#c-titulo-servicios").textContent = "Vehículos disponibles";
+    $("#c-titulo-galeria").textContent = "Galería";
+    $("#c-buscar").placeholder = "Buscar marca, modelo o año…";
+    $("#c-buscar").setAttribute("aria-label", "Buscar vehículo");
+    $("#c-sin-resultados").textContent = "No encontramos vehículos con esa búsqueda.";
+  }
+  const [uno, varios] = esVehiculos() ? ["vehículo", "vehículos"] : ["servicio", "servicios"];
+
   const lista = $("#c-productos");
   if (visibles.length === 0) {
     lista.innerHTML = '<p class="catalog-empty">Pronto habrá novedades aquí.</p>';
@@ -289,13 +313,21 @@ function mostrar(datos, productos) {
     boton.querySelector(".pro-action").textContent = textoAccion();
     boton.querySelector(".product-meta").textContent = producto.duracion ? `⏱ ${producto.duracion}` : "";
     boton.querySelector(".product-desc").textContent = producto.descripcion;
+    if (esVehiculos()) {
+      const ficha = fichaVehiculo(producto);
+      if (ficha.length) {
+        const chips = Object.assign(document.createElement("span"), { className: "vehiculo-ficha" });
+        ficha.forEach((dato) => chips.append(Object.assign(document.createElement("span"), { textContent: dato })));
+        boton.querySelector(".product-desc").before(chips);
+      }
+    }
     boton.dataset.categoria = producto.categoria || "";
-    boton.dataset.texto = `${producto.nombre} ${producto.descripcion || ""} ${producto.categoria || ""}`.toLowerCase();
+    boton.dataset.texto = `${producto.nombre} ${producto.descripcion || ""} ${producto.categoria || ""} ${fichaVehiculo(producto).join(" ")}`.toLowerCase();
     boton.addEventListener("click", () => (perfil.carrito ? agregarAlCarrito(producto, boton) : elegirServicio(producto, boton)));
     lista.append(boton);
   });
 
-  $("#c-cantidad").textContent = visibles.length ? `${visibles.length} ${visibles.length === 1 ? "servicio" : "servicios"}` : "";
+  $("#c-cantidad").textContent = visibles.length ? `${visibles.length} ${visibles.length === 1 ? uno : varios}` : "";
   prepararFiltros(visibles);
   actualizarBotonWhatsapp();
   decorarDiseno();
@@ -429,7 +461,7 @@ function actualizarBotonWhatsapp() {
   const verbo = perfil.reservas ? "Reservar" : "Consultar por";
   $("#c-whatsapp-texto").textContent = elegido ? `${verbo} ${elegido.nombre}` : `${perfil.reservas ? "Reservar" : "Consultar"} por WhatsApp`;
   const consulta = elegido
-    ? `Hola ${perfil.nombre}, quiero consultar por ${elegido.nombre}${elegido.precio ? ` (${elegido.precio})` : ""}.`
+    ? `Hola ${perfil.nombre}, quiero consultar por ${elegido.nombre}${esVehiculos() && fichaVehiculo(elegido).length ? ` · ${fichaVehiculo(elegido).join(" · ")}` : ""}${elegido.precio ? ` (${elegido.precio})` : ""}.`
     : `Hola ${perfil.nombre}, vi tu página en ServicePlanet y quiero hacer una consulta.`;
   $("#c-whatsapp").href = enlaceWhatsapp(consulta);
 }
@@ -511,7 +543,8 @@ $("#sheet-form").addEventListener("submit", async (event) => {
     const total = textoTotal();
     if (total) lineas.push(`*Total estimado:* ${total}`);
   } else if (elegido) {
-    lineas.push("", `*Servicio:* ${elegido.nombre}${elegido.precio ? ` (${elegido.precio})` : ""}`);
+    const ficha = esVehiculos() ? fichaVehiculo(elegido) : [];
+    lineas.push("", `*${esVehiculos() ? "Vehículo" : "Servicio"}:* ${elegido.nombre}${ficha.length ? ` · ${ficha.join(" · ")}` : ""}${elegido.precio ? ` (${elegido.precio})` : ""}`);
   }
 
   if (perfil.reservas) {

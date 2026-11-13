@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="app.css?v=4">
+  <link rel="stylesheet" href="app.css?v=5">
 </head>
 <body>
 
@@ -230,6 +230,7 @@
               <label class="design-option locked" data-funcion="tiendaLateral"><input type="radio" name="diseno" value="tiendaLateral" disabled><span class="design-name">Tienda con barra lateral</span><small>Ver en la Tienda</small></label>
               <label class="design-option locked" data-funcion="linkBio"><input type="radio" name="diseno" value="linkBio" disabled><span class="design-name">Link en bio premium</span><small>Ver en la Tienda</small></label>
               <label class="design-option locked" data-funcion="miniSitio"><input type="radio" name="diseno" value="miniSitio" disabled><span class="design-name">Mini sitio web completo</span><small>Ver en la Tienda</small></label>
+              <label class="design-option locked" data-funcion="vehiculos"><input type="radio" name="diseno" value="vehiculos" disabled><span class="design-name">Venta de vehículos</span><small>Ver en la Tienda</small></label>
             </div>
           </fieldset>
           <fieldset class="form-group">
@@ -307,6 +308,37 @@
           <!-- Paso 2 -->
           <div class="step" data-step="2" hidden>
           <p class="step-intro">Todo esto es opcional, pero ayuda a que tus clientes se decidan.</p>
+          <!-- Ficha del vehículo: solo con el diseño "Venta de vehículos" (panel.js la muestra) -->
+          <fieldset class="vehicle-fields" id="pr-vehiculo" hidden>
+            <legend class="image-label">Ficha del vehículo</legend>
+            <div class="form-row form-row-even">
+              <label>Año
+                <input id="pr-anio" type="number" inputmode="numeric" min="1900" max="2100" placeholder="Ej: 2019">
+              </label>
+              <label>Kilometraje
+                <input id="pr-km" type="number" inputmode="numeric" min="0" max="2000000" step="1" placeholder="Ej: 45000">
+              </label>
+            </div>
+            <div class="form-row form-row-even">
+              <label>Combustible
+                <select id="pr-combustible">
+                  <option value="">Sin indicar</option>
+                  <option>Bencina</option>
+                  <option>Diésel</option>
+                  <option>Híbrido</option>
+                  <option>Eléctrico</option>
+                  <option>Gas</option>
+                </select>
+              </label>
+              <label>Transmisión
+                <select id="pr-transmision">
+                  <option value="">Sin indicar</option>
+                  <option>Manual</option>
+                  <option>Automática</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
           <div class="form-row form-row-even">
             <label>Categoría (opcional)
               <input id="pr-categoria" maxlength="30" list="categorias" placeholder="Ej: Tortas, Clases">
@@ -383,7 +415,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-  <script type="module" src="panel.js?v=4"></script>
-  <script type="module" src="tienda.js?v=2"></script>
+  <script type="module" src="panel.js?v=5"></script>
+  <script type="module" src="tienda.js?v=3"></script>
 </body>
 </html>

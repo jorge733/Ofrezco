@@ -587,13 +587,30 @@ function mostrarProductos(docs) {
       producto.destacado && "⭐ Destacado",
       producto.oculto && "⏸ Pausado",
       producto.categoria,
-      producto.duracion && `⏱ ${producto.duracion}`
+      producto.duracion && `⏱ ${producto.duracion}`,
+      ...fichaVehiculo(producto)
     ].filter(Boolean).join(" · ");
     item.classList.toggle("paused", Boolean(producto.oculto));
     item.querySelector('[data-action="editar"]').addEventListener("click", () => abrirFormularioServicio(documento.id, producto));
     item.querySelector('[data-action="eliminar"]').addEventListener("click", () => eliminarProducto(documento.id, producto.nombre));
     lista.append(item);
   });
+}
+
+// Año, kilómetros, combustible y transmisión de un vehículo, listos para mostrar
+function fichaVehiculo(producto) {
+  return [
+    producto.anio && String(producto.anio),
+    Number.isFinite(producto.kilometraje) && `${producto.kilometraje.toLocaleString("es-CL")} km`,
+    producto.combustible,
+    producto.transmision
+  ].filter(Boolean);
+}
+
+// "45000" → 45000; vacío o fuera de rango → null
+function entero(texto, minimo, maximo) {
+  const n = parseInt(texto, 10);
+  return Number.isFinite(n) && n >= minimo && n <= maximo ? n : null;
 }
 
 function pintarImagenServicio() {
@@ -612,6 +629,12 @@ function abrirFormularioServicio(id = null, producto = {}) {
   $("#pr-duracion").value = producto.duracion || "";
   $("#pr-destacado").checked = Boolean(producto.destacado);
   $("#pr-oculto").checked = Boolean(producto.oculto);
+  $("#pr-anio").value = producto.anio || "";
+  $("#pr-km").value = producto.kilometraje ?? "";
+  $("#pr-combustible").value = producto.combustible || "";
+  $("#pr-transmision").value = producto.transmision || "";
+  // La ficha del vehículo aparece con el diseño "Venta de vehículos", o si el servicio ya tiene datos de ficha
+  $("#pr-vehiculo").hidden = perfil?.diseno !== "vehiculos" && !fichaVehiculo(producto).length;
   imagenServicio = producto.imagen || "";
   pintarImagenServicio();
   $("#product-form-title").textContent = id ? "Editar servicio" : "Nuevo servicio";
@@ -674,7 +697,12 @@ $("#product-form").addEventListener("submit", async (event) => {
     duracion: $("#pr-duracion").value.trim(),
     destacado: $("#pr-destacado").checked,
     oculto: $("#pr-oculto").checked,
-    imagen: imagenServicio
+    imagen: imagenServicio,
+    // Ficha del vehículo (vacía si no se usa)
+    anio: entero($("#pr-anio").value, 1900, 2100),
+    kilometraje: entero($("#pr-km").value, 0, 2000000),
+    combustible: $("#pr-combustible").value,
+    transmision: $("#pr-transmision").value
   };
 
   boton.disabled = true;

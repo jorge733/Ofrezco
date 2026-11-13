@@ -264,3 +264,33 @@ body[data-diseno="linkBio"] .product-desc { -webkit-line-clamp: 1; }
   [data-diseno="portadaImpacto"] .pro-logo { margin: 0 0 14px; }
   [data-diseno="linkBio"] .pro-id { display: flex; }
 }
+
+/* Venta de vehículos: portada oscura, vitrina de autos con precio destacado y ficha técnica */
+[data-diseno="vehiculos"] .pro-hero { align-items: flex-end; background: #0b1220; border: 0; display: flex; min-height: min(62vh, 560px); overflow: hidden; position: relative; }
+[data-diseno="vehiculos"] .pro-cover { height: auto; inset: 0; position: absolute; }
+[data-diseno="vehiculos"] .pro-cover::after { background: linear-gradient(to right, rgba(11, 18, 32, .92) 10%, rgba(11, 18, 32, .55) 55%, rgba(11, 18, 32, .15)); content: ""; inset: 0; position: absolute; }
+[data-diseno="vehiculos"] .pro-id { display: block; padding-bottom: 48px; padding-top: 48px; position: relative; width: 100%; z-index: 1; }
+[data-diseno="vehiculos"] .pro-logo { margin: 0 0 16px; }
+[data-diseno="vehiculos"] .pro-id-text { max-width: 640px; padding-top: 0; }
+[data-diseno="vehiculos"] .pro-id h1 { color: #fff; font-size: clamp(2.2rem, 5.5vw, 3.8rem); letter-spacing: -.02em; line-height: 1.05; text-transform: uppercase; }
+[data-diseno="vehiculos"] .pro-location, [data-diseno="vehiculos"] .pro-description { color: rgba(255, 255, 255, .88); }
+[data-diseno="vehiculos"] .pro-trust li { border-color: rgba(255, 255, 255, .4); color: #fff; }
+[data-diseno="vehiculos"] .pro-trust li::before { color: #fff; }
+[data-diseno="vehiculos"] .pro-layout { grid-template-columns: minmax(0, 1fr); }
+[data-diseno="vehiculos"] .pro-services { gap: 18px; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
+body[data-diseno="vehiculos"] .pro-service, body[data-diseno="vehiculos"] .pro-service:last-child { align-items: stretch; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; display: flex; flex-direction: column; gap: 0; overflow: hidden; padding: 0; text-align: left; transition: box-shadow .2s ease, transform .2s ease; }
+body[data-diseno="vehiculos"] .pro-service:hover { box-shadow: 0 14px 32px rgba(16, 24, 40, .12); transform: translateY(-2px); }
+body[data-diseno="vehiculos"] .pro-service.selected { border-color: var(--accent-color); box-shadow: inset 0 0 0 2px var(--accent-color); padding-left: 0; }
+body[data-diseno="vehiculos"] .pro-service .product-image { aspect-ratio: 16 / 10; border-radius: 0; font-size: 3rem; height: auto; width: 100%; }
+body[data-diseno="vehiculos"] .pro-service .product-info { align-content: start; gap: 8px; padding: 16px 16px 0; }
+body[data-diseno="vehiculos"] .pro-service strong { font-size: 1.12rem; }
+body[data-diseno="vehiculos"] .pro-service-side { align-items: center; align-self: stretch; border-top: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin-top: auto; padding: 14px 16px; }
+body[data-diseno="vehiculos"] .pro-service .product-info { margin-bottom: 14px; }
+[data-diseno="vehiculos"] .pro-price { color: var(--accent-color); font-size: 1.3rem; font-weight: 800; }
+.vehiculo-ficha { display: flex; flex-wrap: wrap; gap: 6px; }
+.vehiculo-ficha span { background: var(--canvas); border: 1px solid var(--border); border-radius: 999px; color: var(--text-soft); font-size: .78rem; font-weight: 600; padding: 3px 10px; }
+@media (max-width: 640px) {
+  [data-diseno="vehiculos"] .pro-hero { min-height: 56vh; }
+  [data-diseno="vehiculos"] .pro-id { padding-bottom: 32px; padding-top: 32px; }
+  [data-diseno="vehiculos"] .pro-services { grid-template-columns: minmax(0, 1fr); }
+}

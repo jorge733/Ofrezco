@@ -12,6 +12,7 @@ const PRODUCTOS = [
   { id: "tiendaLateral", precio: 9990, disponible: true, diseno: true, nombre: "Diseño Tienda con barra lateral", texto: "Tu marca fija a un costado y tus servicios como vitrina de tarjetas." },
   { id: "linkBio", precio: 9990, disponible: true, diseno: true, nombre: "Diseño Link en bio premium", texto: "Una sola columna con fondo de tu color, ideal para Instagram y TikTok." },
   { id: "miniSitio", precio: 9990, disponible: true, diseno: true, nombre: "Diseño Mini sitio web completo", texto: "Menú, presentación a dos columnas y secciones a todo el ancho." },
+  { id: "vehiculos", precio: 9990, disponible: true, diseno: true, nombre: "Diseño Venta de vehículos", texto: "Para automotoras y particulares: cada vehículo con foto grande, precio destacado y su ficha (año, kilómetros, combustible y transmisión)." },
   { id: "estadisticas", precio: 12990, disponible: false, nombre: "Estadísticas de visitas", texto: "Mira cuántas personas visitan tu página y te escriben por WhatsApp." }
 ];
 

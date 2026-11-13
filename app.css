@@ -17,8 +17,8 @@
 
 .form { display: grid; gap: 16px; }
 .form label { display: grid; font-size: .88rem; font-weight: 600; gap: 6px; }
-.form input, .form textarea { background: var(--cream); border: 1px solid var(--line); border-radius: 12px; color: var(--ink); font: inherit; padding: 12px 14px; }
-.form input:focus, .form textarea:focus { border-color: var(--blue); outline: 3px solid var(--mist); }
+.form input, .form textarea, .form select { background: var(--cream); border: 1px solid var(--line); border-radius: 12px; color: var(--ink); font: inherit; padding: 12px 14px; }
+.form input:focus, .form textarea:focus, .form select:focus { border-color: var(--blue); outline: 3px solid var(--mist); }
 .form .button { cursor: pointer; width: 100%; }
 /* Contraseña con botón de ojo para mostrar/ocultar */
 .password-field { align-items: center; background: var(--cream); border: 1px solid var(--line); border-radius: 12px; display: flex; }
@@ -438,3 +438,7 @@ body.has-cart .public-footer { padding-bottom: 110px; }
 }
 .store-example { color: var(--blue); font-size: .85rem; font-weight: 600; margin-top: 6px; display: inline-block; }
 .store-hint { color: #1f8a55; font-size: .78rem; font-weight: 500; text-align: right; }
+
+/* Ficha del vehículo en el formulario de servicios (diseño "Venta de vehículos") */
+.vehicle-fields { border: 0; display: grid; gap: 12px; margin: 0; min-width: 0; padding: 0; }
+.vehicle-fields legend { margin-bottom: 4px; padding: 0; }

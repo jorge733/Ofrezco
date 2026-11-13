@@ -7,6 +7,7 @@ const CATALOGO = {
   tiendaLateral: { nombre: "Diseño Tienda con barra lateral", precio: 9990, disponible: true },
   linkBio: { nombre: "Diseño Link en bio premium", precio: 9990, disponible: true },
   miniSitio: { nombre: "Diseño Mini sitio web completo", precio: 9990, disponible: true },
+  vehiculos: { nombre: "Diseño Venta de vehículos", precio: 9990, disponible: true },
   estadisticas: { nombre: "Estadísticas de visitas", precio: 12990, disponible: false }
 };
 
