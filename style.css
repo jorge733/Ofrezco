@@ -155,6 +155,16 @@ h1 em { color: var(--blue); font-style: normal; }
 /* Video o GIF del editor en "Cómo funciona" (oculto hasta que exista, script.js) */
 .steps-media { aspect-ratio: 16 / 10; background: var(--white); border: 1px solid #dfe7f7; border-radius: 22px; margin: 44px auto 0; max-width: 880px; overflow: hidden; }
 .steps-media video, .steps-media img { display: block; height: 100%; object-fit: cover; width: 100%; }
+/* Video de YouTube: 16:9, portada con botón de play hasta que se aprieta */
+.steps-media-youtube { aspect-ratio: 16 / 9; background: var(--ink); }
+.steps-media iframe { border: 0; display: block; height: 100%; width: 100%; }
+.video-play { background: none; border: 0; cursor: pointer; display: block; height: 100%; padding: 0; position: relative; width: 100%; }
+.video-play-icon { background: var(--orange); border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,.25); bottom: 22px; height: 64px; position: absolute; right: 22px; transition: transform .2s ease; width: 64px; }
+.video-play-icon::after { border-bottom: 12px solid transparent; border-left: 19px solid var(--white); border-top: 12px solid transparent; content: ""; left: 25px; position: absolute; top: 20px; }
+.video-play:hover .video-play-icon { transform: scale(1.08); }
+.video-play:focus-visible { border-radius: 22px; outline-offset: -6px; }
+@media (max-width: 780px) { .video-play-icon { bottom: 12px; height: 46px; right: 12px; width: 46px; }.video-play-icon::after { border-bottom-width: 9px; border-left-width: 14px; border-top-width: 9px; left: 18px; top: 14px; } }
+@media (prefers-reduced-motion: reduce) { .video-play-icon { transition: none; } }
 @media (max-width: 780px) { .steps-media { border-radius: 16px; margin-top: 32px; } }
 /* Foco visible para quien navega con teclado */
 :focus-visible { border-radius: 6px; outline: 3px solid var(--blue); outline-offset: 3px; }

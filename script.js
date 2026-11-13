@@ -199,23 +199,57 @@ if (mostrarBloque("testimonio", MOSTRAR_TESTIMONIO)) {
 
 mostrarBloque("quienes-somos", MOSTRAR_QUIENES_SOMOS);
 
-// ==== Video o GIF corto del editor en "Cómo funciona" ====
-// TODO: cuando tengas el video, súbelo junto a index.html y escribe aquí su nombre
-// (por ejemplo "editor.mp4" o "editor.gif") y una imagen de portada para "poster".
-// Mientras "src" esté vacío, el espacio no se muestra.
+// ==== Video del editor en "Cómo funciona" ====
+// Puede ser un video de YouTube (escribe su ID en "youtube") o un archivo subido
+// junto a index.html ("editor.mp4" o "editor.gif" en "src", con imagen en "poster").
+// Si ambos quedan vacíos, el espacio no se muestra.
 const VIDEO_EDITOR = {
+  youtube: "Rk7rJkcrbJo",
   src: "",
   poster: "",
-  descripcion: "Video corto: así se arma una página en el editor de ServicePlanet"
+  descripcion: "Cómo crear tu tienda online gratis en ServicePlanet (paso a paso)"
 };
 
 const videoEditor = document.querySelector("#video-editor");
-if (VIDEO_EDITOR.src && videoEditor) {
+if ((VIDEO_EDITOR.youtube || VIDEO_EDITOR.src) && videoEditor) {
   videoEditor.hidden = false;
   const sinMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Se carga solo cuando está por aparecer en pantalla, para no hacer más lenta la portada
-  const cargarVideo = () => {
+  // YouTube: se muestra la portada con un botón de play y el reproductor se carga
+  // recién al apretarlo, para que la portada del sitio no se haga más lenta
+  const cargarYoutube = () => {
+    const id = VIDEO_EDITOR.youtube;
+    videoEditor.classList.add("steps-media-youtube");
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "video-play";
+    boton.setAttribute("aria-label", `Ver video: ${VIDEO_EDITOR.descripcion}`);
+    const portada = Object.assign(document.createElement("img"), {
+      src: `https://i.ytimg.com/vi_webp/${id}/maxresdefault.webp`,
+      alt: "",
+      decoding: "async"
+    });
+    portada.addEventListener("error", () => { portada.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`; }, { once: true });
+    const icono = document.createElement("span");
+    icono.className = "video-play-icon";
+    icono.setAttribute("aria-hidden", "true");
+    boton.append(portada, icono);
+    boton.addEventListener("click", () => {
+      const iframe = Object.assign(document.createElement("iframe"), {
+        src: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`,
+        title: VIDEO_EDITOR.descripcion,
+        allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+        referrerPolicy: "strict-origin-when-cross-origin",
+        allowFullscreen: true
+      });
+      boton.replaceWith(iframe);
+      iframe.focus();
+    });
+    videoEditor.append(boton);
+  };
+
+  // Archivo propio: se carga solo cuando está por aparecer en pantalla
+  const cargarArchivo = () => {
     let media;
     if (VIDEO_EDITOR.src.endsWith(".gif")) {
       // Con "reducir movimiento" se muestra la portada fija en vez del GIF animado
@@ -242,6 +276,7 @@ if (VIDEO_EDITOR.src && videoEditor) {
     videoEditor.append(media);
   };
 
+  const cargarVideo = VIDEO_EDITOR.youtube ? cargarYoutube : cargarArchivo;
   if ("IntersectionObserver" in window) {
     const observador = new IntersectionObserver((entries) => {
       if (!entries[0].isIntersecting) return;
