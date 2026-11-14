@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sorteo 200 seguidores</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #152238; --blue: #1c56d9; --blue-dark: #1142ae; --cream: #fff9ef;
+    --orange: #ff7b4a; --white: #fff; --mist: #eaf1ff; --line: #e7ded0; --muted: #5f6a80;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #888; font-family: "DM Sans", Arial, sans-serif; color: var(--ink); }
+  .slide { width: 1080px; height: 1350px; position: relative; overflow: hidden; margin: 0 0 40px; }
+  .serif { font-family: "Playfair Display", Georgia, serif; letter-spacing: -.045em; }
+  .eyebrow { font-weight: 800; letter-spacing: .16em; font-size: 26px; text-transform: uppercase; }
+  .brand { position: absolute; left: 80px; bottom: 64px; display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 34px; letter-spacing: -.045em; }
+  .brand img { width: 54px; height: 54px; }
+  .brand span { color: var(--blue); }
+  .pager { position: absolute; right: 80px; bottom: 74px; font-weight: 700; font-size: 24px; letter-spacing: .1em; color: var(--muted); }
+  .swipe { position: absolute; right: 80px; bottom: 64px; font-weight: 800; font-size: 26px; background: var(--ink); color: var(--white); padding: 16px 28px; border-radius: 999px; }
+
+  /* ---------- SLIDE 1 ---------- */
+  .s1 { background: var(--blue); color: var(--white); }
+  .s1 .dots span { position: absolute; border-radius: 50%; background: rgba(255,255,255,.18); }
+  .s1 .ring { position: absolute; right: -230px; top: -170px; width: 900px; height: 900px; }
+  .s1 .content { position: absolute; left: 80px; top: 110px; width: 920px; }
+  .s1 .eyebrow { color: var(--orange); background: var(--white); display: inline-block; padding: 14px 26px; border-radius: 999px; font-size: 28px; transform: rotate(-3deg); }
+  .s1 h1 { font-size: 150px; line-height: .92; margin-top: 56px; font-weight: 800; }
+  .s1 h1 em { font-style: italic; color: var(--orange); }
+  .s1 .big200 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 330px; line-height: .8; letter-spacing: -.06em; color: var(--white); margin-top: 18px; }
+  .s1 .big200 small { font-family: "DM Sans"; font-size: 46px; letter-spacing: 0; font-weight: 700; display: block; margin-top: 26px; color: rgba(255,255,255,.85); }
+  .s1 .prize { position: absolute; left: 80px; right: 80px; top: 850px; background: var(--white); color: var(--ink); border-radius: 36px; padding: 44px 50px; box-shadow: 20px 22px 0 var(--orange); display: flex; align-items: center; gap: 36px; }
+  .s1 .prize .gift { flex: 0 0 auto; width: 132px; height: 132px; border-radius: 32px; background: #ffe5d8; display: flex; align-items: center; justify-content: center; font-size: 76px; }
+  .s1 .prize p { font-size: 40px; line-height: 1.2; font-weight: 500; }
+  .s1 .prize strong { color: var(--blue); font-weight: 800; }
+  .s1 .brand { color: var(--white); }
+  .s1 .brand span { color: var(--orange); }
+  .s1 .swipe { background: var(--orange); color: var(--white); }
+
+  /* ---------- SLIDE 2 ---------- */
+  .s2 { background: var(--cream); }
+  .s2 .head { position: absolute; left: 80px; top: 100px; right: 80px; }
+  .s2 .eyebrow { color: var(--orange); }
+  .s2 h2 { font-size: 96px; line-height: .98; margin-top: 22px; }
+  .s2 h2 em { font-style: normal; color: var(--blue); }
+  .s2 .sub { font-size: 32px; color: var(--muted); margin-top: 26px; line-height: 1.35; max-width: 860px; }
+  .grid { position: absolute; left: 80px; right: 80px; top: 470px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card { background: var(--white); border: 2px solid var(--line); border-radius: 26px; padding: 18px; }
+  .card .shot { height: 200px; border-radius: 16px; overflow: hidden; position: relative; background: #f4f6fb; }
+  .card h3 { font-size: 25px; line-height: 1.15; margin: 16px 4px 4px; font-weight: 800; letter-spacing: -.01em; }
+  .card .price { font-size: 21px; color: var(--muted); margin: 0 4px; font-weight: 500; }
+  .card .price s { text-decoration-thickness: 2px; }
+  .card.mystery { background: var(--ink); border-color: var(--ink); color: var(--white); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 34px; }
+  .card.mystery .q { font-family: "Playfair Display"; font-size: 100px; line-height: .8; color: var(--orange); font-weight: 800; }
+  .card.mystery p { font-size: 30px; font-weight: 700; line-height: 1.2; margin-top: 22px; }
+  .bar { height: 10px; border-radius: 6px; background: #d9dfeb; }
+  /* mini mockups */
+  .m-hero { position: absolute; inset: 0; background: linear-gradient(160deg, #1c56d9, #0c2f80); padding: 30px 20px; color: #fff; }
+  .m-hero .t { font-family: "Playfair Display"; font-weight: 800; font-size: 38px; line-height: .95; letter-spacing: -.04em; }
+  .m-hero .b { position: absolute; left: 20px; bottom: 22px; background: var(--orange); border-radius: 999px; width: 120px; height: 30px; }
+  .m-hero .bar { background: rgba(255,255,255,.4); margin-top: 14px; width: 80%; }
+  .m-side { position: absolute; inset: 0; display: grid; grid-template-columns: 88px 1fr; }
+  .m-side .l { background: var(--ink); padding: 18px 12px; }
+  .m-side .l .av { width: 44px; height: 44px; border-radius: 50%; background: var(--orange); margin-bottom: 14px; }
+  .m-side .l .bar { background: rgba(255,255,255,.3); height: 7px; margin-bottom: 9px; }
+  .m-side .r { padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; }
+  .m-side .r div { height: 78px; border-radius: 10px; background: #dfe7f7; }
+  .m-side .r div:nth-child(2) { background: #ffe5d8; } .m-side .r div:nth-child(3) { background: #e9e0ff; }
+  .m-bio { position: absolute; inset: 0; background: var(--orange); display: flex; flex-direction: column; align-items: center; padding: 18px 30px; gap: 9px; }
+  .m-bio .av { width: 58px; height: 58px; border-radius: 50%; background: #fff; border: 4px solid rgba(21,34,56,.15); }
+  .m-bio .pill { width: 100%; height: 25px; border-radius: 999px; background: rgba(255,255,255,.92); }
+  .m-mini { position: absolute; inset: 0; background: #fff; }
+  .m-mini .nav { height: 34px; background: #fff; border-bottom: 2px solid #eee8de; display: flex; align-items: center; gap: 8px; padding: 0 14px; }
+  .m-mini .nav i { width: 28px; height: 7px; border-radius: 4px; background: #c9d2e3; } .m-mini .nav i:first-child { width: 46px; background: var(--blue); margin-right: auto; }
+  .m-mini .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px 14px; }
+  .m-mini .two .img { height: 80px; border-radius: 10px; background: #ffe5d8; }
+  .m-mini .two .bar { margin-bottom: 9px; } .m-mini .two .bar.h { height: 16px; background: var(--ink); width: 90%; }
+  .m-mini .full { height: 52px; background: var(--mist); display: flex; gap: 10px; padding: 14px; } .m-mini .full span { flex: 1; background: #fff; border-radius: 8px; }
+  .m-car { position: absolute; inset: 0; background: #fff; padding: 12px; }
+  .m-car .img { height: 110px; border-radius: 10px; background: linear-gradient(180deg, #cfdcf7 0 60%, #9aa9c4 60%); position: relative; display: flex; align-items: center; justify-content: center; font-size: 70px; }
+  .m-car .row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .m-car .pr { background: var(--blue); color: #fff; font-weight: 800; font-size: 20px; padding: 5px 12px; border-radius: 8px; }
+  .m-car .chips { display: flex; gap: 6px; margin-top: 10px; } .m-car .chips i { flex: 1; height: 22px; border-radius: 6px; background: var(--mist); }
+  .s2 .note { position: absolute; left: 80px; right: 80px; top: 1158px; font-size: 26px; color: var(--muted); }
+
+  /* ---------- SLIDE 3 ---------- */
+  .s3 { background: var(--ink); color: var(--white); }
+  .s3 .head { position: absolute; left: 80px; top: 100px; right: 80px; }
+  .s3 .eyebrow { color: var(--orange); }
+  .s3 h2 { font-size: 104px; line-height: .98; margin-top: 22px; }
+  .s3 h2 em { font-style: italic; color: var(--orange); }
+  .steps { position: absolute; left: 80px; right: 80px; top: 340px; display: grid; gap: 18px; }
+  .step { display: flex; align-items: center; gap: 34px; background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.12); border-radius: 28px; padding: 24px 34px; }
+  .step .n { flex: 0 0 auto; width: 84px; height: 84px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; font-family: "Playfair Display"; font-size: 54px; font-weight: 800; }
+  .step h3 { font-size: 42px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+  .step p { font-size: 28px; color: rgba(255,255,255,.72); margin-top: 6px; line-height: 1.3; }
+  .step.bonus { background: var(--orange); border-color: var(--orange); }
+  .step.bonus .n { background: var(--white); color: var(--orange); font-family: "DM Sans"; font-size: 40px; }
+  .step.bonus p { color: rgba(255,255,255,.92); }
+  .s3 .meter { position: absolute; left: 80px; right: 80px; top: 1070px; }
+  .s3 .meter .track { height: 22px; border-radius: 999px; background: rgba(255,255,255,.14); overflow: hidden; }
+  .s3 .meter .fill { height: 100%; width: 78%; border-radius: 999px; background: linear-gradient(90deg, var(--blue), var(--orange)); }
+  .s3 .meter .labels { display: flex; justify-content: space-between; font-size: 24px; font-weight: 700; margin-top: 12px; color: rgba(255,255,255,.75); }
+  .s3 .meter .labels b { color: var(--orange); }
+  .s3 .brand { color: var(--white); }
+  .s3 .brand span { color: var(--orange); }
+  .s3 .pager { color: rgba(255,255,255,.55); }
+</style>
+</head>
+<body>
+
+<!-- 1 · PORTADA -->
+<section class="slide s1" id="s1">
+  <svg class="ring" viewBox="0 0 64 64" aria-hidden="true">
+    <g transform="rotate(-24 32 32)"><ellipse cx="32" cy="32" rx="28" ry="8.5" fill="none" stroke="#ff7b4a" stroke-opacity=".9" stroke-width="1.6"/></g>
+    <circle cx="32" cy="32" r="17" fill="#ffffff" fill-opacity=".08"/>
+    <circle cx="53" cy="15" r="2.6" fill="#ff7b4a"/>
+  </svg>
+  <div class="dots">
+    <span style="width:14px;height:14px;left:860px;top:640px"></span>
+    <span style="width:9px;height:9px;left:960px;top:560px"></span>
+    <span style="width:18px;height:18px;left:700px;top:90px"></span>
+    <span style="width:10px;height:10px;left:560px;top:520px"></span>
+  </div>
+  <div class="content">
+    <span class="eyebrow">🎉 Sorteo</span>
+    <h1 class="serif">Si llegamos<br>a <em>200</em></h1>
+  </div>
+  <p class="serif" style="position:absolute;left:80px;top:548px;font-size:62px;line-height:1.1;font-weight:700;max-width:820px;">seguidores, regalamos un <span style="color:var(--orange)">diseño premium</span> para tu página.</p>
+  <div class="prize">
+    <div class="gift">🎁</div>
+    <p>Tú eliges cuál. Valor de hasta <strong>$16.990</strong>, <strong>gratis</strong> para quien gane.</p>
+  </div>
+  <div class="brand"><img src="../../logo.svg" alt=""><b style="font-weight:700">Service<span>Planet</span></b></div>
+  <div class="swipe">Desliza →</div>
+</section>
+
+<!-- 2 · EL PREMIO -->
+<section class="slide s2" id="s2">
+  <div class="head">
+    <p class="eyebrow">El premio</p>
+    <h2 class="serif">Elige el diseño <em>que quieras</em></h2>
+    <p class="sub">Se activa en tu página de ServicePlanet para siempre.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="shot"><div class="m-hero"><div class="t">Tu nombre<br>en grande</div><div class="bar"></div><div class="b"></div></div></div>
+      <h3>Portada de impacto</h3><p class="price"><s>$9.990</s></p>
+    </div>
+    <div class="card">
+      <div class="shot"><div class="m-side"><div class="l"><div class="av"></div><div class="bar"></div><div class="bar" style="width:70%"></div><div class="bar" style="width:85%"></div></div><div class="r"><div></div><div></div><div></div><div></div></div></div></div>
+      <h3>Tienda con barra lateral</h3><p class="price"><s>$9.990</s></p>
+    </div>
+    <div class="card">
+      <div class="shot"><div class="m-bio"><div class="av"></div><div class="pill"></div><div class="pill"></div><div class="pill"></div><div class="pill"></div></div></div>
+      <h3>Link en bio premium</h3><p class="price"><s>$9.990</s></p>
+    </div>
+    <div class="card">
+      <div class="shot"><div class="m-mini"><div class="nav"><i></i><i></i><i></i><i></i></div><div class="two"><div><div class="bar h"></div><div class="bar"></div><div class="bar" style="width:70%"></div><div class="bar" style="width:85%"></div></div><div class="img"></div></div><div class="full"><span></span><span></span><span></span></div></div></div>
+      <h3>Mini sitio web completo</h3><p class="price"><s>$9.990</s></p>
+    </div>
+    <div class="card">
+      <div class="shot"><div class="m-car"><div class="img">🚙</div><div class="row"><div class="bar" style="width:46%;height:14px;background:var(--ink)"></div><span class="pr">$8.490.000</span></div><div class="chips"><i></i><i></i><i></i><i></i></div></div></div>
+      <h3>Venta de vehículos</h3><p class="price"><s>$16.990</s></p>
+    </div>
+    <div class="card mystery">
+      <div class="q">1</div>
+      <p>ganador/a.<br>Un diseño.<br>Cero pesos.</p>
+    </div>
+  </div>
+  <div class="brand"><img src="../../logo.svg" alt=""><b style="font-weight:700">Service<span>Planet</span></b></div>
+  <div class="pager">2 / 3</div>
+</section>
+
+<!-- 3 · CÓMO PARTICIPAR -->
+<section class="slide s3" id="s3">
+  <div class="head">
+    <p class="eyebrow">Cómo participar</p>
+    <h2 class="serif">Así de <em>simple</em></h2>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div><h3>Sigue esta cuenta</h3><p>Cada seguidor nos acerca a los 200.</p></div></div>
+    <div class="step"><div class="n">2</div><div><h3>Dale ❤️ a este post</h3><p>Y guárdalo para no perderte el resultado.</p></div></div>
+    <div class="step"><div class="n">3</div><div><h3>Etiqueta a un emprendedor</h3><p>Cada comentario con una etiqueta distinta es una participación.</p></div></div>
+    <div class="step bonus"><div class="n">★</div><div><h3>Bonus: compártelo en historias</h3><p>Y etiquétanos para sumar una participación extra.</p></div></div>
+  </div>
+  <div class="meter">
+    <div class="track"><div class="fill"></div></div>
+    <div class="labels"><span>¡Ya casi!</span><b>Meta: 200 seguidores</b></div>
+  </div>
+  <div class="brand"><img src="../../logo.svg" alt=""><b style="font-weight:700">Service<span>Planet</span></b></div>
+  <div class="pager">3 / 3</div>
+</section>
+
+</body>
+</html>
