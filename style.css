@@ -100,6 +100,11 @@ h1 em { color: var(--blue); font-style: normal; }
 .legal { max-width: 760px; padding-bottom: 80px; padding-top: 50px; }
 .legal h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin-bottom: 8px; }.legal .updated { color: var(--muted); font-size: .88rem; margin-bottom: 36px; }
 .legal h2 { font-family: "DM Sans", Arial, sans-serif; font-size: 1.25rem; margin: 32px 0 10px; }.legal p, .legal li { color: #3d4a60; line-height: 1.7; }.legal ul { margin: 8px 0 0 22px; }.legal a { color: var(--blue); font-weight: 600; }
+/* Artículo de consejos */
+.post .post-lead { color: var(--ink); font-size: 1.15rem; margin-bottom: 8px; }
+.post-tip { background: var(--mist); border-left: 4px solid var(--blue); border-radius: 12px; color: #3d4a60; line-height: 1.7; margin-top: 36px; padding: 18px 20px; }
+.post-cta { background: var(--white); border: 1px solid var(--line); border-radius: 24px; margin-top: 44px; padding: 28px; text-align: center; }
+.post-cta h2 { margin-top: 0; }.post-cta p { margin-bottom: 20px; }.legal .post-cta .button { color: var(--white); }
 @media (max-width: 980px) { .includes-more { grid-template-columns: 1fr 1fr; }.includes-more li + li { border-left: 0; }.includes-more li:nth-child(even) { border-left: 1px solid #eee8de; }.includes-more li:nth-child(n+3) { border-top: 1px solid #eee8de; }.includes-more li:last-child { grid-column: 1 / -1; } }
 @media (max-width: 780px) { .includes, .faq { padding: 78px 0; } }
 @media (max-width: 780px) { .includes-key { gap: 14px; grid-template-columns: 1fr; margin-top: 38px; }.includes-key article { align-items: start; column-gap: 16px; display: grid; grid-template-columns: auto 1fr; padding: 22px; }.include-icon { grid-row: span 2; height: 52px; width: 52px; }.includes-key h3 { font-size: 1.15rem; margin: 2px 0 4px; }.includes-key p { font-size: .92rem; } }
