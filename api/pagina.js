@@ -30,12 +30,70 @@ async function buscarNegocio(slug) {
   if (!/^[a-z0-9-]{3,40}$/.test(slug)) return null;
   const enlace = await leer(`slugs/${slug}`, ["uid"]);
   if (!enlace?.uid) return null;
-  return leer(`perfiles/${enlace.uid}`, ["nombre", "descripcion", "zona"]);
+  const negocio = await leer(`perfiles/${enlace.uid}`, ["nombre", "descripcion", "zona", "whatsapp"]);
+  if (negocio) negocio.productos = await leerProductos(enlace.uid);
+  return negocio;
+}
+
+// Servicios del negocio (solo texto, sin fotos), para contárselos a Google
+async function leerProductos(uid) {
+  try {
+    const mascara = ["nombre", "precio", "descripcion"].map((c) => `&mask.fieldPaths=${c}`).join("");
+    const respuesta = await fetch(`${FIRESTORE}/perfiles/${uid}/productos?key=${API_KEY}&pageSize=100${mascara}`);
+    if (!respuesta.ok) return [];
+    const { documents = [] } = await respuesta.json();
+    return documents
+      .map(({ fields = {} }) => Object.fromEntries(Object.entries(fields).map(([c, v]) => [c, v.stringValue ?? ""])))
+      .filter((p) => p.nombre);
+  } catch {
+    return [];
+  }
+}
+
+// "$5.000 la hora" → 5000 (null si no hay número, ej: "A convenir")
+function precioNumero(texto = "") {
+  const encontrado = String(texto).match(/\d[\d.]*/);
+  return encontrado ? Number(encontrado[0].replace(/\./g, "")) : null;
+}
+
+// Título para Google: "Nombre — Zona | ServicePlanet"
+const tituloDe = (negocio) => `${negocio.nombre}${negocio.zona ? ` — ${negocio.zona}` : ""} | ServicePlanet`;
+
+// Datos estructurados (schema.org): le dicen a Google qué es el negocio, dónde atiende y qué ofrece
+function datosEstructurados(url, negocio, descripcion, imagen) {
+  const datos = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${url}#negocio`,
+    name: negocio.nombre,
+    description: descripcion,
+    url,
+    image: imagen
+  };
+  if (negocio.zona) datos.areaServed = negocio.zona;
+  if (/^\d{8,15}$/.test(negocio.whatsapp || "")) datos.telephone = `+${negocio.whatsapp}`;
+  if (negocio.productos?.length) {
+    datos.hasOfferCatalog = {
+      "@type": "OfferCatalog",
+      name: `Servicios de ${negocio.nombre}`,
+      itemListElement: negocio.productos.slice(0, 50).map((p) => {
+        const oferta = {
+          "@type": "Offer",
+          itemOffered: { "@type": "Service", name: p.nombre, ...(p.descripcion ? { description: recortar(p.descripcion, 300) } : {}) }
+        };
+        const precio = precioNumero(p.precio);
+        if (precio) Object.assign(oferta, { price: precio, priceCurrency: "CLP" });
+        return oferta;
+      })
+    };
+  }
+  // "<" escapado para que ningún texto pueda cerrar la etiqueta <script>
+  return `<script type="application/ld+json">${JSON.stringify(datos).replace(/</g, String.raw`\u003c`)}</script>`;
 }
 
 function etiquetas(slug, negocio) {
   const url = `${SITIO}/${slug}`;
-  const titulo = `${negocio.nombre} — ServicePlanet`;
+  const titulo = tituloDe(negocio);
   const descripcion = recortar(
     (negocio.descripcion || "").replace(/\s+/g, " ").trim() ||
       `Mira los servicios y precios de ${negocio.nombre}${negocio.zona ? ` en ${negocio.zona}` : ""} y escríbele directo por WhatsApp.`,
@@ -58,7 +116,8 @@ function etiquetas(slug, negocio) {
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="twitter:title" content="${escapar(titulo)}">`,
     `<meta name="twitter:description" content="${escapar(descripcion)}">`,
-    `<meta name="twitter:image" content="${imagen}">`
+    `<meta name="twitter:image" content="${imagen}">`,
+    datosEstructurados(url, negocio, descripcion, imagen)
   ].join("\n  ");
 }
 
@@ -71,10 +130,11 @@ module.exports = async (req, res) => {
     const negocio = await buscarNegocio(slug);
     if (negocio?.nombre) {
       html = html
-        .replace(/<title>.*?<\/title>/, `<title>${escapar(negocio.nombre)} — ServicePlanet</title>`)
-        .replace(/<!-- og:inicio -->[\s\S]*?<!-- og:fin -->/, etiquetas(slug, negocio));
+        .replace(/<title>.*?<\/title>/, () => `<title>${escapar(tituloDe(negocio))}</title>`)
+        .replace(/<!-- og:inicio -->[\s\S]*?<!-- og:fin -->/, () => etiquetas(slug, negocio)); // con () => un "$" en el texto no se interpreta
     } else {
       estado = 404; // pagina.js muestra el aviso de "página no encontrada"
+      html = html.replace("<!-- og:inicio -->", '<meta name="robots" content="noindex">\n  <!-- og:inicio -->');
     }
   } catch (error) {
     // Si Firestore falla, igual enviamos la página: pagina.js la carga en el navegador

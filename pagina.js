@@ -232,7 +232,7 @@ function mostrarRedes(redes = {}) {
 
 function mostrar(datos, productos) {
   perfil = datos;
-  document.title = `${perfil.nombre} — ServicePlanet`;
+  document.title = `${perfil.nombre}${perfil.zona ? ` — ${perfil.zona}` : ""} | ServicePlanet`;
   if (perfil.color) {
     document.documentElement.style.setProperty("--accent", perfil.color);
     // Con colores muy claros (amarillo, celeste…) el texto encima va oscuro para que se lea

@@ -1,6 +1,14 @@
 User-agent: *
 Allow: /
-Disallow: /panel
-Disallow: /cuenta
+# Páginas privadas o internas. El "$" y el "?" hacen que solo se bloquee esa ruta exacta,
+# y no los negocios cuyo enlace empieza igual (ej: serviceplanet.cl/panel-solar-maipu).
+Disallow: /panel$
+Disallow: /panel?
+Disallow: /panel.html
+Disallow: /cuenta$
+Disallow: /cuenta?
+Disallow: /cuenta.html
+Disallow: /pagina$
+Disallow: /pagina.html
 
 Sitemap: https://www.serviceplanet.cl/sitemap.xml
